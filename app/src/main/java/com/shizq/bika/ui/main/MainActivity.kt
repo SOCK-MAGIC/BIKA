@@ -443,6 +443,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
 
         //加载主页
+        viewModel.getCategories()
         viewModel.liveData.observe(this) {
             skeletonScreen.hide()
             if (it.code == 200) {

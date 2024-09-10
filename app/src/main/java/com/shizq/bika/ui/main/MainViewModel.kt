@@ -6,17 +6,21 @@ import com.google.gson.JsonObject
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.*
+import com.shizq.bika.network.Result
 import com.shizq.bika.network.RetrofitUtil
+import com.shizq.bika.network.asResult
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 import com.shizq.bika.utils.SPUtil
-import okhttp3.MediaType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
 class MainViewModel(application: Application) : BaseViewModel(application) {
-    var userId = "" //用来确认账号是否已经登录
+    var userId = "" // 用来确认账号是否已经登录
     var fileServer = ""
     var path = ""
     private val cTitle = arrayOf(
@@ -54,10 +58,11 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     val liveData: MutableLiveData<BaseResponse<CategoriesBean>> by lazy {
         MutableLiveData<BaseResponse<CategoriesBean>>()
     }
+    val liveData2 = MutableStateFlow<Result<BaseResponse<CategoriesBean>>>()
 
     var categoriesList = ArrayList<CategoriesBean.Category>()
 
-    var cList ={
+    var cList = {
         val categoriesList = ArrayList<CategoriesBean.Category>()
         for (index in cTitle.indices) {
             val category = CategoriesBean.Category(
@@ -87,7 +92,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                 override fun onCodeError(baseResponse: BaseResponse<ProfileBean>) {
                     liveData_profile.postValue(baseResponse)
                 }
-
             })
     }
 
@@ -102,7 +106,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
                 override fun onCodeError(baseResponse: BaseResponse<PunchInBean>) {
                     liveData_punch_in.postValue(baseResponse)
-
                 }
             })
     }
@@ -129,20 +132,20 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             })
     }
 
-    fun getCategories() {
+    fun getCategories(): Flow<Result<BaseResponse<CategoriesBean>>> {
         val headers = BaseHeaders("categories", "GET").getHeaderMapAndToken()
-        RetrofitUtil.service.categoriesGet(headers)
-            .doOnSubscribe(this@MainViewModel)
-            .subscribe(object : BaseObserver<CategoriesBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<CategoriesBean>) {
-                    liveData.postValue(baseResponse)
-                }
-
-                override fun onCodeError(baseResponse: BaseResponse<CategoriesBean>) {
-                    liveData.postValue(baseResponse)
-                }
-            })
+        return flow { emit(RetrofitUtil.service.categoriesGet(headers)) }
+            .asResult()
+//        RetrofitUtil.service.categoriesGet(headers)
+//            .doOnSubscribe(this@MainViewModel)
+//            .subscribe(object : BaseObserver<CategoriesBean>() {
+//                override fun onSuccess(baseResponse: BaseResponse<CategoriesBean>) {
+//                    liveData.postValue(baseResponse)
+//                }
+//
+//                override fun onCodeError(baseResponse: BaseResponse<CategoriesBean>) {
+//                    liveData.postValue(baseResponse)
+//                }
+//            })
     }
-
-
 }

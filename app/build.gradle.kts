@@ -1,7 +1,9 @@
 plugins {
     id("kotlin-kapt")
+    alias(libs.plugins.bika.android.application)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.jvm)
+//    alias(libs.plugins.kotlin.jvm)
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }

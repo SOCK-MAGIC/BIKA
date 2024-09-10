@@ -77,9 +77,7 @@ interface ApiService {
 
     //分类
     @GET("categories")
-    fun categoriesGet(
-        @HeaderMap headers: Map<String, String>
-    ): Observable<BaseResponse<CategoriesBean>>
+    suspend fun categoriesGet(@HeaderMap headers: Map<String, String>): BaseResponse<CategoriesBean>
 
     //骑士榜
     @GET("comics/knight-leaderboard")
@@ -317,7 +315,7 @@ interface ApiService {
     @GET("chat")
     suspend fun oldChatRoomListGet(
         @HeaderMap headers: Map<String, String>
-    ):BaseResponse<ChatRoomListOldBean>
+    ): BaseResponse<ChatRoomListOldBean>
 
     //上传头像 //抓包得出上传的分辨率是200*200 //聊天室抓包，图片其中一边的最大分辨率是800
     @PUT("users/avatar")

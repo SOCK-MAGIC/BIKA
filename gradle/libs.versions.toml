@@ -1,37 +1,83 @@
 [versions]
 androidGradlePlugin = "8.6.0"
-androidxAppcompat = "1.7.0"
-androidxCore = "1.13.1"
-androidPreference = "1.2.1"
-androidxSplashscreen = "1.0.1"
+androidTools = "31.6.0"
+androidxTracing = "1.3.0-alpha02"
+androidxMacroBenchmark = "1.3.0"
+atomicfu = "0.25.0"
+androidxAnnotation = "1.8.2"
+androidxActivity = "1.9.2"
+androidxCollection = "1.4.3"
+androidxComposeBom = "2024.09.00"
+androidxComposeRuntimeTracing = "1.0.0-beta01"
+androidxComposeMaterial3Adaptive = "1.0.0"
+androidxComposeMaterial3AdaptiveNavigationSuite = "1.3.0"
+androidxCoreSplashscreen = "1.0.1"
+androidxPaging = "3.3.2"
+androidxDataStore = "1.1.1"
+androidxLifecycle = "2.8.5"
+androidxMedia3 = "1.4.1"
+androidXMetrics = "1.0.0-beta01"
+androidxProfileinstaller = "1.3.1"
+androidxRoom = "2.7.0-alpha07"
+androidxWork = "2.9.1"
+androidxWindowManager = "1.3.0"
+androidxTestCore = "1.6.1"
+androidxTestExt = "1.2.1"
+androidxTestRules = "1.6.1"
+androidxTestRunner = "1.6.2"
+androidxUiAutomator = "2.3.0"
+androidxEspresso = "3.6.1"
+banner = "2.2.3"
+buildconfig = "5.4.0"
+coil = "2.7.0"
+coreKtx = "1.13.1"
+composeSettings = "2.4.0"
+dokarSheets = "0.6.0-alpha05"
+decompose = "3.1.0"
+detekt = "1.23.7"
+devappx = "2.4.6"
+dependencyGuard = "0.5.0"
+hilt = "2.52"
+hiltExt = "1.2.0"
+jacoco = "0.8.12"
+kotlin = "2.0.20"
+kotlinDsl = "5.1.1"
+kotlinxCoroutines = "1.8.1"
+kotlinxSerialization = "1.7.2"
+ksp = "2.0.20-1.0.25"
+ktor = "2.3.12"
+monitor = "1.8.1"
+moduleGraph = "2.7.1"
+napier = "2.7.1"
+okhttp = "5.0.0-alpha.14"
+okio = "3.9.0"
+robolectric = "4.13"
+roborazzi = "1.26.0"
 androidxRecyclerview = "1.3.2"
-androidxRoom = "2.6.1"
 byrecyclerview = "1.3.6"
 commonsCodec = "1.17.1"
 glide = "4.16.0"
-kotlin = "2.0.20"
 kotlinxCoroutinesCore = "1.8.1"
-kotlinxSerialization = "1.7.2"
-ksp = "2.0.20-1.0.25"
-androidxLifecycle = "2.8.5"
 material = "1.12.0"
 androidxNavigationFragment = "2.8.0"
-okhttp = "5.0.0-alpha.14"
 okhttp3Integration = "4.14.2"
 photoview = "2.3.0"
 pictureselector = "v3.10.7"
 retrofit = "2.11.0"
 rxandroid = "3.0.0"
+androidxAppcompat = "1.7.0"
+androidxPreference = "1.2.1"
+truth = "1.4.4"
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
-androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashscreen" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
 androidx-navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "androidxNavigationFragment" }
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidxNavigationFragment" }
-androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidPreference" }
+androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "androidxPreference" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "androidxRecyclerview" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidxRoom" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidxRoom" }
@@ -55,9 +101,41 @@ retrofit-converter-kotlinx-serialization = { module = "com.squareup.retrofit2:co
 retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
 ucrop = { module = "io.github.lucksiege:ucrop", version.ref = "pictureselector" }
+truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
+android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
+android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }
+compose-gradlePlugin = { group = "org.jetbrains.kotlin", name = "compose-compiler-gradle-plugin", version.ref = "kotlin" }
+detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gradle-plugin", version.ref = "detekt" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
+room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-test = { id = "com.android.test", version.ref = "androidGradlePlugin" }
+compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dependencyGuard" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-dsl = { id = "org.gradle.kotlin.kotlin-dsl", version.ref = "kotlinDsl" }
+module-graph = { id = "com.jraska.module.graph.assertion", version.ref = "moduleGraph" }
+room = { id = "androidx.room", version.ref = "androidxRoom" }
+roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
+
+bika-android-compose = { id = "bika.android.compose", version = "unspecified" }
+bika-android-application = { id = "bika.android.application", version = "unspecified" }
+bika-android-jacoco = { id = "bika.android.jacoco", version = "unspecified" }
+bika-android-library = { id = "bika.android.library", version = "unspecified" }
+bika-android-feature = { id = "bika.android.feature", version = "unspecified" }
+bika-android-test = { id = "bika.android.test", version = "unspecified" }
+bika-android-room = { id = "bika.android.room", version = "unspecified" }
+bika-android-lint = { id = "bika.android.lint", version = "unspecified" }
+bika-jvm-library = { id = "bika.jvm.library", version = "unspecified" }
+bika-android-application-flavors = { id = "bika.android.application.flavors", version = "unspecified" }
+bika-hilt = { id = "bika.hilt", version = "unspecified" }
+bika-decompose = { id = "bika.decompose", version = "unspecified" }
+bika-detekt = { id = "bika.detekt", version = "unspecified" }
+bika-android-testoptions = { id = "bika.android.testoptions", version = "unspecified" }
