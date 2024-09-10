@@ -1,9 +1,6 @@
 plugins {
     id("kotlin-kapt")
     alias(libs.plugins.bika.android.application)
-    alias(libs.plugins.android.application)
-//    alias(libs.plugins.kotlin.jvm)
-    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
@@ -20,7 +17,6 @@ android {
         versionName = "1.0.7"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
 
     signingConfigs {
@@ -61,7 +57,7 @@ android {
         outputs
             .map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }
             .forEach { output ->
-                output.outputFileName = "BIKA_v${versionName}.apk"
+                output.outputFileName = "BIKA_v$versionName.apk"
             }
     }
 }

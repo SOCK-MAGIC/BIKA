@@ -18,8 +18,8 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
-                apply("bika.android.lint")
-                apply("bika.detekt")
+//                apply("bika.android.lint")
+//                apply("bika.detekt")
             }
 
             extensions.configure<LibraryExtension> {

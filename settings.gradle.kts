@@ -7,6 +7,7 @@ pluginManagement {
         maven { setUrl("https://www.jitpack.io") }
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -15,6 +16,10 @@ dependencyResolutionManagement {
         maven { setUrl("https://www.jitpack.io") }
     }
 }
+
 rootProject.name = "BIKA"
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 include(":app")
- 
+include(":core:database")
