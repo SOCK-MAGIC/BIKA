@@ -58,7 +58,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     val liveData: MutableLiveData<BaseResponse<CategoriesBean>> by lazy {
         MutableLiveData<BaseResponse<CategoriesBean>>()
     }
-    val liveData2 = MutableStateFlow<Result<BaseResponse<CategoriesBean>>>()
 
     var categoriesList = ArrayList<CategoriesBean.Category>()
 
