@@ -23,3 +23,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(":app")
 include(":core:database")
+include(":core:network")
+include(":feature:interest")
