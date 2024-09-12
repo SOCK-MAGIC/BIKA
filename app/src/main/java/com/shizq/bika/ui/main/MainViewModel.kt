@@ -118,17 +118,17 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             }.asJsonObject.toString()
         )
         val headers = BaseHeaders("auth/sign-in", "POST").getHeaders()
-        RetrofitUtil.service.signInPost(body, headers)
-            .doOnSubscribe(this@MainViewModel)
-            .subscribe(object : BaseObserver<SignInBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<SignInBean>) {
-                    liveData_signin.postValue(baseResponse)
-                }
-
-                override fun onCodeError(baseResponse: BaseResponse<SignInBean>) {
-                    liveData_signin.postValue(baseResponse)
-                }
-            })
+//        RetrofitUtil.service.signInPost(body, headers)
+//            .doOnSubscribe(this@MainViewModel)
+//            .subscribe(object : BaseObserver<SignInBean>() {
+//                override fun onSuccess(baseResponse: BaseResponse<SignInBean>) {
+//                    liveData_signin.postValue(baseResponse)
+//                }
+//
+//                override fun onCodeError(baseResponse: BaseResponse<SignInBean>) {
+//                    liveData_signin.postValue(baseResponse)
+//                }
+//            })
     }
 
     fun getCategories(): Flow<Result<BaseResponse<CategoriesBean>>> {

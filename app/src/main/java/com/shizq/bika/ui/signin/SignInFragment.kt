@@ -7,11 +7,14 @@ import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.navigation.Navigation
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shizq.bika.BR
@@ -27,6 +30,19 @@ import com.shizq.bika.utils.SPUtil
  */
 
 class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                LoginScreen()
+            }
+        }
+    }
 
     override fun initContentView(
         inflater: LayoutInflater?,
@@ -150,7 +166,7 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
                 //登录失败 账号或密码错误
                 MaterialAlertDialogBuilder(activity as AppCompatActivity)
                     .setTitle("账号或密码错误")
-                    .setPositiveButton("确定",null)
+                    .setPositiveButton("确定", null)
                     .show()
 
             } else {
@@ -158,14 +174,14 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
                 MaterialAlertDialogBuilder(activity as AppCompatActivity)
                     .setTitle("网络错误")
                     .setMessage("code=${it.code} error=${it.error} message=${it.message}")
-                    .setPositiveButton("确定",null)
+                    .setPositiveButton("确定", null)
                     .show()
 
             }
         }
 
         //忘记密码 网络请求结果
-        viewModel.liveData_forgot.observe(this){
+        viewModel.liveData_forgot.observe(this) {
             hideProgressBar(true)
             if (it.code == 200) {
                 val choices =
@@ -200,7 +216,7 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
         }
 
         //忘记密码回答问题后的 网络请求结果
-        viewModel.liveData_password.observe(this){
+        viewModel.liveData_password.observe(this) {
             hideProgressBar(true)
             if (it.code == 200) {
                 //获得临时密码成功

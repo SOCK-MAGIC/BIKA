@@ -44,17 +44,17 @@ class SignInViewModel(application: Application) : BaseViewModel(application) {
         )
         val headers = BaseHeaders("auth/sign-in", "POST").getHeaders()
 
-        RetrofitUtil.service.signInPost(body, headers)
-            .doOnSubscribe(this@SignInViewModel)
-            .subscribe(object : BaseObserver<SignInBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<SignInBean>) {
-                    liveData_signin.postValue(baseResponse)
-                }
-
-                override fun onCodeError(baseResponse: BaseResponse<SignInBean>) {
-                    liveData_signin.postValue(baseResponse)
-                }
-            })
+//        RetrofitUtil.service.signInPost(body, headers)
+//            .doOnSubscribe(this@SignInViewModel)
+//            .subscribe(object : BaseObserver<SignInBean>() {
+//                override fun onSuccess(baseResponse: BaseResponse<SignInBean>) {
+//                    liveData_signin.postValue(baseResponse)
+//                }
+//
+//                override fun onCodeError(baseResponse: BaseResponse<SignInBean>) {
+//                    liveData_signin.postValue(baseResponse)
+//                }
+//            })
     }
 
     fun getForgot() {

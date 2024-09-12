@@ -36,10 +36,10 @@ interface ApiService {
 
     //登录
     @POST("auth/sign-in")
-    fun signInPost(
+    suspend fun signInPost(
         @Body requestBody: RequestBody,
         @HeaderMap headers: Map<String, String>
-    ): Observable<BaseResponse<SignInBean>>
+    ): BaseResponse<SignInBean>
 
     //注册
     @POST("auth/register")
