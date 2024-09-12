@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shizq.bika.BR
+import com.shizq.bika.BuildConfig
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.bean.InitBean
@@ -37,7 +38,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     }
 
     override fun initData() {
-        showProgressBar(true,"获取版本信息...")//加载时 view不可点击
+        if (BuildConfig.DEBUG) return
+        showProgressBar(true, "获取版本信息...")//加载时 view不可点击
         viewModel.getLatestVersion()//版本检测
     }
 
@@ -59,13 +61,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
                         startActivity(intent)
                         finish()
                     }
-                    .setNegativeButton("取消"){_, _ ->
-                        showProgressBar(true,"获取节点信息...")
+                    .setNegativeButton("取消") { _, _ ->
+                        showProgressBar(true, "获取节点信息...")
                         viewModel.getInit()// 网络请求获取 节点一节点二
                     }
                     .show()
             } else {
-                showProgressBar(true,"获取节点信息...")
+                showProgressBar(true, "获取节点信息...")
                 viewModel.getInit()// 网络请求获取 节点一节点二
             }
         }
@@ -108,14 +110,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
 
         //网络重试点击事件监听
         binding.loadLayout.setOnClickListener {
-            showProgressBar(true,"获取节点信息...")
+            showProgressBar(true, "获取节点信息...")
             viewModel.getInit()
         }
     }
 
-    private fun showProgressBar(show: Boolean, string: String){
-        binding.loadProgressBar.visibility=if (show)View.VISIBLE else View.GONE
-        binding.loadError.visibility=if (show)View.GONE else View.VISIBLE
+    private fun showProgressBar(show: Boolean, string: String) {
+        binding.loadProgressBar.visibility = if (show) View.VISIBLE else View.GONE
+        binding.loadError.visibility = if (show) View.GONE else View.VISIBLE
         binding.loadText.text = string
         binding.loadLayout.isEnabled = !show
     }
