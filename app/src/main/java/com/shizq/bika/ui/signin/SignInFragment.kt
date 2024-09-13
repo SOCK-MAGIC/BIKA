@@ -23,12 +23,13 @@ import com.shizq.bika.base.BaseFragment
 import com.shizq.bika.databinding.FragmentSigninBinding
 import com.shizq.bika.ui.main.MainActivity
 import com.shizq.bika.utils.SPUtil
+import dagger.hilt.android.AndroidEntryPoint
 
 
 /**
  * 登录
  */
-
+@AndroidEntryPoint
 class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -34,12 +34,12 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.shizq.bika.R
 
 @Composable
 fun LoginScreen(modifier: Modifier = Modifier) {
-    val viewModel = viewModel<LoginViewModel>()
+    val viewModel = hiltViewModel<LoginViewModel>()
     LoginContent(
         login = viewModel::login
     )
