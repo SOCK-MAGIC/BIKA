@@ -8,7 +8,7 @@ class JvmLibraryConventionPlugin : Plugin<Project> {
         with(target) {
             with(pluginManager) {
                 apply("org.jetbrains.kotlin.jvm")
-                apply("bika.android.lint")
+//                apply("bika.android.lint")
             }
             configureKotlin<KotlinJvmProjectExtension>()
         }
