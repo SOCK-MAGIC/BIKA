@@ -2,8 +2,8 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.bika.android.application)
     alias(libs.plugins.bika.android.compose)
+    alias(libs.plugins.bika.hilt)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -65,6 +65,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.network)
+
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -122,4 +124,5 @@ dependencies {
 //    implementation(libs.androidx.window.core)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.iconsExtended)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

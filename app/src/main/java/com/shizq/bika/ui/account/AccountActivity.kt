@@ -7,8 +7,10 @@ import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityAccountBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 //登录注册
+@AndroidEntryPoint
 class AccountActivity : BaseActivity<ActivityAccountBinding, AccountViewModel>() {
 
     override fun initContentView(savedInstanceState: Bundle?): Int {
