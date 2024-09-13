@@ -13,10 +13,8 @@ import io.ktor.client.plugins.addDefaultResponseValidation
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Dns
-import okhttp3.ExperimentalOkHttpApi
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import javax.inject.Singleton
@@ -24,22 +22,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 internal class NetworkModule {
-    @OptIn(ExperimentalSerializationApi::class)
     @Provides
     @Singleton
-    fun provideNetworkJson(): Json = trace("AsJson") {
-        Json {
-            prettyPrint = true
-            ignoreUnknownKeys = true
-            // 使用默认值覆盖 null
-            coerceInputValues = true
-            prettyPrintIndent = "  "
-        }
-    }
-
-    @Provides
-    @Singleton
-    fun okHttpCallFactory(): OkHttpClient = trace("NiaOkHttpClient") {
+    fun okHttpCallFactory(): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
             .dns { Dns.SYSTEM.lookup("172.67.194.19") + Dns.SYSTEM.lookup("104.21.20.188") }
             .addInterceptor(

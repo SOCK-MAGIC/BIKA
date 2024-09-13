@@ -7,37 +7,33 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
+import androidx.datastore.dataStoreFile
+import com.shizq.bika.core.datastore.UserPreferencesSerializer
+import com.shizq.bika.core.datastore.model.UserPreferences
+import com.shizq.bika.core.network.Dispatcher
+import com.shizq.bika.core.network.BikaDispatchers.IO
+import com.shizq.bika.core.network.di.ApplicationScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.json.Json
 
 @Module
 @InstallIn(SingletonComponent::class)
 class DataStoreModule {
     @Provides
     @Singleton
-    internal fun providesAsCookieStoreDataStore(
+    internal fun providesUserPreferencesDataStore(
         @ApplicationContext context: Context,
-        @Dispatcher(AsDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+        @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
         @ApplicationScope scope: CoroutineScope,
-        asCookieStoreSerializer: AsCookieStoreSerializer,
-    ): DataStore<AsCookieStore> =
+        userPreferencesSerializer: UserPreferencesSerializer,
+    ): DataStore<UserPreferences> =
         DataStoreFactory.create(
-            serializer = asCookieStoreSerializer,
+            serializer = userPreferencesSerializer,
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
         ) {
-            context.dataStoreFile("as_cookie.pb")
-        }
-
-    @Provides
-    @Singleton
-    internal fun providesUsersDataStore(
-        @ApplicationContext context: Context,
-        @Dispatcher(AsDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-        @ApplicationScope scope: CoroutineScope,
-        usersSerializer: UsersSerializer,
-    ): DataStore<Users> =
-        DataStoreFactory.create(
-            serializer = usersSerializer,
-            scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
-        ) {
-            context.dataStoreFile("users.pb")
+            context.dataStoreFile("user_preferences.pb")
         }
 }
