@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
-import com.shizq.bika.core.network.ktor.BikaNetworkApi
+import com.shizq.bika.core.network.api.BikaNetworkApi
 import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +24,8 @@ class LoginViewModel @Inject constructor(private val api: BikaNetworkApi) : View
         }.asJsonObject.toString()
             .toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull())
         viewModelScope.launch {
-            val data = RetrofitUtil.service.signInPost(body, headers).data
-            Log.d("login", "login: $data")
+//            val data = RetrofitUtil.service.signInPost(body, headers).data
+//            Log.d("login", "login: $data")
             api.login(account, password, headers)
         }
     }
