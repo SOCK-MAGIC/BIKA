@@ -36,14 +36,13 @@ import com.shizq.bika.utils.*
 import me.jingbin.library.skeleton.ByRVItemSkeletonScreen
 import me.jingbin.library.skeleton.BySkeleton
 
-
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private lateinit var adapter_categories: CategoriesAdapter
     private lateinit var skeletonScreen: ByRVItemSkeletonScreen
 
     private val ERROR_PROFILE = 0
     private val ERROR_CATEGORIES = 1
-    private var ERROR = this.ERROR_PROFILE //这里标记哪个网络请求异常
+    private var ERROR = this.ERROR_PROFILE // 这里标记哪个网络请求异常
 
     override fun initContentView(savedInstanceState: Bundle?): Int {
         return R.layout.activity_main
@@ -61,33 +60,33 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.mainRv.layoutManager = GridLayoutManager(
             this@MainActivity,
             if (getWindowWidth() > getWindowHeight()) 6 else 3
-        )//初步适配平板（没卵用
+        ) // 初步适配平板（没卵用
         skeletonScreen = BySkeleton
             .bindItem(binding.mainRv)
-            .adapter(adapter_categories)// 必须设置adapter，且在此之前不要设置adapter
-            .load(R.layout.item_categories_skeleton)// item骨架图
-            .duration(2000)// 微光一次显示时间
-            .count(18)// item个数
+            .adapter(adapter_categories) // 必须设置adapter，且在此之前不要设置adapter
+            .load(R.layout.item_categories_skeleton) // item骨架图
+            .duration(2000) // 微光一次显示时间
+            .count(18) // item个数
             .show()
 
         initListener()
 
         if (adapter_categories.data.size < 1) {
-            //防止重复加载
+            // 防止重复加载
             showProgressBar(true, "检查账号信息...")
-            viewModel.getProfile() //先获得个人信息
+            viewModel.getProfile() // 先获得个人信息
         }
     }
 
     override fun onTopResumedActivityChanged(isTopResumedActivity: Boolean) {
         super.onTopResumedActivityChanged(isTopResumedActivity)
-        //页面显示时调用
+        // 页面显示时调用
         if (isTopResumedActivity) {
-            initProfile()//显示用户信息
+            initProfile() // 显示用户信息
         }
     }
 
-    //显示用户信息
+    // 显示用户信息
     private fun initProfile() {
         viewModel.fileServer = SPUtil.get("user_fileServer", "") as String
         viewModel.path = SPUtil.get("user_path", "") as String
@@ -98,44 +97,54 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         val exp = SPUtil.get("user_exp", 0) as Int
         val slogan = SPUtil.get("user_slogan", "") as String
 
-        //头像
+        // 头像
         Glide.with(this@MainActivity)
             .load(GlideUrlNewKey(viewModel.fileServer, viewModel.path))
             .centerCrop()
             .placeholder(R.drawable.placeholder_avatar_2)
             .into(
                 binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_imageView) as ImageView
+                    .findViewById<ImageView>(R.id.main_drawer_imageView)!!
             )
-        //头像框
+        // 头像框
         Glide.with(this@MainActivity)
             .load(character)
             .into(
                 binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_character) as ImageView
+                    .findViewById<ImageView>(R.id.main_drawer_character)!!
             )
-        //用户名
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_name) as TextView).text = name
-        //等级
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_user_ver) as TextView).text =
+        // 用户名
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_name)!!
+            ).text = name
+        // 等级
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_user_ver)!!
+            ).text =
             "Lv.$level($exp/${exp(level)})"
-        //性别
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_gender) as TextView).text =
+        // 性别
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_gender)!!
+            ).text =
             when (gender) {
                 "m" -> "(绅士)"
                 "f" -> "(淑女)"
                 else -> "(机器人)"
             }
-        //title
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_title) as TextView).text =
+        // title
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_title)!!
+            ).text =
             SPUtil.get("user_title", "萌新") as String
-        //自我介绍 签名
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_slogan) as TextView).text =
+        // 自我介绍 签名
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_slogan)!!
+            ).text =
             if (slogan == "") resources.getString(R.string.slogan) else slogan
     }
 
@@ -144,7 +153,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.mainNavView.setCheckedItem(R.id.drawer_menu_home)
     }
 
-    //toolbar菜单
+    // toolbar菜单
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_main, menu)
         return true
@@ -159,9 +168,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         return super.onOptionsItemSelected(item)
     }
 
-
     private fun initListener() {
-        //侧滑
+        // 侧滑
         binding.drawerLayout.addDrawerListener(
             ActionBarDrawerToggle(
                 this@MainActivity,
@@ -171,27 +179,37 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 R.string.drawer_hide
             )
         )
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_modify) as TextView).setOnClickListener {
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_modify)!!
+            ).setOnClickListener {
             startActivity(Intent(this@MainActivity, UserActivity::class.java))
         }
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_punch_in) as TextView).setOnClickListener {
-            (binding.mainNavView.getHeaderView(0)
-                .findViewById(R.id.main_drawer_punch_in) as TextView).visibility=View.GONE
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<TextView>(R.id.main_drawer_punch_in)!!
+            ).setOnClickListener {
+            (
+                binding.mainNavView.getHeaderView(0)
+                    .findViewById<TextView>(R.id.main_drawer_punch_in)!!
+                ).visibility = View.GONE
             viewModel.punch_In()
         }
-        (binding.mainNavView.getHeaderView(0)
-            .findViewById(R.id.main_drawer_character) as ImageView).setOnClickListener {
+        (
+            binding.mainNavView.getHeaderView(0)
+                .findViewById<ImageView>(R.id.main_drawer_character)!!
+            ).setOnClickListener {
             if (viewModel.userId != "" && viewModel.fileServer != "") {
-                //判断用户是否登录是否有头像，是就查看头像大图
+                // 判断用户是否登录是否有头像，是就查看头像大图
                 val intent = Intent(this, ImageActivity::class.java)
                 intent.putExtra("fileserver", viewModel.fileServer)
                 intent.putExtra("imageurl", viewModel.path)
                 val options = ActivityOptions.makeSceneTransitionAnimation(
                     this,
-                    (binding.mainNavView.getHeaderView(0)
-                        .findViewById(R.id.main_drawer_imageView) as ImageView),
+                    (
+                        binding.mainNavView.getHeaderView(0)
+                            .findViewById<ImageView>(R.id.main_drawer_imageView)!!
+                        ),
                     "image"
                 )
                 startActivity(intent, options.toBundle())
@@ -209,20 +227,16 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     intent.putExtra("title", "我的收藏")
                     intent.putExtra("value", "我的收藏")
                     startActivity(intent)
-
                 }
                 R.id.drawer_menu_mail -> {
                     startActivity(NotificationsActivity::class.java)
-
                 }
                 R.id.drawer_menu_chat -> {
                     startActivity(MyCommentsActivity::class.java)
-
                 }
                 R.id.drawer_menu_settings -> {
                     startActivity(SettingsActivity::class.java)
                 }
-
             }
             true
         }
@@ -231,7 +245,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             val intent = Intent(this, ComicListActivity::class.java)
             val datas = adapter_categories.getItemData(position)
             when (datas.imageRes) {
-                //根据ResId来判断 以后改
+                // 根据ResId来判断 以后改
                 R.drawable.bika -> {
                     startActivity(Intent(this, CollectionsActivity::class.java))
                 }
@@ -286,9 +300,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     }
                 }
             }
-
         }
-        //网络重试点击事件监听
+        // 网络重试点击事件监听
         binding.mainLoadLayout.setOnClickListener {
             skeletonScreen.show()
             if (ERROR == ERROR_PROFILE) {
@@ -303,7 +316,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
 
     @SuppressLint("SetTextI18n")
     override fun initViewObservable() {
-        //user信息
+        // user信息
         viewModel.liveData_profile.observe(this) {
             if (it.code == 200) {
                 var fileServer = ""
@@ -311,7 +324,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 var character = ""
                 viewModel.userId = it.data.user._id
 
-                if (it.data.user.avatar != null) {//头像
+                if (it.data.user.avatar != null) { // 头像
                     fileServer = it.data.user.avatar.fileServer
                     path = it.data.user.avatar.path
                     Glide.with(this@MainActivity)
@@ -325,59 +338,71 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                         .placeholder(R.drawable.placeholder_avatar_2)
                         .into(
                             binding.mainNavView.getHeaderView(0)
-                                .findViewById(R.id.main_drawer_imageView) as ImageView
+                                .findViewById<ImageView>(R.id.main_drawer_imageView)!!
                         )
                 }
-                if (it.data.user.character != null) { //头像框 新用户没有
+                if (it.data.user.character != null) { // 头像框 新用户没有
 
                     character = it.data.user.character
                     Glide.with(this@MainActivity)
                         .load(character)
                         .into(
                             binding.mainNavView.getHeaderView(0)
-                                .findViewById(R.id.main_drawer_character) as ImageView
+                                .findViewById<ImageView>(R.id.main_drawer_character)!!
                         )
                 }
 
                 val name = it.data.user.name
-                (binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_name) as TextView).text = name //用户名
+                (
+                    binding.mainNavView.getHeaderView(0)
+                        .findViewById<TextView>(R.id.main_drawer_name)!!
+                    ).text = name // 用户名
 
-                val level = it.data.user.level//等级
-                (binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_user_ver) as TextView).text =
-                    "Lv.${it.data.user.level}(${it.data.user.exp}/${exp(it.data.user.level)})"//等级
+                val level = it.data.user.level // 等级
+                (
+                    binding.mainNavView.getHeaderView(0)
+                        .findViewById<TextView>(R.id.main_drawer_user_ver)!!
+                    ).text =
+                    "Lv.${it.data.user.level}(${it.data.user.exp}/${exp(it.data.user.level)})" // 等级
 
-                (binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_title) as TextView).text = it.data.user.title//称号
+                (
+                    binding.mainNavView.getHeaderView(0)
+                        .findViewById<TextView>(R.id.main_drawer_title)!!
+                    ).text = it.data.user.title // 称号
 
-                //性别
+                // 性别
                 val gender = it.data.user.gender
-                (binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_gender) as TextView).text =
+                (
+                    binding.mainNavView.getHeaderView(0)
+                        .findViewById<TextView>(R.id.main_drawer_gender)!!
+                    ).text =
                     when (it.data.user.gender) {
                         "m" -> "(绅士)"
                         "f" -> "(淑女)"
                         else -> "(机器人)"
                     }
 
-                //用户签名
+                // 用户签名
                 val slogan = if (it.data.user.slogan.isNullOrBlank()) "" else it.data.user.slogan
-                (binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_slogan) as TextView).text =
+                (
+                    binding.mainNavView.getHeaderView(0)
+                        .findViewById<TextView>(R.id.main_drawer_slogan)!!
+                    ).text =
                     if (slogan == "") resources.getString(R.string.slogan) else slogan
 
-                if (!it.data.user.isPunched) {//当前用户未打卡时
-                    //是否设置自动打卡
+                if (!it.data.user.isPunched) { // 当前用户未打卡时
+                    // 是否设置自动打卡
                     if (SPUtil.get("setting_punch", true) as Boolean) {
                         viewModel.punch_In()
                     } else {
-                        (binding.mainNavView.getHeaderView(0)
-                            .findViewById(R.id.main_drawer_punch_in) as TextView).visibility=View.VISIBLE
+                        (
+                            binding.mainNavView.getHeaderView(0)
+                                .findViewById<TextView>(R.id.main_drawer_punch_in)!!
+                            ).visibility = View.VISIBLE
                     }
                 }
 
-                //存一下当前用户信息 用于显示个人评论
+                // 存一下当前用户信息 用于显示个人评论
                 SPUtil.put("user_fileServer", fileServer)
                 SPUtil.put("user_path", path)
                 SPUtil.put("user_character", character)
@@ -393,16 +418,15 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 SPUtil.put("user_verified", it.data.user.verified)
 
                 if (viewModel.cList().size <= 10) {
-                    //更换头像会重新加载个人信息 防止重复加载
+                    // 更换头像会重新加载个人信息 防止重复加载
                     showProgressBar(true, "获取主页信息...")
-                    viewModel.getCategories() //获得主页信息
+                    viewModel.getCategories() // 获得主页信息
                 }
-
             } else if (it.code == 401) {
                 if (it.error == "1005") {
-                    //token 过期 进行自动登录
+                    // token 过期 进行自动登录
                     showProgressBar(true, "账号信息已过期，进行自动登录...")
-                    viewModel.getSignIn()//自动登录 重新获取token
+                    viewModel.getSignIn() // 自动登录 重新获取token
                 }
             } else {
                 ERROR = this.ERROR_PROFILE
@@ -413,24 +437,23 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
 
-        //自动登录 只要是网络错误请求失败全跳转到登录页
+        // 自动登录 只要是网络错误请求失败全跳转到登录页
         viewModel.liveData_signin.observe(this) {
             if (it.code == 200) {
-                //登录成功 保存token
+                // 登录成功 保存token
 //                MmkvUtils.putSet("token", bean.data.token)
                 SPUtil.put("token", it.data.token)
                 showProgressBar(true, "登录成功，检查账号信息...")
-                viewModel.getProfile() //重新加载数据
-
+                viewModel.getProfile() // 重新加载数据
             } else if (it.code == 400) {
                 if (it.error == "1004") {
-                    //登录失败 账号或密码错误 跳转到登录页面AccountActivity
+                    // 登录失败 账号或密码错误 跳转到登录页面AccountActivity
                     Toast.makeText(this, "自动登录失败 账号或密码错误", Toast.LENGTH_SHORT).show()
                     startActivity(AccountActivity::class.java)
                     finish()
                 }
             } else {
-                //网络错误 登录失败 跳转到登录页面AccountActivity
+                // 网络错误 登录失败 跳转到登录页面AccountActivity
                 Toast.makeText(
                     this,
                     "自动登录失败code=${it.code} error=${it.error} message=${it.message}",
@@ -441,8 +464,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             }
         }
 
-
-        //加载主页
+        // 加载主页
         viewModel.getCategories()
         viewModel.liveData.observe(this) {
             skeletonScreen.hide()
@@ -452,7 +474,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 viewModel.categoriesList = viewModel.cList()
                 viewModel.categoriesList.addAll(it.data.categories)
                 if (adapter_categories.data.size < 1) {
-                    //防止重复添加
+                    // 防止重复添加
                     adapter_categories.addData(viewModel.categoriesList)
                 }
             } else {
@@ -462,28 +484,28 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                     "网络错误，点击重试\ncode=${it.code} error=${it.error} message=${it.message}"
                 )
             }
-
         }
 
-
-        //打卡签到
+        // 打卡签到
         viewModel.liveData_punch_in.observe(this) {
             if (it.code == 200) {
-                //打卡成功 手动加经验来保存
+                // 打卡成功 手动加经验来保存
                 var exp = SPUtil.get("user_exp", 0) as Int
                 var level = SPUtil.get("user_level", 1) as Int
                 exp += 10
                 if (exp > exp(level)) {
                     level += 1
                 }
-                //保存
+                // 保存
                 SPUtil.put("user_level", level)
                 SPUtil.put("user_exp", exp)
                 initProfile()
                 Toast.makeText(this, "自动打卡成功", Toast.LENGTH_SHORT).show()
             } else {
-                (binding.mainNavView.getHeaderView(0)
-                    .findViewById(R.id.main_drawer_punch_in) as TextView).visibility=View.VISIBLE
+                (
+                    binding.mainNavView.getHeaderView(0)
+                        .findViewById<TextView>(R.id.main_drawer_punch_in)!!
+                    ).visibility = View.VISIBLE
                 Toast.makeText(
                     this,
                     "打卡失败message=${it.message} code=${it.code} error=${it.error}",
@@ -491,7 +513,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 ).show()
             }
         }
-
     }
 
     private fun showProgressBar(show: Boolean, string: String) {
@@ -502,7 +523,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     private fun exp(i: Int): Int {
-        //等级计算是反编译源码找到的
+        // 等级计算是反编译源码找到的
         return 100 * i * i + (100 * i)
     }
 
