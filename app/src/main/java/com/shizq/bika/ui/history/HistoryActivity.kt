@@ -11,13 +11,13 @@ import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.HistoryAdapter
 import com.shizq.bika.base.BaseActivity
-import com.shizq.bika.databinding.ActivityHistoryBinding
 import com.shizq.bika.database.model.HistoryEntity
+import com.shizq.bika.databinding.ActivityHistoryBinding
 import com.shizq.bika.ui.comicinfo.ComicInfoActivity
 import kotlinx.coroutines.launch
 
 class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>() {
-    private lateinit var mAdapter: HistoryAdapter
+    private val mAdapter: HistoryAdapter = HistoryAdapter()
 
     override fun initContentView(savedInstanceState: Bundle?): Int {
         return R.layout.activity_history
@@ -32,14 +32,11 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>()
         setSupportActionBar(binding.historyInclude.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        mAdapter = HistoryAdapter()
         binding.historyRv.layoutManager = LinearLayoutManager(this)
         binding.historyRv.adapter = mAdapter
-
-
     }
 
-    //toolbar菜单
+    // toolbar菜单
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_history, menu)
         return true
@@ -67,7 +64,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>()
     }
 
     override fun initViewObservable() {
-        //第一页用livedata 有数据清除原数据重新加载
+        // 第一页用livedata 有数据清除原数据重新加载
         viewModel.firstPageHistoryEntityLive.observe(this) {
             mAdapter.clear()
             viewModel.page = 0
@@ -75,7 +72,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>()
             mAdapter.addData(it)
         }
 
-        //除了第一页后面进行每20条加载更多
+        // 除了第一页后面进行每20条加载更多
         binding.historyRv.setOnLoadMoreListener {
             lifecycleScope.launch {
                 val data = viewModel.getAllHistory()
@@ -86,11 +83,10 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>()
                     binding.historyRv.loadMoreEnd()
                 }
             }
-
         }
 
-        //点击跳转
-        binding.historyRv.setOnItemClickListener { v, position ->
+        // 点击跳转
+        binding.historyRv.setOnItemClickListener { _, position ->
             val data = mAdapter.getItemData(position)
             val intent = Intent(this, ComicInfoActivity::class.java)
             intent.putExtra("id", data.comic_or_game_id)
@@ -102,7 +98,7 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>()
             startActivity(intent)
         }
 
-        //长按提示删除
+        // 长按提示删除
         binding.historyRv.setOnItemLongClickListener { v, position ->
             MaterialAlertDialogBuilder(this)
                 .setTitle("删除")
@@ -132,7 +128,5 @@ class HistoryActivity : BaseActivity<ActivityHistoryBinding, HistoryViewModel>()
                 .show()
             return@setOnItemLongClickListener true
         }
-
-
     }
 }
