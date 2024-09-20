@@ -128,12 +128,6 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
         }
     }
 
-    private fun hideKeyboard() {
-        val view = binding.searchView
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
-    }
-
     private fun showKeyboard() {
         val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.searchView, 0)

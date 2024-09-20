@@ -46,12 +46,6 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    fun deleteSearch(vararg searchEntities: SearchEntity) {
-        viewModelScope.launch {
-            searchRepository.deleteSearch(*searchEntities)
-        }
-    }
-
     fun deleteAllSearch() {
         viewModelScope.launch {
             searchRepository.deleteAllSearch()
