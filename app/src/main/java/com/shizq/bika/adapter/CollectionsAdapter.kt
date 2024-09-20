@@ -11,9 +11,9 @@ import com.shizq.bika.R
 import com.shizq.bika.bean.CollectionsBean
 import com.shizq.bika.widget.SpacesItemDecoration
 
-class CollectionsAdapter (val context: Context) : RecyclerView.Adapter<CollectionsAdapter.ViewHolder>() {
+class CollectionsAdapter(val context: Context) : RecyclerView.Adapter<CollectionsAdapter.ViewHolder>() {
 
-    private var datas= ArrayList<CollectionsBean.Collection>()
+    private var datas = ArrayList<CollectionsBean.Collection>()
 
     fun addData(data: List<CollectionsBean.Collection>) {
         datas.clear()
@@ -33,30 +33,24 @@ class CollectionsAdapter (val context: Context) : RecyclerView.Adapter<Collectio
         return datas.size
     }
 
-
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        private var mTextView: TextView
-        private var text_null: TextView
-        private var mRecyclerView: RecyclerView
-        private var adapter: CollectionsItemAdapter
+        private val mTextView: TextView = view.findViewById(R.id.item_collections_title)
+        private val text_null: TextView = view.findViewById(R.id.item_collections_null)
+        private val mRecyclerView: RecyclerView = view.findViewById(R.id.item_collections_rv)
+        private val adapter: CollectionsItemAdapter = CollectionsItemAdapter(context)
 
         init {
-            mTextView = view.findViewById(R.id.item_collections_title)
-            text_null = view.findViewById(R.id.item_collections_null)
-            mRecyclerView = view.findViewById(R.id.item_collections_rv)
-            adapter = CollectionsItemAdapter(context)
-            val linearLayoutManager=LinearLayoutManager(context)
-            linearLayoutManager.orientation=LinearLayoutManager.HORIZONTAL
+            val linearLayoutManager = LinearLayoutManager(context)
+            linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
             mRecyclerView.layoutManager = linearLayoutManager
             mRecyclerView.adapter = adapter
-
         }
 
         fun setData(item: CollectionsBean.Collection) {
             mTextView.text = item.title
             if (item.comics.isEmpty()) {
-                text_null.visibility=View.VISIBLE
+                text_null.visibility = View.VISIBLE
             }
             mRecyclerView.addItemDecoration(
                 SpacesItemDecoration(
@@ -65,9 +59,6 @@ class CollectionsAdapter (val context: Context) : RecyclerView.Adapter<Collectio
                 )
             )
             adapter.addNewData(item.comics)
-
         }
-
     }
-
 }

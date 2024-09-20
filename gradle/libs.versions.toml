@@ -63,6 +63,7 @@ androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx"
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxCoreSplashscreen" }
 
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
+androidx-compose-ui-viewbinding = { group = "androidx.compose.ui", name = "ui-viewbinding" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
 androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation" }
 androidx-compose-foundation-layout = { group = "androidx.compose.foundation", name = "foundation-layout" }
@@ -151,17 +152,17 @@ module-graph = { id = "com.jraska.module.graph.assertion", version.ref = "module
 room = { id = "androidx.room", version.ref = "androidxRoom" }
 roborazzi = { id = "io.github.takahirom.roborazzi", version.ref = "roborazzi" }
 
-bika-android-compose = { id = "bika.android.compose", version = "unspecified" }
-bika-android-application = { id = "bika.android.application", version = "unspecified" }
-bika-android-jacoco = { id = "bika.android.jacoco", version = "unspecified" }
-bika-android-library = { id = "bika.android.library", version = "unspecified" }
-bika-android-feature = { id = "bika.android.feature", version = "unspecified" }
-bika-android-test = { id = "bika.android.test", version = "unspecified" }
-bika-android-room = { id = "bika.android.room", version = "unspecified" }
-bika-android-lint = { id = "bika.android.lint", version = "unspecified" }
-bika-jvm-library = { id = "bika.jvm.library", version = "unspecified" }
-bika-android-application-flavors = { id = "bika.android.application.flavors", version = "unspecified" }
-bika-hilt = { id = "bika.hilt", version = "unspecified" }
-bika-decompose = { id = "bika.decompose", version = "unspecified" }
-bika-detekt = { id = "bika.detekt", version = "unspecified" }
-bika-android-testoptions = { id = "bika.android.testoptions", version = "unspecified" }
+bika-android-compose = { id = "bika.android.compose" }
+bika-android-application = { id = "bika.android.application" }
+bika-android-jacoco = { id = "bika.android.jacoco" }
+bika-android-library = { id = "bika.android.library" }
+bika-android-feature = { id = "bika.android.feature" }
+bika-android-test = { id = "bika.android.test" }
+bika-android-room = { id = "bika.android.room" }
+bika-android-lint = { id = "bika.android.lint" }
+bika-jvm-library = { id = "bika.jvm.library" }
+bika-android-application-flavors = { id = "bika.android.application.flavors" }
+bika-hilt = { id = "bika.hilt" }
+bika-decompose = { id = "bika.decompose" }
+bika-detekt = { id = "bika.detekt" }
+bika-android-testoptions = { id = "bika.android.testoptions" }

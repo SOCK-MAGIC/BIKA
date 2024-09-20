@@ -112,6 +112,7 @@ dependencies {
     implementation(libs.commons.codec)
 
     implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.ui.viewbinding)
     implementation(libs.androidx.compose.material3.adaptive)
     implementation(libs.androidx.compose.material3.adaptive.layout)
     implementation(libs.androidx.compose.material3.adaptive.navigation)
