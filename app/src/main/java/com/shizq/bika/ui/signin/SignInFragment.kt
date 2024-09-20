@@ -31,19 +31,6 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 @AndroidEntryPoint
 class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        super.onCreateView(inflater, container, savedInstanceState)
-        return ComposeView(requireContext()).apply {
-            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-            setContent {
-                LoginScreen()
-            }
-        }
-    }
 
     override fun initContentView(
         inflater: LayoutInflater?,
