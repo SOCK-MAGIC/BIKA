@@ -77,7 +77,7 @@ interface ApiService {
 
     //分类
     @GET("categories")
-    suspend fun categoriesGet(@HeaderMap headers: Map<String, String>): BaseResponse<CategoriesBean>
+    fun categoriesGet(@HeaderMap headers: Map<String, String>): Observable<BaseResponse<CategoriesBean>>
 
     //骑士榜
     @GET("comics/knight-leaderboard")

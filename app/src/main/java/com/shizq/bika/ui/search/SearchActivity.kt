@@ -11,8 +11,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity
-import com.shizq.bika.databinding.ActivitySearchBinding
 import com.shizq.bika.database.model.SearchEntity
+import com.shizq.bika.databinding.ActivitySearchBinding
 import com.shizq.bika.ui.comiclist.ComicListActivity
 
 class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
@@ -27,11 +27,9 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
 
     override fun initData() {
         setSupportActionBar(binding.toolbar)
-        viewModel.getKey()//显示搜索推荐词
+        viewModel.getKey() // 显示搜索推荐词
         binding.searchView.requestFocus()
         initListener()
-
-
     }
 
     private fun initListener() {
@@ -41,16 +39,15 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
 
         binding.searchView.setOnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
-                //监听回车键
-                val searchEntity= SearchEntity(binding.searchView.text.toString())
-                viewModel.insertSearch(searchEntity)//添加搜索记录
+                // 监听回车键
+                val searchEntity = SearchEntity(binding.searchView.text.toString())
+                viewModel.insertSearch(searchEntity) // 添加搜索记录
 
                 val intent = Intent(this@SearchActivity, ComicListActivity::class.java)
                 intent.putExtra("tag", "search")
                 intent.putExtra("title", binding.searchView.text.toString())
                 intent.putExtra("value", binding.searchView.text.toString())
                 startActivity(intent)
-
             }
             false
         }
@@ -59,11 +56,11 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
             binding.searchView.setText("")
         }
 
-        binding.searchKeyboard.setOnClickListener{
+        binding.searchKeyboard.setOnClickListener {
             showKeyboard()
         }
         binding.searchHistoryListClear.setOnClickListener {
-            //提示框 清空全部
+            // 提示框 清空全部
             MaterialAlertDialogBuilder(this)
                 .setTitle("确定清空全部历史记录吗")
                 .setPositiveButton("确定") { _, _ ->
@@ -71,7 +68,6 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                 }
                 .setNegativeButton("取消", null)
                 .show()
-
         }
     }
 
@@ -85,13 +81,13 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                 for (i in tags) {
                     val chip = Chip(this@SearchActivity)
                     chip.text = i
-                    chip.setEnsureMinTouchTargetSize(false)//去除视图的顶部和底部的额外空间
+                    chip.setEnsureMinTouchTargetSize(false) // 去除视图的顶部和底部的额外空间
 //                        chip.minHeight=0
 
                     binding.searchTagsList.addView(chip)
                     chip.setOnClickListener {
-                        val searchEntity= SearchEntity(i)
-                        viewModel.insertSearch(searchEntity)//添加搜索记录
+                        val searchEntity = SearchEntity(i)
+                        viewModel.insertSearch(searchEntity) // 添加搜索记录
 
                         val intent = Intent(this@SearchActivity, ComicListActivity::class.java)
                         intent.putExtra("tag", "search")
@@ -100,12 +96,11 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                         startActivity(intent)
                     }
                 }
-
             }
         }
 
-        viewModel.allSearchLive.observe(this){
-            //搜索历史
+        viewModel.allSearchLive.observe(this) {
+            // 搜索历史
             if (it.isNotEmpty()) {
                 binding.searchHistoryListLayout.visibility = View.VISIBLE
                 binding.searchHistoryList.removeAllViews()
@@ -113,12 +108,12 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
                 for (i in it) {
                     val chip = Chip(this@SearchActivity)
                     chip.text = i
-                    chip.setEnsureMinTouchTargetSize(false)//去除视图的顶部和底部的额外空间
+                    chip.setEnsureMinTouchTargetSize(false) // 去除视图的顶部和底部的额外空间
 //                        chip.minHeight=0
 
                     binding.searchHistoryList.addView(chip)
                     chip.setOnClickListener {
-                        viewModel.insertSearch(SearchEntity(i))//添加搜索记录
+                        viewModel.insertSearch(SearchEntity(i)) // 添加搜索记录
 
                         val intent = Intent(this@SearchActivity, ComicListActivity::class.java)
                         intent.putExtra("tag", "search")
@@ -140,9 +135,7 @@ class SearchActivity : BaseActivity<ActivitySearchBinding, SearchViewModel>() {
     }
 
     private fun showKeyboard() {
-
-        val imm =getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.searchView, 0)
     }
-
 }

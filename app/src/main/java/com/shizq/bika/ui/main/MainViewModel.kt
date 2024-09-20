@@ -2,6 +2,7 @@ package com.shizq.bika.ui.main
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
@@ -16,6 +17,7 @@ import com.shizq.bika.utils.SPUtil
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
@@ -118,33 +120,25 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
             }.asJsonObject.toString()
         )
         val headers = BaseHeaders("auth/sign-in", "POST").getHeaders()
-//        RetrofitUtil.service.signInPost(body, headers)
-//            .doOnSubscribe(this@MainViewModel)
-//            .subscribe(object : BaseObserver<SignInBean>() {
-//                override fun onSuccess(baseResponse: BaseResponse<SignInBean>) {
-//                    liveData_signin.postValue(baseResponse)
-//                }
-//
-//                override fun onCodeError(baseResponse: BaseResponse<SignInBean>) {
-//                    liveData_signin.postValue(baseResponse)
-//                }
-//            })
+        viewModelScope.launch {
+            RetrofitUtil.service.signInPost(body, headers).let {
+                liveData_signin.postValue(it)
+            }
+        }
     }
 
-    fun getCategories(): Flow<Result<BaseResponse<CategoriesBean>>> {
+    fun getCategories() {
         val headers = BaseHeaders("categories", "GET").getHeaderMapAndToken()
-        return flow { emit(RetrofitUtil.service.categoriesGet(headers)) }
-            .asResult()
-//        RetrofitUtil.service.categoriesGet(headers)
-//            .doOnSubscribe(this@MainViewModel)
-//            .subscribe(object : BaseObserver<CategoriesBean>() {
-//                override fun onSuccess(baseResponse: BaseResponse<CategoriesBean>) {
-//                    liveData.postValue(baseResponse)
-//                }
-//
-//                override fun onCodeError(baseResponse: BaseResponse<CategoriesBean>) {
-//                    liveData.postValue(baseResponse)
-//                }
-//            })
+        RetrofitUtil.service.categoriesGet(headers)
+            .doOnSubscribe(this@MainViewModel)
+            .subscribe(object : BaseObserver<CategoriesBean>() {
+                override fun onSuccess(baseResponse: BaseResponse<CategoriesBean>) {
+                    liveData.postValue(baseResponse)
+                }
+
+                override fun onCodeError(baseResponse: BaseResponse<CategoriesBean>) {
+                    liveData.postValue(baseResponse)
+                }
+            })
     }
 }
