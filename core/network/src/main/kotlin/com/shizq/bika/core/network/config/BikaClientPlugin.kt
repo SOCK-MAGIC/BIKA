@@ -1,4 +1,4 @@
-package com.shizq.bika.core.network.ktor
+package com.shizq.bika.core.network.config
 
 import com.shizq.bika.core.network.model.Box
 import io.ktor.client.plugins.api.createClientPlugin

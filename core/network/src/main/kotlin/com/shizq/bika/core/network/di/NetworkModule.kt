@@ -1,8 +1,8 @@
 package com.shizq.bika.core.network.di
 
 import androidx.tracing.trace
-import com.shizq.bika.core.network.BikaInterceptor
-import com.shizq.bika.core.network.ktor.BikaClientPlugin
+import com.shizq.bika.core.network.config.BikaInterceptor
+import com.shizq.bika.core.network.config.BikaClientPlugin
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

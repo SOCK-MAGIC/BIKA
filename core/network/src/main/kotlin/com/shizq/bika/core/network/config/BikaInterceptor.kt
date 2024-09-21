@@ -1,4 +1,4 @@
-package com.shizq.bika.core.network
+package com.shizq.bika.core.network.config
 
 import com.shizq.bika.core.network.util.API_KEY
 import com.shizq.bika.core.network.util.DIGEST_KEY
@@ -8,7 +8,7 @@ import okhttp3.Interceptor
 import okhttp3.Response
 import java.util.UUID
 
-class BikaInterceptor : Interceptor {
+internal class BikaInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val time = (System.currentTimeMillis() / 1000).toString()

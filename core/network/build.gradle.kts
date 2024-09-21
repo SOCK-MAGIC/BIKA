@@ -12,7 +12,7 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.common)
+    api(projects.core.common)
 
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logging)
