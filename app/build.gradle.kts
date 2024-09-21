@@ -66,8 +66,8 @@ android {
 
 dependencies {
     implementation(projects.core.common)
-    implementation(projects.core.network)
-    implementation(projects.core.datastore)
+    implementation(projects.core.data)
+    implementation(projects.sync.work)
 
     implementation(libs.material)
     implementation(libs.androidx.core.ktx)

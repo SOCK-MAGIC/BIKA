@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.android.material.color.DynamicColors
+import com.shizq.bika.sync.initializers.Sync
 import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.HiltAndroidApp
 
@@ -30,5 +31,6 @@ class BIKAApplication : Application() {
                 else -> AppCompatDelegate.MODE_NIGHT_NO
             }
         )
+        Sync.initialize(this)
     }
 }

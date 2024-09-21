@@ -2,7 +2,6 @@ package com.shizq.bika.core.network.di
 
 import androidx.tracing.trace
 import com.shizq.bika.core.network.BikaInterceptor
-import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.ktor.BikaClientPlugin
 import dagger.Module
 import dagger.Provides
@@ -32,6 +31,12 @@ internal class NetworkModule {
     fun okHttpCallFactory(): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
             .dns { Dns.SYSTEM.lookup("172.67.194.19") + Dns.SYSTEM.lookup("104.21.20.188") }
+            .addInterceptor(BikaInterceptor())
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .build()
     }
 
@@ -44,12 +49,6 @@ internal class NetworkModule {
         HttpClient(OkHttp) {
             engine {
                 preconfigured = okHttpClient
-                addInterceptor(BikaInterceptor())
-                addInterceptor(
-                    HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.BODY
-                    }
-                )
             }
             defaultRequest {
                 url("https://picaapi.picacomic.com/")

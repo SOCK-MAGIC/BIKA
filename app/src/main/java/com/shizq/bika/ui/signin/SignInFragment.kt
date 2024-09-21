@@ -25,7 +25,6 @@ import com.shizq.bika.ui.main.MainActivity
 import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.AndroidEntryPoint
 
-
 /**
  * 登录
  */
