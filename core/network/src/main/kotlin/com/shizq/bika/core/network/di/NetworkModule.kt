@@ -1,8 +1,9 @@
 package com.shizq.bika.core.network.di
 
 import androidx.tracing.trace
+import com.shizq.bika.core.network.BikaInterceptor
 import com.shizq.bika.core.network.BuildConfig
-import com.shizq.bika.core.network.ktor.unwrapResponse
+import com.shizq.bika.core.network.ktor.BikaClientPlugin
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,10 +14,9 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.addDefaultResponseValidation
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.header
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
+import io.ktor.http.contentType
+import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import okhttp3.Dns
@@ -32,21 +32,6 @@ internal class NetworkModule {
     fun okHttpCallFactory(): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
             .dns { Dns.SYSTEM.lookup("172.67.194.19") + Dns.SYSTEM.lookup("104.21.20.188") }
-            .addInterceptor {
-                val result = it.request()
-                    .newBuilder()
-                    .removeHeader("Accept-Charset")
-                    .build()
-                it.proceed(result)
-            }
-            .addInterceptor(
-                HttpLoggingInterceptor()
-                    .apply {
-                        if (BuildConfig.DEBUG) {
-                            setLevel(HttpLoggingInterceptor.Level.BODY)
-                        }
-                    },
-            )
             .build()
     }
 
@@ -55,29 +40,34 @@ internal class NetworkModule {
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
-    ): HttpClient {
-        val client = HttpClient(
-            OkHttp.create { preconfigured = okHttpClient },
-        ) {
-            defaultRequest {
-                url("https://picaapi.picacomic.com")
-                header(
-                    HttpHeaders.ContentType,
-                    ContentType.parse("application/json; charset=UTF-8")
+    ): HttpClient = trace("BikaHttpClient") {
+        HttpClient(OkHttp) {
+            engine {
+                preconfigured = okHttpClient
+                addInterceptor(BikaInterceptor())
+                addInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }
                 )
             }
+            defaultRequest {
+                url("https://picaapi.picacomic.com/")
+                userAgent("okhttp/3.8.1")
+                contentType(ContentType.parse("application/json; charset=UTF-8"))
+            }
             addDefaultResponseValidation()
-            Logging()
             install(ContentNegotiation) {
-                json(json, ContentType.parse("application/vnd.picacomic.com.v1+json"))
+                json(json)
             }
 
             install(HttpRequestRetry) {
                 retryOnServerErrors(maxRetries = 5)
                 exponentialDelay()
             }
-            install(unwrapResponse(json))
+            install(BikaClientPlugin) {
+                transform = json
+            }
         }
-        return client
     }
 }

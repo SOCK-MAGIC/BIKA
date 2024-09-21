@@ -4,5 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferences(
-    val addresses: List<String> = emptyList()
+    val dns: Set<String> = setOf(),
+    val token: String = "",
 )

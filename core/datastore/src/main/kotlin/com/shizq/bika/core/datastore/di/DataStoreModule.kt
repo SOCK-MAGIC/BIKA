@@ -1,23 +1,22 @@
 package com.shizq.bika.core.datastore.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.shizq.bika.core.datastore.UserPreferencesSerializer
 import com.shizq.bika.core.datastore.model.UserPreferences
-import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.BikaDispatchers.IO
+import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.di.ApplicationScope
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.serialization.json.Json
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)

@@ -111,7 +111,7 @@ fun LoginContent(
         }
         Spacer(Modifier.weight(1f))
         ExtendedFloatingActionButton(
-            onClick = {},
+            onClick = { login(account, password) },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("登录", fontSize = 16.sp)
