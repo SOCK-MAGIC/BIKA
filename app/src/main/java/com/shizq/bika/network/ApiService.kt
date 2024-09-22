@@ -15,13 +15,6 @@ interface ApiService {
     @GET("api/v0.1/apps/shizq123hh/bika/distribution_groups/Release/releases/latest")
     fun updateGet(): Observable<UpdateBean>
 
-    //平台 info 不清楚用途
-    @GET("init")
-    fun picaInitGet(
-        @Query("platform") platform: String,
-        @HeaderMap headers: Map<String, String>
-    ): Observable<PicaInitBean>
-
     //用户个人信息
     @GET("users/profile")
     fun profileGet(

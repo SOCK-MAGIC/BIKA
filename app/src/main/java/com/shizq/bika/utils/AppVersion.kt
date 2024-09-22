@@ -25,7 +25,6 @@ class AppVersion {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             packageManager.getPackageInfo(packageName, PackageManager.PackageInfoFlags.of(0))
         } else {
-            @Suppress("DEPRECATION")
             packageManager.getPackageInfo(packageName, 0)
         }
     }
