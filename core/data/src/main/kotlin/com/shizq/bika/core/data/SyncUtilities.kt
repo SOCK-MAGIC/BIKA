@@ -30,7 +30,7 @@ interface Syncable {
  * Attempts [block], returning a successful [Result] if it succeeds, otherwise a [Result.Failure]
  * taking care not to break structured concurrency
  */
-private suspend fun <T> suspendRunCatching(block: suspend () -> T): Result<T> = try {
+internal suspend fun <T> suspendRunCatching(block: suspend () -> T): Result<T> = try {
     Result.success(block())
 } catch (cancellationException: CancellationException) {
     throw cancellationException

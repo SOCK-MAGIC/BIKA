@@ -9,6 +9,7 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
 import com.shizq.bika.core.data.Synchronizer
+import com.shizq.bika.core.data.repository.DailyTaskRepository
 import com.shizq.bika.core.network.BikaDispatchers.IO
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.sync.initializers.SyncConstraints
@@ -17,6 +18,8 @@ import com.shizq.bika.sync.status.SyncSubscriber
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
 /**
@@ -29,6 +32,7 @@ internal class SyncWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val syncSubscriber: SyncSubscriber,
+    private val dailyTaskRepository: DailyTaskRepository,
 ) : CoroutineWorker(appContext, workerParams), Synchronizer {
 
     override suspend fun getForegroundInfo(): ForegroundInfo =
@@ -37,8 +41,9 @@ internal class SyncWorker @AssistedInject constructor(
     override suspend fun doWork(): Result = withContext(ioDispatcher) {
         traceAsync("Sync", 0) {
             syncSubscriber.subscribe()
-
-            if (true) {
+            val syncedSuccessfully = awaitAll(async { dailyTaskRepository.sync() })
+                .all { it }
+            if (syncedSuccessfully) {
                 Result.success()
             } else {
                 Result.retry()

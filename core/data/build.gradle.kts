@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.bika.android.library)
     alias(libs.plugins.bika.hilt)
-    id("kotlinx-serialization")
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {

@@ -14,4 +14,10 @@ class BikaPreferencesDataSource @Inject constructor(
             it.copy(token = token)
         }
     }
+
+    suspend fun setResolveAddress(addresses: Set<String>) {
+        userPreferences.updateData {
+            it.copy(dns = it.dns + addresses)
+        }
+    }
 }
