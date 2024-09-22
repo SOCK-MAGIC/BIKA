@@ -47,7 +47,7 @@ class ChatRoomListActivity : BaseActivity<ActivityChatRoomListBinding, ChatRoomL
         binding.chatroomRv.adapter = mChatRoomsAdapter
 
         //检查是否有token 没有就进行登录 显示登录提示框
-        if (SPUtil.get("chat_token", "") == "") {
+        if (SPUtil.get<String>("chat_token", "") == "") {
             //没有token 登录聊天室
             showProgressBar(true, "获取用户信息...")
             viewModel.chatSignIn()

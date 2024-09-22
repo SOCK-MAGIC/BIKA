@@ -3,6 +3,7 @@ package com.shizq.bika.ui.reader
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.shizq.bika.BIKAApplication
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.ComicsPictureBean
 import com.shizq.bika.database.BikaDatabase
@@ -13,7 +14,7 @@ import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 import kotlinx.coroutines.launch
 
-class ReaderViewModel(application: Application) : BaseViewModel(application) {
+class ReaderViewModel : BaseViewModel() {
     var order = 1
     var bookId: String? = null
     var page = 0
@@ -44,7 +45,7 @@ class ReaderViewModel(application: Application) : BaseViewModel(application) {
             })
     }
 
-    private val historyRepository = BikaDatabase(application).historyDao()
+    private val historyRepository = BikaDatabase(BIKAApplication.contextBase).historyDao()
     //通过 漫画的id查询
     suspend fun getHistory(): List<HistoryEntity>{
         return historyRepository.gatHistory(bookId!!)

@@ -61,7 +61,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
         }
 
         // 检查是否有token 没有就进行登录 显示登录提示框
-        if (SPUtil.get("token", "") == "") {
+        if (SPUtil.get<String>("token", "") == "") {
             // 没有token 挑转到登录页面
             startActivity(AccountActivity::class.java)
             finish()

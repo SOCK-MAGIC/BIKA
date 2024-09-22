@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.shizq.bika.BIKAApplication
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.KeywordsBean
 import com.shizq.bika.database.BikaDatabase
@@ -14,7 +15,7 @@ import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 import kotlinx.coroutines.launch
 
-class SearchViewModel(application: Application) : BaseViewModel(application) {
+class SearchViewModel : BaseViewModel() {
     val liveDataSearchKey: MutableLiveData<BaseResponse<KeywordsBean>> by lazy {
         MutableLiveData<BaseResponse<KeywordsBean>>()
     }
@@ -36,7 +37,7 @@ class SearchViewModel(application: Application) : BaseViewModel(application) {
             })
     }
 
-    private val searchRepository = BikaDatabase(application).searchDao()
+    private val searchRepository = BikaDatabase(BIKAApplication.contextBase).searchDao()
     val allSearchLive: LiveData<List<String>>
         get() = searchRepository.allSearchLive
 

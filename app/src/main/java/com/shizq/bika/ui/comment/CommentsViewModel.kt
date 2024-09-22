@@ -15,11 +15,10 @@ import com.shizq.bika.network.base.BaseResponse
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
-class CommentsViewModel(application: Application) : BaseViewModel(application) {
+class CommentsViewModel : BaseViewModel() {
     var data: CommentsBean.Comments.Doc?=null
     var id =""//漫画或游戏的id
     var comicsOrGames  = ""//类型是漫画还是游戏

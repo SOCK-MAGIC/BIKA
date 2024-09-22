@@ -9,11 +9,10 @@ import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
-class UserViewModel(application: Application) : BaseViewModel(application) {
+class UserViewModel : BaseViewModel() {
     val liveData_avatar: MutableLiveData<BaseResponse<Any>> by lazy {
         MutableLiveData<BaseResponse<Any>>()
     }

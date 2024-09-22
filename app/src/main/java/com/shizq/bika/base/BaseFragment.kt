@@ -25,11 +25,20 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
         initParam()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        //如果fragment的view已经创建则不再重新创建
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // 如果fragment的view已经创建则不再重新创建
         if (lastView == null) {
             binding =
-                DataBindingUtil.inflate(inflater, initContentView(inflater, container, savedInstanceState), container, false)
+                DataBindingUtil.inflate(
+                    inflater,
+                    initContentView(inflater, container, savedInstanceState),
+                    container,
+                    false
+                )
             binding.lifecycleOwner = viewLifecycleOwner
             lastView = binding.root
         }
@@ -37,14 +46,14 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        if (!isNavigationViewInit) { //初始化过视图则不再进行view和data初始化
+        if (!isNavigationViewInit) { // 初始化过视图则不再进行view和data初始化
             super.onViewCreated(view, savedInstanceState)
-            //私有的初始化Databinding和ViewModel方法
+            // 私有的初始化Databinding和ViewModel方法
             initViewDataBinding()
-            //页面数据初始化方法
+            // 页面数据初始化方法
             initData()
             initToolbar()
-            //页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
+            // 页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
             initViewObservable()
         }
         isNavigationViewInit = true
@@ -61,14 +70,14 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
     private fun initViewDataBinding() {
         viewModelId = initVariableId()
         val modelClass: Class<VM>
-        //返回表示此 Class 所表示的实体（类、接口、基本类型或 void）的直接超类的 Type
-        //然后将其转换ParameterizedType
+        // 返回表示此 Class 所表示的实体（类、接口、基本类型或 void）的直接超类的 Type
+        // 然后将其转换ParameterizedType
         val type = javaClass.genericSuperclass
         modelClass = if (type is ParameterizedType) {
             // 返回表示此类型实际类型参数的 Type 对象的数组。简而言之就是获得超类的泛型参数的实际类型,获取第二个泛型
             type.actualTypeArguments[1] as Class<VM>
         } else {
-            //如果没有指定泛型参数，则默认使用BaseViewModel
+            // 如果没有指定泛型参数，则默认使用BaseViewModel
             BaseViewModel::class.java as Class<VM>
         }
         viewModel = createViewModel(this, modelClass)
@@ -81,7 +90,8 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
          * 所以ViewModel是lifecycle生命周期的观察者,viewmode可以在不同的生命周期中处理不同的事情
          * viewModel可以感受到ui的生命周期状态;
          * BaseViewModel中实现了IBaseViewModel中的类似生命周期的观察
-         */lifecycle.addObserver(viewModel)
+         */
+        lifecycle.addObserver(viewModel)
     }
 
     /**
@@ -102,7 +112,11 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
      *
      * @return 布局layout的id
      */
-    abstract fun initContentView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): Int
+    abstract fun initContentView(
+        inflater: LayoutInflater?,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): Int
 
     /**
      * 初始化ViewModel的id
@@ -124,10 +138,9 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
         return ViewModelProvider(fragment)[cls]
     }
 
-    //刷新布局数据
+    // 刷新布局数据
     fun refreshLayout() {
         binding.setVariable(viewModelId, viewModel)
-
     }
 
     /**
@@ -135,8 +148,8 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
      *
      * @param clz 所跳转的目的Activity类
      */
-    fun startActivity(clz: Class<*>?) {
-        startActivity(Intent(context, clz))
+    fun startActivity(clz: Class<*>) {
+        startActivity(Intent(requireContext(), clz))
     }
 
     /**
@@ -145,13 +158,7 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
      * @param clz    所跳转的目的Activity类
      * @param bundle 跳转所携带的信息
      */
-    fun startActivity(clz: Class<*>?, bundle: Bundle?) {
-        val intent = Intent(context, clz)
-        if (bundle != null) {
-            intent.putExtras(bundle)
-        }
-        startActivity(intent)
+    fun startActivity(clz: Class<*>, bundle: Bundle.() -> Unit = {}) {
+        startActivity(Intent(requireContext(), clz), Bundle().apply(bundle))
     }
-
-
 }

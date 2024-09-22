@@ -9,7 +9,7 @@ import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 
-class LeaderboardKnightViewModel(application: Application) : BaseViewModel(application) {
+class LeaderboardKnightViewModel : BaseViewModel() {
     val liveData: MutableLiveData<BaseResponse<KnightBean>> by lazy {
         MutableLiveData<BaseResponse<KnightBean>>()
     }

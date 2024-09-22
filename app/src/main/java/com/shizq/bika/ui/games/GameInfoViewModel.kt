@@ -10,7 +10,7 @@ import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 
-class GameInfoViewModel (application: Application) : BaseViewModel(application) {
+class GameInfoViewModel  : BaseViewModel() {
     var gameId: String? = null//游戏id
 
     val liveData: MutableLiveData<BaseResponse<GameInfoBean>> by lazy {

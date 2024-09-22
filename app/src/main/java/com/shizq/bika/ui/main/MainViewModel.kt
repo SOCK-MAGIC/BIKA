@@ -4,24 +4,20 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
+import com.shizq.bika.BIKAApplication
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.*
-import com.shizq.bika.network.Result
 import com.shizq.bika.network.RetrofitUtil
-import com.shizq.bika.network.asResult
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 import com.shizq.bika.utils.SPUtil
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
-class MainViewModel(application: Application) : BaseViewModel(application) {
+class MainViewModel : BaseViewModel() {
     var userId = "" // 用来确认账号是否已经登录
     var fileServer = ""
     var path = ""
@@ -73,7 +69,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
                 false,
                 "",
                 thumb = CategoriesBean.Category.Thumb("", "", ""),
-                application.resources.getString(cTitle[index]),
+                BIKAApplication.contextBase.resources.getString(cTitle[index]),
                 cRes[index]
             )
             categoriesList.add(index, category)

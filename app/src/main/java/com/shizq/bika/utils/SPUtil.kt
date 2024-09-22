@@ -69,7 +69,9 @@ class SPUtil private constructor(context: Context) {
     companion object {
         private lateinit var INSTANCE: SPUtil
         fun init(context: Context): SPUtil = SPUtil(context).also { INSTANCE = it }
-        fun get(key: String, defaultObject: Any): Any = INSTANCE.get(key, defaultObject)
+
+        @Suppress("UNCHECKED_CAST")
+        fun <T> get(key: String, defaultObject: Any): T = INSTANCE.get(key, defaultObject) as T
 
         fun put(key: String, defaultObject: Any) = INSTANCE.put(key, defaultObject)
 

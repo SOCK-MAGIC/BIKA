@@ -11,7 +11,7 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 
-class ChatRoomViewModel(application: Application) : BaseViewModel(application) {
+class ChatRoomViewModel : BaseViewModel() {
     var url = ""
 
     var reply: String = ""

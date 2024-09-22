@@ -2,6 +2,7 @@ package com.shizq.bika.ui.comiclist
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.shizq.bika.BIKAApplication
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.ComicListBean
 import com.shizq.bika.bean.ComicListBean2
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ComicListViewModel(application: Application) : BaseViewModel(application) {
+class ComicListViewModel : BaseViewModel() {
     var tag: String? = null
     var startpage = 0//起始页数，用于跳转页数后判断当前页数
     var page = 0//当前页数
@@ -54,7 +55,7 @@ class ComicListViewModel(application: Application) : BaseViewModel(application) 
         }
     }
 
-    private val searchDao = BikaDatabase(application).searchDao()
+    private val searchDao = BikaDatabase(BIKAApplication.contextBase).searchDao()
     fun insertSearch(vararg searchEntities: SearchEntity) {
         viewModelScope.launch {
             searchDao.insertSearch(*searchEntities)

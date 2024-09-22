@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class  ChatBlacklistViewModel(application: Application) : BaseViewModel(application) {
+class  ChatBlacklistViewModel : BaseViewModel() {
     var offset = -1
     private val repository = ChatBlacklistRepository()
     private val _blackListFlow = MutableStateFlow<Result<ChatRoomBlackListBean>?>(null)

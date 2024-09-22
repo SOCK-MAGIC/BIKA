@@ -1,27 +1,40 @@
 package com.shizq.bika.ui.signin
 
-import android.app.Application
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.shizq.bika.base.BaseViewModel
-import com.shizq.bika.bean.ProfileBean
 import com.shizq.bika.bean.SignInBean
+import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.network.BikaNetworkDataSource
+import com.shizq.bika.core.result.Result
+import com.shizq.bika.core.result.asResult
 import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
+import com.shizq.bika.utils.SPUtil
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import javax.inject.Inject
 
-class SignInViewModel(application: Application) : BaseViewModel(application) {
+@HiltViewModel
+class SignInViewModel @Inject constructor(
+    private val network: BikaNetworkDataSource,
+    private val preferencesDataSource: BikaPreferencesDataSource
+) : BaseViewModel() {
+
     var forgot_answer: String? = null
     var forgot_email: String? = null
     var forgot_questionNo: String? = null
-    var email: String? = null
-    var password: String? = null
+    val email: ObservableField<String> = ObservableField(SPUtil.get<String>("username", ""))
+    val password: ObservableField<String> = ObservableField(SPUtil.get<String>("password", ""))
 
     val liveData_signin: MutableLiveData<BaseResponse<SignInBean>> by lazy {
         MutableLiveData<BaseResponse<SignInBean>>()
@@ -35,21 +48,29 @@ class SignInViewModel(application: Application) : BaseViewModel(application) {
         MutableLiveData<BaseResponse<SignInBean>>()
     }
 
-
-    fun getSignIn() {
-        val body = RequestBody.create(
-            "application/json; charset=UTF-8".toMediaTypeOrNull(),
-            JsonObject().apply {
-                addProperty("email", email)
-                addProperty("password", password)
-            }.asJsonObject.toString()
-        )
-        val headers = BaseHeaders("auth/sign-in", "POST").getHeaders()
-
+    fun signIn(
+        email: String,
+        password: String,
+        onSuccess: () -> Unit,
+        onError: (Throwable) -> Unit
+    ) {
         viewModelScope.launch {
-            RetrofitUtil.service.signInPost(body, headers).let {
-                liveData_signin.postValue(it)
-            }
+            flow { emit(network.signIn(email, password)) }
+                .asResult()
+                .map { result ->
+                    when (result) {
+                        is Result.Error -> onError(result.exception)
+                        Result.Loading -> Unit
+                        is Result.Success -> {
+                            onSuccess()
+                            preferencesDataSource.setToken(result.data.token)
+                            SPUtil.put("token", result.data.token)
+                            SPUtil.put("username", email)
+                            SPUtil.put("password", password)
+                        }
+                    }
+                }
+                .collect()
         }
     }
 
@@ -94,7 +115,6 @@ class SignInViewModel(application: Application) : BaseViewModel(application) {
 
                 override fun onCodeError(baseResponse: BaseResponse<SignInBean>) {
                     liveData_password.postValue(baseResponse)
-
                 }
             })
     }

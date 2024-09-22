@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class CollectionsViewModel(application: Application) : BaseViewModel(application) {
+class CollectionsViewModel : BaseViewModel() {
 
     private val repository =CollectionsRepository()
     private val _collections = MutableStateFlow<Result<CollectionsBean>?>(null)

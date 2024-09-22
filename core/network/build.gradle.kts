@@ -13,6 +13,7 @@ android {
 
 dependencies {
     api(projects.core.common)
+    implementation(projects.core.datastore)
 
     implementation(libs.ktor.client.content.negotiation)
     implementation(libs.ktor.client.logging)

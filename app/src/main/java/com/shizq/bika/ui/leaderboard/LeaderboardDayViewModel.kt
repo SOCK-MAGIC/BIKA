@@ -9,7 +9,7 @@ import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 
-class LeaderboardDayViewModel(application: Application) : BaseViewModel(application) {
+class LeaderboardDayViewModel : BaseViewModel() {
     var tt: String? =null
     val liveData: MutableLiveData<BaseResponse<ComicListBean2>> by lazy {
         MutableLiveData<BaseResponse<ComicListBean2>>()

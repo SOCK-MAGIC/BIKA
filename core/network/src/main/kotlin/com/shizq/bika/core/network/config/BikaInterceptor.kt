@@ -16,8 +16,7 @@ internal class BikaInterceptor : Interceptor {
         val request = originalRequest
             .newBuilder()
             .removeHeader(HttpHeaders.AcceptCharset)
-            .removeHeader(HttpHeaders.Accept)
-            .addHeader(HttpHeaders.Accept, "application/vnd.picacomic.com.v1+json")
+            .header(HttpHeaders.Accept, "application/vnd.picacomic.com.v1+json")
             .addHeader("app-version", "2.2.1.2.3.4")
             .addHeader("app-uuid", "defaultUuid")
             .addHeader("app-platform", "android")

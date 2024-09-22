@@ -3,15 +3,16 @@ package com.shizq.bika.ui.history
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
+import com.shizq.bika.BIKAApplication
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.database.BikaDatabase
 import com.shizq.bika.database.model.HistoryEntity
 import kotlinx.coroutines.launch
 
-class HistoryViewModel(application: Application) : BaseViewModel(application) {
+class HistoryViewModel : BaseViewModel() {
     var page = 0
 
-    private val historyDao = BikaDatabase(application).historyDao()
+    private val historyDao = BikaDatabase(BIKAApplication.contextBase).historyDao()
 
     // 查询第一页
     val firstPageHistoryEntityLive: LiveData<List<HistoryEntity>>

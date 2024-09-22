@@ -11,7 +11,7 @@ import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 
-class MyCommentsViewModel (application: Application) : BaseViewModel(application) {
+class MyCommentsViewModel  : BaseViewModel() {
     var page = 0
     var commentsId: String? = null
     var subPage = 0

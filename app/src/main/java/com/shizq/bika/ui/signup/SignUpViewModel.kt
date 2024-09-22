@@ -9,11 +9,10 @@ import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
-class SignUpViewModel(application: Application) : BaseViewModel(application) {
+class SignUpViewModel : BaseViewModel() {
     var name:String?=null
     var email:String?=null
     var password:String?=null

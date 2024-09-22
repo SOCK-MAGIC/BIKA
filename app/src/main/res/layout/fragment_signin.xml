@@ -3,9 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="clickListener"
             type="com.shizq.bika.ui.signin.SignInFragment.ClickListener" />
+
         <variable
             name="viewModel"
             type="com.shizq.bika.ui.signin.SignInViewModel" />
@@ -29,7 +31,8 @@
                 android:id="@+id/signin_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"/>
+                android:text="@={viewModel.email}"
+                android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -47,6 +50,7 @@
                 android:id="@+id/signin_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@={viewModel.password}"
                 android:inputType="textPassword" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -57,7 +61,6 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/fab_margin"
-            android:onClick="@{()->clickListener.SignIn()}"
             android:text="登录"
             android:textSize="16sp" />
 
@@ -81,13 +84,13 @@
             android:layout_marginStart="16dp"
             android:onClick="@{()->clickListener.Forgot()}"
             android:text="忘记密码" />
+
         <ProgressBar
             android:id="@+id/signin_progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:visibility="gone"
-            />
+            android:visibility="gone" />
 
     </RelativeLayout>
 </layout>

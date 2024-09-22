@@ -2,6 +2,7 @@ package com.shizq.bika.ui.comicinfo
 
 import android.app.Application
 import androidx.lifecycle.viewModelScope
+import com.shizq.bika.BIKAApplication
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.ActionBean
 import com.shizq.bika.bean.EpisodeBean
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ComicInfoViewModel(application: Application) : BaseViewModel(application) {
+class ComicInfoViewModel : BaseViewModel() {
     var bookId: String = ""
     var title: String? = null
     var author: String? = null
@@ -84,7 +85,7 @@ class ComicInfoViewModel(application: Application) : BaseViewModel(application) 
         }
     }
 
-    private val historyDao = BikaDatabase(application).historyDao()
+    private val historyDao = BikaDatabase(BIKAApplication.contextBase).historyDao()
 
     //通过 漫画的id查询
     suspend fun getHistory(): List<HistoryEntity> {

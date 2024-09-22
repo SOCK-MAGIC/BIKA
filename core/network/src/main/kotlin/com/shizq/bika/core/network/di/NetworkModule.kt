@@ -1,8 +1,9 @@
 package com.shizq.bika.core.network.di
 
 import androidx.tracing.trace
-import com.shizq.bika.core.network.config.BikaInterceptor
+import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.network.config.BikaClientPlugin
+import com.shizq.bika.core.network.config.BikaInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,13 +11,18 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
+import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.addDefaultResponseValidation
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.plugin
 import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import okhttp3.Dns
 import okhttp3.OkHttpClient
@@ -28,9 +34,14 @@ import javax.inject.Singleton
 internal class NetworkModule {
     @Provides
     @Singleton
-    fun okHttpCallFactory(): OkHttpClient = trace("BikaOkHttpClient") {
+    fun okHttpCallFactory(
+        preferencesDataSource: BikaPreferencesDataSource
+    ): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
-            .dns { Dns.SYSTEM.lookup("172.67.194.19") + Dns.SYSTEM.lookup("104.21.20.188") }
+            .dns {
+                val dns = runBlocking { preferencesDataSource.userData.first().dns }
+                dns.flatMap { Dns.SYSTEM.lookup(it) }
+            }
             .addInterceptor(BikaInterceptor())
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
@@ -45,6 +56,7 @@ internal class NetworkModule {
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
+        preferencesDataSource: BikaPreferencesDataSource
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -66,6 +78,12 @@ internal class NetworkModule {
             }
             install(BikaClientPlugin) {
                 transform = json
+            }
+        }.apply {
+            plugin(HttpSend).intercept { request ->
+                val token = preferencesDataSource.userData.first().token
+                request.headers[HttpHeaders.Authorization] = token
+                execute(request)
             }
         }
     }

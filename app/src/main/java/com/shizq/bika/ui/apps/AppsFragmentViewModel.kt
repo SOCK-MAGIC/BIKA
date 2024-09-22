@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AppsFragmentViewModel(application: Application) : BaseViewModel(application) {
+class AppsFragmentViewModel : BaseViewModel() {
     private val repository = AppsRepository()
 
     private val _roomList = MutableStateFlow<Result<ChatRoomListOldBean>?>(null)

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ChatRoomListViewModel(application: Application) : BaseViewModel(application) {
+class ChatRoomListViewModel : BaseViewModel() {
     val liveDataSignIn: MutableLiveData<ChatRoomSignInBean> by lazy {
         MutableLiveData<ChatRoomSignInBean>()
     }

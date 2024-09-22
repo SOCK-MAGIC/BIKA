@@ -9,7 +9,7 @@ import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 
-class GamesViewModel(application: Application) : BaseViewModel(application) {
+class GamesViewModel : BaseViewModel() {
     var page = 0//当前页数
 
     val liveData: MutableLiveData<BaseResponse<GamesBean>> by lazy {

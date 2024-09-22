@@ -285,7 +285,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                         intent.action = "android.intent.action.VIEW"
                         intent.data = Uri.parse(
                             "${datas.link}/?token=${
-                                SPUtil.get(
+                                SPUtil.get<String>(
                                     "token",
                                     ""
                                 )
