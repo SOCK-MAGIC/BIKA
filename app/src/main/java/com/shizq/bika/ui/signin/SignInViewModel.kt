@@ -1,9 +1,12 @@
 package com.shizq.bika.ui.signin
 
+import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.Navigation
 import com.google.gson.JsonObject
+import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.SignInBean
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
@@ -22,6 +25,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 @HiltViewModel
@@ -75,10 +79,8 @@ class SignInViewModel @Inject constructor(
     }
 
     fun getForgot() {
-        val body = RequestBody.create(
-            "application/json; charset=UTF-8".toMediaTypeOrNull(),
-            JsonObject().apply { addProperty("email", forgot_email) }.asJsonObject.toString()
-        )
+        val body = JsonObject().apply { addProperty("email", forgot_email) }.asJsonObject.toString()
+            .toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull())
         val headers = BaseHeaders("auth/forgot-password", "POST").getHeaders()
 
         RetrofitUtil.service.forgotPasswordPost(body, headers)
@@ -95,14 +97,12 @@ class SignInViewModel @Inject constructor(
     }
 
     fun resetPassword() {
-        val body = RequestBody.create(
-            "application/json; charset=UTF-8".toMediaTypeOrNull(),
-            JsonObject().apply {
-                addProperty("answer", forgot_answer)
-                addProperty("email", forgot_email)
-                addProperty("questionNo", forgot_questionNo)
-            }.asJsonObject.toString()
-        )
+        val body = JsonObject().apply {
+            addProperty("answer", forgot_answer)
+            addProperty("email", forgot_email)
+            addProperty("questionNo", forgot_questionNo)
+        }.asJsonObject.toString()
+            .toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull())
         val headers = BaseHeaders("auth/reset-password", "POST").getHeaders()
 
         RetrofitUtil.service.resetPasswordPost(body, headers)

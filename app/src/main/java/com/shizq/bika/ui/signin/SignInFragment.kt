@@ -15,7 +15,6 @@ import com.shizq.bika.R
 import com.shizq.bika.base.BaseFragment
 import com.shizq.bika.databinding.FragmentSigninBinding
 import com.shizq.bika.ui.main.MainActivity
-import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -39,8 +38,6 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
     override fun initData() {
         (activity as AppCompatActivity).supportActionBar?.title = "登录"
 
-        binding.clickListener = ClickListener()
-
         binding.signinBtnSignin.setOnClickListener {
             hideProgressBar(false)
             val email = viewModel.email.get()
@@ -56,21 +53,14 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
                         requireActivity().finish()
                     },
                     {
-                        Toast.makeText(requireContext(), it.message ?: "", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), it.message ?: "", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 )
             }
             hideProgressBar(true)
         }
-    }
-
-    inner class ClickListener {
-        fun SignUp() {
-            Navigation.findNavController(requireActivity(), R.id.login_fcv)
-                .navigate(R.id.action_signInFragment_to_signUpFragment)
-        }
-
-        fun Forgot() {
+        binding.signinBtnForgot.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("忘记密码")
                 .setMessage("请输入需要找回密码的账号")
@@ -83,6 +73,10 @@ class SignInFragment : BaseFragment<FragmentSigninBinding, SignInViewModel>() {
                 }
                 .setNegativeButton("取消", null)
                 .show()
+        }
+        binding.signinBtnForgot.setOnClickListener {
+            Navigation.findNavController(requireActivity(), R.id.login_fcv)
+                .navigate(R.id.action_signInFragment_to_signUpFragment)
         }
     }
 
