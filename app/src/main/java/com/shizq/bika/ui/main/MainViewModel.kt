@@ -1,23 +1,31 @@
 package com.shizq.bika.ui.main
 
-import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.shizq.bika.BIKAApplication
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
-import com.shizq.bika.bean.*
+import com.shizq.bika.bean.CategoriesBean
+import com.shizq.bika.bean.ProfileBean
+import com.shizq.bika.bean.PunchInBean
+import com.shizq.bika.bean.SignInBean
+import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 import com.shizq.bika.utils.SPUtil
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import javax.inject.Inject
 
-class MainViewModel : BaseViewModel() {
+@HiltViewModel
+class MainViewModel@Inject constructor(
+    private val network: BikaNetworkDataSource
+) : BaseViewModel() {
     var userId = "" // 用来确认账号是否已经登录
     var fileServer = ""
     var path = ""
@@ -92,29 +100,12 @@ class MainViewModel : BaseViewModel() {
             })
     }
 
-    fun punch_In() {
-        val headers = BaseHeaders("users/punch-in", "POST").getHeaderMapAndToken()
-        RetrofitUtil.service.punchInPOST(headers)
-            .doOnSubscribe(this@MainViewModel)
-            .subscribe(object : BaseObserver<PunchInBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<PunchInBean>) {
-                    liveData_punch_in.postValue(baseResponse)
-                }
-
-                override fun onCodeError(baseResponse: BaseResponse<PunchInBean>) {
-                    liveData_punch_in.postValue(baseResponse)
-                }
-            })
-    }
-
     fun getSignIn() {
-        val body = RequestBody.create(
-            "application/json; charset=UTF-8".toMediaTypeOrNull(),
-            JsonObject().apply {
-                addProperty("email", SPUtil.get("username", "") as String)
-                addProperty("password", SPUtil.get("password", "") as String)
-            }.asJsonObject.toString()
-        )
+        val body = JsonObject().apply {
+            addProperty("email", SPUtil.get("username", "") as String)
+            addProperty("password", SPUtil.get("password", "") as String)
+        }.asJsonObject.toString()
+            .toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull())
         val headers = BaseHeaders("auth/sign-in", "POST").getHeaders()
         viewModelScope.launch {
             RetrofitUtil.service.signInPost(body, headers).let {

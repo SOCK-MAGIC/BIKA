@@ -43,3 +43,10 @@ internal suspend fun <T> suspendRunCatching(block: suspend () -> T): Result<T> =
     Result.failure(exception)
 }
 
+suspend fun Synchronizer.dailyWork(
+    networkInit: suspend () -> Unit,
+    punchIn: suspend () -> Unit
+) = suspendRunCatching {
+    networkInit()
+    punchIn()
+}.isSuccess

@@ -193,7 +193,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 binding.mainNavView.getHeaderView(0)
                     .findViewById<TextView>(R.id.main_drawer_punch_in)!!
                 ).visibility = View.GONE
-            viewModel.punch_In()
         }
         (
             binding.mainNavView.getHeaderView(0)
@@ -393,7 +392,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 if (!it.data.user.isPunched) { // 当前用户未打卡时
                     // 是否设置自动打卡
                     if (SPUtil.get("setting_punch", true) as Boolean) {
-                        viewModel.punch_In()
                     } else {
                         (
                             binding.mainNavView.getHeaderView(0)
