@@ -21,7 +21,6 @@ import me.jingbin.library.skeleton.BySkeleton
 /**
  * 排行榜  日榜 周榜 月榜
  */
-
 class LeaderboardDayFragment :
     BaseFragment<FragmentLeaderboardDayBinding, LeaderboardDayViewModel>() {
     private lateinit var adapter: ComicListAdapter2
@@ -31,7 +30,9 @@ class LeaderboardDayFragment :
     private lateinit var popupImage: ImageView
 
     override fun initContentView(
-        inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater?,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): Int {
         return R.layout.fragment_leaderboard_day
     }
@@ -46,22 +47,20 @@ class LeaderboardDayFragment :
         adapter = ComicListAdapter2()
         binding.leaderboardDayRv.layoutManager = LinearLayoutManager(context)
 
-        //PopupWindow 用来显示图片大图
+        // PopupWindow 用来显示图片大图
         popupView = View.inflate(context, R.layout.view_popup_image, null)
         popupImage = popupView.findViewById(R.id.popup_image)
 
         skeletonScreen = BySkeleton
             .bindItem(binding.leaderboardDayRv)
-            .adapter(adapter)// 必须设置adapter，且在此之前不要设置adapter
-            .load(R.layout.item_comiclist_skeleton)// item骨架图
+            .adapter(adapter) // 必须设置adapter，且在此之前不要设置adapter
+            .load(R.layout.item_comiclist_skeleton) // item骨架图
 //            .frozen(false)
-            .duration(2000)// 微光一次显示时间
-            .count(4)// item个数
+            .duration(2000) // 微光一次显示时间
+            .count(4) // item个数
             .show()
 
-
-
-        binding.leaderboardDayLoadLayout.isEnabled = false//加载时 view不可点击
+        binding.leaderboardDayLoadLayout.isEnabled = false // 加载时 view不可点击
         viewModel.getLeaderboard()
         initListener()
     }
@@ -91,20 +90,17 @@ class LeaderboardDayFragment :
             intent.putExtra("imageurl", path)
             val options = ActivityOptions.makeSceneTransitionAnimation(activity, view, "image")
             startActivity(intent, options.toBundle())
-
         }
 
-        //加了监听才能显示 显示底部布局
+        // 加了监听才能显示 显示底部布局
         binding.leaderboardDayRv.setOnLoadMoreListener { }
 
-        //网络重试点击事件监听
+        // 网络重试点击事件监听
         binding.leaderboardDayLoadLayout.setOnClickListener {
             showProgressBar(true, "")
             skeletonScreen.show()
             viewModel.getLeaderboard()
-
         }
-
     }
 
     override fun initViewObservable() {
@@ -113,24 +109,22 @@ class LeaderboardDayFragment :
             binding.leaderboardDayRv.isEnabled = true
             if (it.code == 200) {
                 adapter.addData(it.data.comics)
-                binding.leaderboardDayLoadLayout.visibility = ViewGroup.GONE//隐藏加载进度条页面
+                binding.leaderboardDayLoadLayout.visibility = ViewGroup.GONE // 隐藏加载进度条页面
                 binding.leaderboardDayRv.loadMoreEnd()
             } else {
                 showProgressBar(
-                    false, "网络错误，点击重试\ncode=${it.code} error=${it.error} message=${it.message}"
+                    false,
+                    "网络错误，点击重试\ncode=${it.code} error=${it.error} message=${it.message}"
                 )
             }
         }
     }
 
     private fun showProgressBar(show: Boolean, string: String) {
-
         binding.leaderboardDayLoadProgressBar.visibility =
             if (show) ViewGroup.VISIBLE else ViewGroup.GONE
         binding.leaderboardDayLoadError.visibility = if (show) ViewGroup.GONE else ViewGroup.VISIBLE
         binding.leaderboardDayLoadText.text = string
         binding.leaderboardDayLoadLayout.isEnabled = !show
     }
-
 }
-
