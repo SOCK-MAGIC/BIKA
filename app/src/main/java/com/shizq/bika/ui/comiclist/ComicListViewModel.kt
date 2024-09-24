@@ -23,15 +23,6 @@ class ComicListViewModel : BaseViewModel() {
     var title: String? = null
     var value: String? = null
 
-////    var baseObservable: Observable<BaseResponse<ComicListBean>>? = null
-//
-//    val liveData: MutableLiveData<BaseResponse<ComicListBean>> by lazy {
-//        MutableLiveData<BaseResponse<ComicListBean>>()
-//    }
-//    val liveData2: MutableLiveData<BaseResponse<ComicListBean2>> by lazy {
-//        MutableLiveData<BaseResponse<ComicListBean2>>()
-//    }
-
     private val repository = ComicListRepository()
     private val _comicList = MutableStateFlow<Result<ComicListBean>?>(null)
     val comicList: StateFlow<Result<ComicListBean>?> = _comicList

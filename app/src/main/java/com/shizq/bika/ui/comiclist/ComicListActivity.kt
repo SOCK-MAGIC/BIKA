@@ -37,7 +37,7 @@ import kotlin.math.ceil
 
 class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewModel>() {
     companion object {
-        private var tag = arrayOf<CharSequence>(
+        private val tag = arrayOf(
             "全彩",
             "長篇",
             "同人",
@@ -74,7 +74,7 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
             "Cosplay",
             "重口地帶"
         )
-        private var tagInitial = booleanArrayOf(
+        private val tagInitial = booleanArrayOf(
             false,
             false,
             false,
