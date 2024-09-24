@@ -1,5 +1,6 @@
 package com.shizq.bika.core.network.config
 
+import android.util.Log
 import com.shizq.bika.core.network.model.Box
 import io.ktor.client.plugins.api.createClientPlugin
 import io.ktor.utils.io.jvm.javaio.toInputStream
@@ -9,7 +10,7 @@ import kotlinx.serialization.json.decodeFromStream
 import kotlinx.serialization.serializer
 
 @OptIn(ExperimentalSerializationApi::class)
-internal val BikaClientPlugin = createClientPlugin("unwrapResponse", ::ClientConfig) {
+internal val BikaClientPlugin = createClientPlugin("BikaPlugin", ::ClientConfig) {
     val json = pluginConfig.transform
     transformResponseBody { response, content, requestedType ->
         val box = json.decodeFromStream(
@@ -19,6 +20,7 @@ internal val BikaClientPlugin = createClientPlugin("unwrapResponse", ::ClientCon
         if (box.code != 200) {
             throw Exception(box.message)
         }
+        Log.d("BikaClientPlugin", box.data.toString())
         box.data
     }
 }

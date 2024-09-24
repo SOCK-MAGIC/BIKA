@@ -1,6 +1,8 @@
 package com.shizq.bika.core.network
 
+import com.shizq.bika.core.network.model.NetworkCategories
 import com.shizq.bika.core.network.model.NetworkInit
+import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
 import com.shizq.bika.core.network.model.NetworkToken
 import io.ktor.client.HttpClient
@@ -19,4 +21,6 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
         }.body()
 
     suspend fun punchIn(): NetworkPunchIn = client.post("users/punch-in").body()
+    suspend fun profile(): NetworkProfile = client.post("users/profile").body()
+    suspend fun getCategories(): NetworkCategories = client.get("categories").body()
 }

@@ -2,29 +2,27 @@ package com.shizq.bika.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.google.gson.JsonObject
 import com.shizq.bika.BIKAApplication
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.CategoriesBean
 import com.shizq.bika.bean.ProfileBean
-import com.shizq.bika.bean.PunchInBean
 import com.shizq.bika.bean.SignInBean
+import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
-import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel@Inject constructor(
-    private val network: BikaNetworkDataSource
+class MainViewModel @Inject constructor(
+    private val network: BikaNetworkDataSource,
+    private val bikaPreferencesDataSource: BikaPreferencesDataSource
 ) : BaseViewModel() {
     var userId = "" // 用来确认账号是否已经登录
     var fileServer = ""
@@ -49,16 +47,9 @@ class MainViewModel@Inject constructor(
         R.drawable.cat_latest,
         R.drawable.cat_random
     )
+
     val liveData_profile: MutableLiveData<BaseResponse<ProfileBean>> by lazy {
         MutableLiveData<BaseResponse<ProfileBean>>()
-    }
-
-    val liveData_punch_in: MutableLiveData<BaseResponse<PunchInBean>> by lazy {
-        MutableLiveData<BaseResponse<PunchInBean>>()
-    }
-
-    val liveData_signin: MutableLiveData<BaseResponse<SignInBean>> by lazy {
-        MutableLiveData<BaseResponse<SignInBean>>()
     }
 
     val liveData: MutableLiveData<BaseResponse<CategoriesBean>> by lazy {
@@ -101,16 +92,10 @@ class MainViewModel@Inject constructor(
     }
 
     fun getSignIn() {
-        val body = JsonObject().apply {
-            addProperty("email", SPUtil.get("username", "") as String)
-            addProperty("password", SPUtil.get("password", "") as String)
-        }.asJsonObject.toString()
-            .toRequestBody("application/json; charset=UTF-8".toMediaTypeOrNull())
-        val headers = BaseHeaders("auth/sign-in", "POST").getHeaders()
         viewModelScope.launch {
-            RetrofitUtil.service.signInPost(body, headers).let {
-                liveData_signin.postValue(it)
-            }
+            val account = bikaPreferencesDataSource.userData.first().account
+            val token = network.signIn(account.email, account.password)
+            bikaPreferencesDataSource.setToken(token.token)
         }
     }
 

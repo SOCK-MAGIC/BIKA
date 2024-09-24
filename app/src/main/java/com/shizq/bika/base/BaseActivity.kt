@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.reflect.ParameterizedType
 
 abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(), IBaseView {
@@ -17,14 +17,14 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //页面接受的参数方法
+        // 页面接受的参数方法
         initParam()
-        //私有的初始化 binding和ViewModel方法
+        // 私有的初始化 binding和ViewModel方法
         initViewDataBinding(savedInstanceState)
         initToolbar()
-        //页面数据初始化方法
+        // 页面数据初始化方法
         initData()
-        //页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
+        // 页面事件监听的方法，一般用于ViewModel层转到View层的事件注册
         initViewObservable()
     }
 
@@ -34,7 +34,7 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
     }
 
     private fun initViewDataBinding(savedInstanceState: Bundle?) {
-        //DataBindingUtil类需要在project的build中配置 dataBinding {enabled true }, 同步后会自动关联android.binding包
+        // DataBindingUtil类需要在project的build中配置 dataBinding {enabled true }, 同步后会自动关联android.binding包
         binding = DataBindingUtil.setContentView(this, initContentView(savedInstanceState))
         viewModelId = initVariableId()
         //        viewModel = initViewModel()
@@ -45,13 +45,14 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
         modelClass = if (type is ParameterizedType) {
             type.actualTypeArguments[1] as Class<VM>
         } else {
-            //如果没有指定泛型参数，则默认使用BaseViewModel
+            // 如果没有指定泛型参数，则默认使用BaseViewModel
             BaseViewModel::class.java as Class<VM>
         }
-        viewModel = createViewModel(this, modelClass)
-        //关联ViewModel
+
+        viewModel = createViewModel(modelClass)
+        // 关联ViewModel
         binding.setVariable(viewModelId, viewModel)
-        //让ViewModel拥有View的生命周期感应
+        // 让ViewModel拥有View的生命周期感应
         lifecycle.addObserver(viewModel)
     }
 
@@ -59,7 +60,6 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
     }
 
     override fun initParam() {
-
     }
 
     /**
@@ -86,10 +86,11 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
      * @param cls 类
      * @param <T> 泛型参数,必须继承ViewMode
      * @return 生成的viewMode实例
-    </T> */
-    private fun <T : ViewModel> createViewModel(activity: FragmentActivity, cls: Class<T>): T {
-        return ViewModelProvider(activity)[cls]
+     </T> */
+    private fun <T : ViewModel> createViewModel(cls: Class<T>): T {
+        return ViewModelProvider(this)[cls]
     }
+
     /**
      * 跳转页面
      * @param clz 所跳转的目的Activity类
@@ -110,5 +111,4 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
         }
         startActivity(intent)
     }
-
 }

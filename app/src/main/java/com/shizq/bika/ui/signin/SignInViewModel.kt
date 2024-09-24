@@ -1,12 +1,9 @@
 package com.shizq.bika.ui.signin
 
-import android.view.View
 import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.Navigation
 import com.google.gson.JsonObject
-import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.SignInBean
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
@@ -24,7 +21,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import javax.inject.Inject
 
@@ -68,6 +64,7 @@ class SignInViewModel @Inject constructor(
                         is Result.Success -> {
                             onSuccess()
                             preferencesDataSource.setToken(result.data.token)
+                            preferencesDataSource.setAccount(email, password)
                             SPUtil.put("token", result.data.token)
                             SPUtil.put("username", email)
                             SPUtil.put("password", password)

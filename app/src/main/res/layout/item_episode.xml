@@ -3,7 +3,7 @@
     <!--    <data>-->
     <!--        <variable-->
     <!--            name="m"-->
-    <!--            type="com.shizq.bika.bean.ChapterBean.Data.Eps.Doc" />-->
+    <!--            type="com.shizq.bika.bean.ChapterBean.com.shizq.bika.core.network.model.Data.Eps.Doc" />-->
     <!--    </data>-->
     <com.google.android.material.card.MaterialCardView
         style="@style/Widget.Material3.CardView.Elevated"

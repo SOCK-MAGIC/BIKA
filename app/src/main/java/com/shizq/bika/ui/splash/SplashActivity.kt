@@ -16,7 +16,9 @@ import com.shizq.bika.ui.account.AccountActivity
 import com.shizq.bika.ui.main.MainActivity
 import com.shizq.bika.utils.AppVersion
 import com.shizq.bika.utils.SPUtil
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>() {
     private lateinit var splashScreen: SplashScreen

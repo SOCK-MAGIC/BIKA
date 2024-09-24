@@ -68,16 +68,15 @@ internal class NetworkModule {
                 contentType(ContentType.parse("application/json; charset=UTF-8"))
             }
             addDefaultResponseValidation()
+            install(BikaClientPlugin) {
+                transform = json
+            }
             install(ContentNegotiation) {
                 json(json)
             }
-
             install(HttpRequestRetry) {
                 retryOnServerErrors(maxRetries = 5)
                 exponentialDelay()
-            }
-            install(BikaClientPlugin) {
-                transform = json
             }
         }.apply {
             plugin(HttpSend).intercept { request ->

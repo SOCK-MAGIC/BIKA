@@ -1,6 +1,7 @@
 package com.shizq.bika.core.datastore
 
 import androidx.datastore.core.DataStore
+import com.shizq.bika.core.datastore.model.Account
 import com.shizq.bika.core.datastore.model.UserPreferences
 import javax.inject.Inject
 
@@ -18,6 +19,12 @@ class BikaPreferencesDataSource @Inject constructor(
     suspend fun setResolveAddress(addresses: Set<String>) {
         userPreferences.updateData {
             it.copy(dns = it.dns + addresses)
+        }
+    }
+
+    suspend fun setAccount(email: String, password: String) {
+        userPreferences.updateData {
+            it.copy(account = Account(email, password))
         }
     }
 }
