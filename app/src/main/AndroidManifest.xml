@@ -42,6 +42,9 @@
         android:theme="@style/AppTheme"
         tools:ignore="UnusedAttribute">
         <activity
+            android:name=".ui.signup.SignUpActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.signin.SignInActivity"
             android:exported="false" />
         <activity

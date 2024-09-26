@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.shizq.bika.ui.signup.SignUpViewModel" />
@@ -16,21 +17,24 @@
             android:id="@+id/signup_scrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
                 <TextView
                     android:id="@+id/signup_username_password_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:gravity="center"
-                    android:text="请输入账号密码"/>
+                    android:text="请输入账号密码" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_nickname_layout"
-                    android:layout_below="@+id/signup_username_password_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/signup_username_password_title"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
@@ -41,8 +45,9 @@
                         android:id="@+id/signup_nickname_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="50"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.name}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -60,10 +65,12 @@
                         android:id="@+id/signup_username_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:maxLength="30"
                         android:digits="0123456789abcdefghijklmnopqrstuvwxyz._"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:maxLength="30"
+                        android:text="@={viewModel.email}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_password_layout"
                     android:layout_width="match_parent"
@@ -79,9 +86,11 @@
                         android:id="@+id/signup_password_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textPassword"
                         android:maxLength="100"
-                        android:inputType="textPassword" />
+                        android:text="@={viewModel.password}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_confirm_password_layout"
                     android:layout_width="match_parent"
@@ -97,8 +106,9 @@
                         android:id="@+id/signup_confirm_password_edit"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textPassword"
                         android:maxLength="100"
-                        android:inputType="textPassword" />
+                        android:text="@={viewModel.confirmPassword}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -108,23 +118,25 @@
                     android:layout_below="@id/signup_confirm_password_layout"
                     android:layout_marginTop="24dp"
                     android:gravity="center"
-                    android:text="请输入你的出生日期和性别"/>
+                    android:text="请输入你的出生日期和性别" />
+
                 <LinearLayout
                     android:id="@+id/signup_date_layout"
-                    android:orientation="horizontal"
-                    android:layout_below="@id/signup_date_title"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/signup_date_title"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
-                    android:weightSum="3"
-                    android:layout_height="wrap_content">
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/signup_date_year_layout"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
                         android:hint="年份">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -134,28 +146,30 @@
                             android:inputType="number"
                             android:maxLength="4" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/signup_date_month_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
                         android:hint="月份">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/signup_date_month_edit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:maxLength="2"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:maxLength="2" />
                     </com.google.android.material.textfield.TextInputLayout>
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/signup_date_day_layout"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
                         android:hint="日"
                         app:endIconMode="clear_text">
 
@@ -163,10 +177,11 @@
                             android:id="@+id/signup_date_day_edit"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:maxLength="2"
-                            android:inputType="number" />
+                            android:inputType="number"
+                            android:maxLength="2" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_gender_layout"
                     android:layout_width="match_parent"
@@ -193,7 +208,8 @@
                     android:layout_below="@id/signup_gender_layout"
                     android:layout_marginTop="24dp"
                     android:gravity="center"
-                    android:text="请输入你的安全问题和答案"/>
+                    android:text="请输入你的安全问题和答案" />
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_safety_problem_layout1"
                     android:layout_width="match_parent"
@@ -209,9 +225,11 @@
                         android:id="@+id/signup_safety_problem_edit1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="100"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.question1}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_answer_layout1"
                     android:layout_width="match_parent"
@@ -227,9 +245,11 @@
                         android:id="@+id/signup_answer_edit1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="100"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.answer1}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_safety_problem_layout2"
                     android:layout_width="match_parent"
@@ -245,9 +265,11 @@
                         android:id="@+id/signup_safety_problem_edit2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="100"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.question2}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_answer_layout2"
                     android:layout_width="match_parent"
@@ -263,9 +285,11 @@
                         android:id="@+id/signup_answer_edit2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="100"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.answer2}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_safety_problem_layout3"
                     android:layout_width="match_parent"
@@ -281,16 +305,18 @@
                         android:id="@+id/signup_safety_problem_edit3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="100"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.question3}" />
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/signup_answer_layout3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/signup_safety_problem_layout3"
-                    android:layout_marginTop="16dp"
                     android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_marginBottom="88dp"
                     android:hint="@string/signup_answer"
@@ -300,26 +326,28 @@
                         android:id="@+id/signup_answer_edit3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
                         android:maxLength="100"
-                        android:inputType="textEmailAddress" />
+                        android:text="@={viewModel.answer3}" />
                 </com.google.android.material.textfield.TextInputLayout>
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>
+
         <ProgressBar
             android:id="@+id/signup_progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:visibility="gone" />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/signup_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/fab_margin"
-            android:textSize="16sp"
-            android:text="注册"/>
+            android:text="注册"
+            android:textSize="16sp" />
     </RelativeLayout>
 </layout>

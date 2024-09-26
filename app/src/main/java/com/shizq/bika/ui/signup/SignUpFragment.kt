@@ -221,29 +221,29 @@ class SignUpFragment : BaseFragment<FragmentSignupBinding, SignUpViewModel>() {
                             )
                         ) {
 
-                            viewModel.name = binding.signupNicknameEdit.text.toString().trim()
-                            viewModel.email = binding.signupUsernameEdit.text.toString().trim()
-                            viewModel.password = binding.signupPasswordEdit.text.toString().trim()
-                            viewModel.birthday = "${binding.signupDateYearEdit.text.toString()}-${
-                                String.format(
-                                    "%02d",
-                                    binding.signupDateMonthEdit.text.toString().toInt()
-                                )
-                            }-${
-                                String.format(
-                                    "%02d",
-                                    binding.signupDateDayEdit.text.toString().toInt()
-                                )
-                            }"
-                            viewModel.question1 =
-                                binding.signupSafetyProblemEdit1.text.toString().trim()
-                            viewModel.question2 =
-                                binding.signupSafetyProblemEdit2.text.toString().trim()
-                            viewModel.question3 =
-                                binding.signupSafetyProblemEdit3.text.toString().trim()
-                            viewModel.answer1 = binding.signupAnswerEdit1.text.toString().trim()
-                            viewModel.answer2 = binding.signupAnswerEdit2.text.toString().trim()
-                            viewModel.answer3 = binding.signupAnswerEdit3.text.toString().trim()
+//                            viewModel.name = binding.signupNicknameEdit.text.toString().trim()
+//                            viewModel.email = binding.signupUsernameEdit.text.toString().trim()
+//                            viewModel.password = binding.signupPasswordEdit.text.toString().trim()
+//                            viewModel.birthday = "${binding.signupDateYearEdit.text.toString()}-${
+//                                String.format(
+//                                    "%02d",
+//                                    binding.signupDateMonthEdit.text.toString().toInt()
+//                                )
+//                            }-${
+//                                String.format(
+//                                    "%02d",
+//                                    binding.signupDateDayEdit.text.toString().toInt()
+//                                )
+//                            }"
+//                            viewModel.question1 =
+//                                binding.signupSafetyProblemEdit1.text.toString().trim()
+//                            viewModel.question2 =
+//                                binding.signupSafetyProblemEdit2.text.toString().trim()
+//                            viewModel.question3 =
+//                                binding.signupSafetyProblemEdit3.text.toString().trim()
+//                            viewModel.answer1 = binding.signupAnswerEdit1.text.toString().trim()
+//                            viewModel.answer2 = binding.signupAnswerEdit2.text.toString().trim()
+//                            viewModel.answer3 = binding.signupAnswerEdit3.text.toString().trim()
 
                             //显示加载进度条
                             hideProgressBar(false)
@@ -427,11 +427,11 @@ class SignUpFragment : BaseFragment<FragmentSignupBinding, SignUpViewModel>() {
         // menu的item点击事件
         popupMenu.setOnMenuItemClickListener { item ->
             binding.signupGenderEdit.setText(item.title)
-            viewModel.gender = when (item.itemId) {
-                R.id.menu_id_nan -> "m"
-                R.id.menu_id_nv -> "f"
-                else -> "bot"
-            }
+//            viewModel.gender = when (item.itemId) {
+//                R.id.menu_id_nan -> "m"
+//                R.id.menu_id_nv -> "f"
+//                else -> "bot"
+//            }
             false
         }
         popupMenu.show()

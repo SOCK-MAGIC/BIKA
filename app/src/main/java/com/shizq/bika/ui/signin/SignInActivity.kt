@@ -11,7 +11,7 @@ import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity2
 import com.shizq.bika.databinding.FragmentSigninBinding
 import com.shizq.bika.ui.main.MainActivity
-import com.shizq.bika.ui.signup.SignUpFragment
+import com.shizq.bika.ui.signup.SignUpActivity
 import com.shizq.bika.utils.bindView
 
 class SignInActivity : BaseActivity2() {
@@ -47,7 +47,7 @@ class SignInActivity : BaseActivity2() {
             hideProgressBar(true)
         }
         binding.signinBtnSignup.setOnClickListener {
-            startActivity(SignUpFragment::class.java,)
+            startActivity(SignUpActivity::class.java,)
         }
         binding.signinBtnForgot.setOnClickListener {
             MaterialAlertDialogBuilder(this)

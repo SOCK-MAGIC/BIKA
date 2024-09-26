@@ -1,6 +1,7 @@
 package com.shizq.bika.ui.signup
 
 import android.app.Application
+import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.JsonObject
 import com.shizq.bika.base.BaseViewModel
@@ -13,17 +14,18 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.RequestBody
 
 class SignUpViewModel : BaseViewModel() {
-    var name:String?=null
-    var email:String?=null
-    var password:String?=null
-    var birthday:String?=null
-    var gender:String?=null
-    var question1:String?=null
-    var question2:String?=null
-    var question3:String?=null
-    var answer1:String?=null
-    var answer2:String?=null
-    var answer3:String?=null
+    val name = ObservableField("")
+    val email = ObservableField("")
+    val password = ObservableField("")
+    val confirmPassword = ObservableField("")
+    val birthday = ObservableField("")
+    val gender = ObservableField("")
+    val question1 = ObservableField("")
+    val question2 = ObservableField("")
+    val question3 = ObservableField("")
+    val answer1 = ObservableField("")
+    val answer2 = ObservableField("")
+    val answer3 = ObservableField("")
 
     val liveData_signup: MutableLiveData<BaseResponse<SignInBean>> by lazy {
         MutableLiveData<BaseResponse<SignInBean>>()
@@ -34,22 +36,22 @@ class SignUpViewModel : BaseViewModel() {
         val body = RequestBody.create(
             "application/json; charset=UTF-8".toMediaTypeOrNull(),
             JsonObject().apply {
-                addProperty("answer1", answer1)
-                addProperty("answer2", answer2)
-                addProperty("answer3", answer3)
-                addProperty("birthday", birthday)
-                addProperty("email", email)
-                addProperty("gender", gender)
-                addProperty("name", name)
-                addProperty("password", password)
-                addProperty("question1", question1)
-                addProperty("question2", question2)
-                addProperty("question3", question3)
+//                addProperty("answer1", answer1)
+//                addProperty("answer2", answer2)
+//                addProperty("answer3", answer3)
+//                addProperty("birthday", birthday)
+//                addProperty("email", email)
+//                addProperty("gender", gender)
+//                addProperty("name", name)
+//                addProperty("password", password)
+//                addProperty("question1", question1)
+//                addProperty("question2", question2)
+//                addProperty("question3", question3)
             }.asJsonObject.toString()
         )
-        val headers= BaseHeaders("auth/register","POST").getHeaders()
+        val headers = BaseHeaders("auth/register", "POST").getHeaders()
 
-        RetrofitUtil.service.signUpPost(body,headers)
+        RetrofitUtil.service.signUpPost(body, headers)
             .doOnSubscribe(this@SignUpViewModel)
             .subscribe(object : BaseObserver<SignInBean>() {
                 override fun onSuccess(baseResponse: BaseResponse<SignInBean>) {
