@@ -66,7 +66,12 @@ android {
 }
 
 dependencies {
+    implementation(projects.feature.interest)
+    implementation(projects.feature.signin)
+
     implementation(projects.core.common)
+    implementation(projects.core.ui)
+    implementation(projects.core.designsystem)
     implementation(projects.core.data)
     implementation(projects.sync.work)
 
@@ -131,4 +136,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.decompose)
+    implementation(libs.decompose.compose)
 }
