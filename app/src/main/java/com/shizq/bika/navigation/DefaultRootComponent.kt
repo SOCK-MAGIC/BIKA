@@ -5,7 +5,9 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.feature.signin.SignInComponent
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -13,6 +15,7 @@ import kotlinx.serialization.Serializable
 
 class DefaultRootComponent @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
+    private val signInComponentFactory: SignInComponent.Factory
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
     override val stack: Value<ChildStack<*, RootComponent.Child>> =
@@ -26,15 +29,16 @@ class DefaultRootComponent @AssistedInject constructor(
 
     private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
         trace("Navigation: $config") {
-            TODO()
+            when (config) {
+                Config.SignIn -> RootComponent.Child.SignIn(signInComponentFactory(componentContext))
+            }
         }
 
     override fun navigationToSignIn() {
-        TODO("Not yet implemented")
     }
 
     override fun onBack() {
-        TODO("Not yet implemented")
+        navigation.pop()
     }
 
     @Serializable

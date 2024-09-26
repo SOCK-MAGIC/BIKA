@@ -5,21 +5,24 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.shizq.bika.feature.signin.SignInScreen
-import io.github.xxfast.decompose.router.LocalRouterContext
-import io.github.xxfast.decompose.router.defaultRouterContext
+import com.arkivanov.decompose.defaultComponentContext
+import com.shizq.bika.navigation.RootComponent
+import com.shizq.bika.ui.BikaApp
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    @Inject
+    lateinit var rootComponentFactory: RootComponent.Factory
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
         setContent {
             MaterialTheme {
-
+                val componentContext = defaultComponentContext()
+                BikaApp(rootComponentFactory(componentContext))
             }
         }
     }
