@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.bika.android.compose)
     alias(libs.plugins.bika.hilt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
@@ -85,6 +86,8 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     ksp(libs.androidx.room.compiler)
 
     implementation(libs.byrecyclerview)

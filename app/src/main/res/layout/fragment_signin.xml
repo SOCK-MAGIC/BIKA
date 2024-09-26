@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.shizq.bika.ui.signin.SignInViewModel" />
@@ -26,8 +27,10 @@
                 android:id="@+id/signin_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={viewModel.email}"
-                android:inputType="text" />
+                android:inputType="text"
+                android:text="@={viewModel.email}" />
+
+            <requestFocus />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -45,8 +48,8 @@
                 android:id="@+id/signin_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@={viewModel.password}"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:text="@={viewModel.password}" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -84,6 +87,5 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:visibility="gone" />
-
     </RelativeLayout>
 </layout>

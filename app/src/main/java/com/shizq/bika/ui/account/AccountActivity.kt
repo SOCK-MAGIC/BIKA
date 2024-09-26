@@ -2,7 +2,6 @@ package com.shizq.bika.ui.account
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.activity.addCallback
 import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity

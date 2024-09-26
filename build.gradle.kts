@@ -12,5 +12,6 @@ plugins {
     alias(libs.plugins.module.graph) apply false
     alias(libs.plugins.room) apply false
     alias(libs.plugins.roborazzi) apply false
+    alias(libs.plugins.kotlin.android) apply false
 }
 

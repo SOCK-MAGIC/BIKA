@@ -57,6 +57,8 @@ androidxAppcompat = "1.7.0"
 androidxPreference = "1.2.1"
 truth = "1.4.4"
 androidxHiltNavigationCompose = "1.2.0"
+activity = "1.9.2"
+constraintlayout = "2.1.4"
 [libraries]
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
@@ -138,6 +140,8 @@ detekt-gradlePlugin = { group = "io.gitlab.arturbosch.detekt", name = "detekt-gr
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", version.ref = "androidxRoom" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
@@ -168,3 +172,4 @@ bika-hilt = { id = "bika.hilt" }
 bika-decompose = { id = "bika.decompose" }
 bika-detekt = { id = "bika.detekt" }
 bika-android-testoptions = { id = "bika.android.testoptions" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

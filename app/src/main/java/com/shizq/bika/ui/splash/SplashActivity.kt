@@ -2,23 +2,18 @@ package com.shizq.bika.ui.splash
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity2
-import com.shizq.bika.ui.account.AccountActivity
 import com.shizq.bika.ui.main.MainActivity
-import com.shizq.bika.utils.SPUtil
+import com.shizq.bika.ui.signin.SignInActivity
+import com.shizq.bika.ui.splash.SplashActivityUiState.Failed
+import com.shizq.bika.ui.splash.SplashActivityUiState.Loading
+import com.shizq.bika.ui.splash.SplashActivityUiState.Success
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import com.shizq.bika.ui.splash.SplashActivityUiState.*
 
 @AndroidEntryPoint
 class SplashActivity : BaseActivity2() {
@@ -40,7 +35,7 @@ class SplashActivity : BaseActivity2() {
                             }
 
                             Failed -> {
-                                startActivity(AccountActivity::class.java)
+                                startActivity(SignInActivity::class.java)
                                 finish()
                             }
                         }

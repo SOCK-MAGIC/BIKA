@@ -15,12 +15,20 @@ abstract class BaseActivity2 : AppCompatActivity() {
         setContentView(layoutId)
         initView()
         initData()
+        initListener()
     }
 
     open fun initData() {}
 
     open fun initView() {}
-    protected fun startActivity(clz: Class<*>, bundle: Bundle.() -> Unit = {}) {
-        startActivity(Intent(this, clz).putExtras(Bundle().apply(bundle)))
+    open fun initListener() {}
+    protected fun startActivity(
+        clz: Class<*>,
+        intent: Intent.() -> Unit = {},
+        bundle: Bundle.() -> Unit = {}
+    ) {
+        startActivity(
+            Intent(this, clz).apply(intent).putExtras(Bundle().apply(bundle))
+        )
     }
 }
