@@ -16,8 +16,7 @@ data class NetworkCategories(
         val isWeb: Boolean = false,
         val link: String = "",
         val thumb: Thumb = Thumb(),
-        var title: String = "",
-        var imageRes: Int? = null,
+        val title: String = "",
     ) {
         @Serializable
         data class Thumb(

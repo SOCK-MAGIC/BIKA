@@ -2,6 +2,7 @@ package com.shizq.bika.core.network.di
 
 import androidx.tracing.trace
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.BikaInterceptor
 import dagger.Module
@@ -56,7 +57,8 @@ internal class NetworkModule {
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
-        preferencesDataSource: BikaPreferencesDataSource
+        preferencesDataSource: BikaPreferencesDataSource,
+        network: BikaNetworkDataSource,
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -70,6 +72,9 @@ internal class NetworkModule {
             addDefaultResponseValidation()
             install(BikaClientPlugin) {
                 transform = json
+                account = runBlocking { preferencesDataSource.userData.first().account }
+                refreshToken = network::signIn
+                save = preferencesDataSource::setToken
             }
             install(ContentNegotiation) {
                 json(json)
