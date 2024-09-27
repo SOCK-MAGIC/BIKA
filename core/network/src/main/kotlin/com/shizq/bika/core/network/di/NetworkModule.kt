@@ -58,7 +58,6 @@ internal class NetworkModule {
         json: Json,
         okHttpClient: OkHttpClient,
         preferencesDataSource: BikaPreferencesDataSource,
-        network: BikaNetworkDataSource,
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -73,7 +72,6 @@ internal class NetworkModule {
             install(BikaClientPlugin) {
                 transform = json
                 account = runBlocking { preferencesDataSource.userData.first().account }
-                refreshToken = network::signIn
                 save = preferencesDataSource::setToken
             }
             install(ContentNegotiation) {
