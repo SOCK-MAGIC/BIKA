@@ -68,8 +68,8 @@ internal fun SignInContent(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        val (account, setAccount) = rememberSaveable { mutableStateOf(model.account) }
-        val (password, setPassword) = rememberSaveable { mutableStateOf(model.password) }
+        val (account, setAccount) = rememberSaveable(model) { mutableStateOf(model.account) }
+        val (password, setPassword) = rememberSaveable(model) { mutableStateOf(model.password) }
         var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
         val localFocusManager = LocalFocusManager.current
