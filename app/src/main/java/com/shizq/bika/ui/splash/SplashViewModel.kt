@@ -23,25 +23,25 @@ class SplashActivityViewModel @Inject constructor(
     private val network: BikaNetworkDataSource,
     preferencesDataSource: BikaPreferencesDataSource
 ) : ViewModel() {
-    val uiState: StateFlow<SplashActivityUiState> = flow {
-        val account = preferencesDataSource.userData.first().account
-        emit(network.signIn(account.email, account.password))
-    }.asResult()
-        .map { result ->
-            when (result) {
-                is Result.Error -> Failed
-                Result.Loading -> Loading
-                is Result.Success -> {
-                    val token = result.data.token
-                    preferencesDataSource.setToken(token)
-                    Success
-                }
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            initialValue = Loading,
-            started = SharingStarted.WhileSubscribed(5_000),
-        )
+    // val uiState: StateFlow<SplashActivityUiState> = flow {
+    //     // val account = preferencesDataSource.userData.first().account
+    //     // emit(network.signIn(account.email, account.password))
+    // }.asResult()
+    //     .map { result ->
+    //         when (result) {
+    //             is Result.Error -> Failed
+    //             Result.Loading -> Loading
+    //             is Result.Success -> {
+    //                 val token = result.data.token
+    //                 preferencesDataSource.setToken(token)
+    //                 Success
+    //             }
+    //         }
+    //     }.stateIn(
+    //         scope = viewModelScope,
+    //         initialValue = Loading,
+    //         started = SharingStarted.WhileSubscribed(5_000),
+    //     )
 }
 
 sealed interface SplashActivityUiState {

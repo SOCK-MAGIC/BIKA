@@ -23,24 +23,24 @@ class SplashActivity : BaseActivity2() {
         super.onCreate(savedInstanceState)
 
         // Update the uiState
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState
-                    .collect {
-                        when (it) {
-                            Loading -> Unit
-                            is Success -> {
-                                startActivity(MainActivity::class.java)
-                                finish()
-                            }
-
-                            Failed -> {
-                                startActivity(SignInActivity::class.java)
-                                finish()
-                            }
-                        }
-                    }
-            }
-        }
+        // lifecycleScope.launch {
+        //     lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        //         viewModel.uiState
+        //             .collect {
+        //                 when (it) {
+        //                     Loading -> Unit
+        //                     is Success -> {
+        //                         startActivity(MainActivity::class.java)
+        //                         finish()
+        //                     }
+        //
+        //                     Failed -> {
+        //                         startActivity(SignInActivity::class.java)
+        //                         finish()
+        //                     }
+        //                 }
+        //             }
+        //     }
+        // }
     }
 }

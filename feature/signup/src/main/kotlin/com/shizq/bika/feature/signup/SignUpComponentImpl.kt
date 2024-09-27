@@ -17,26 +17,10 @@ class SignUpComponentImpl @AssistedInject constructor(
     private val network: BikaNetworkDataSource,
     private val preferencesDataSource: BikaPreferencesDataSource
 ) : SignUpComponent, ComponentContext by componentContext {
-    val acc = preferencesDataSource.userData.map { preferences ->
-        preferences.account?.let { JVMD.Success(it) } ?: JVMD.Failed
-    }.stateIn(
-        componentScope,
-        SharingStarted.WhileSubscribed(5000),
-        JVMD.Failed
-    )
-    fun signIn(email: String, password: String) {
-        // network.signIn(email,password)
-    }
-
     @AssistedFactory
     interface Factory : SignUpComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
         ): SignUpComponentImpl
     }
-}
-
-sealed interface JVMD {
-    data class Success(val account: Account) : JVMD
-    data object Failed : JVMD
 }

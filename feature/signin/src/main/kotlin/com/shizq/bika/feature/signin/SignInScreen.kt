@@ -1,5 +1,6 @@
 package com.shizq.bika.feature.signin
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -25,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,16 +35,32 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun SignInScreen(component: SignInComponent) {
+fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
+    val state by component.account.collectAsStateWithLifecycle()
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        component.viewEvents.collect { event ->
+            when (event) {
+                is LoginViewEvent.NavTo -> navigationToInterest()
+                is LoginViewEvent.ShowMessage -> Toast.makeText(
+                    context,
+                    event.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
 
-    SignInContent({ _, _ -> })
+    SignInContent(state, component::signIn)
 }
 
 @Composable
 internal fun SignInContent(
-    login: (String, String) -> Unit,
+    model: SignInViewState,
+    signIn: (String, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -49,8 +68,8 @@ internal fun SignInContent(
             .padding(16.dp)
             .fillMaxSize()
     ) {
-        val (account, setAccount) = rememberSaveable { mutableStateOf("") }
-        val (password, setPassword) = rememberSaveable { mutableStateOf("") }
+        val (account, setAccount) = rememberSaveable { mutableStateOf(model.account) }
+        val (password, setPassword) = rememberSaveable { mutableStateOf(model.password) }
         var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
         val localFocusManager = LocalFocusManager.current
@@ -97,7 +116,7 @@ internal fun SignInContent(
                 }
             },
             keyboardActions = KeyboardActions(
-                onDone = { login(account, password) }
+                onDone = { signIn(account, password) }
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -110,7 +129,7 @@ internal fun SignInContent(
         }
         Spacer(Modifier.weight(1f))
         ExtendedFloatingActionButton(
-            onClick = { login(account, password) },
+            onClick = { signIn(account, password) },
             modifier = Modifier.align(Alignment.End)
         ) {
             Text("登录", fontSize = 16.sp)

@@ -31,6 +31,6 @@ class BIKAApplication : Application() {
                 else -> AppCompatDelegate.MODE_NIGHT_NO
             }
         )
-        Sync.initialize(this)
+        // Sync.initialize(this)
     }
 }

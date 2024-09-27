@@ -21,8 +21,10 @@ class DailyTaskRepository @Inject constructor(
             punchIn = { network.punchIn() },
             signIn = {
                 val account = bikaPreferencesDataSource.userData.first().account
-                val token = network.signIn(account.email, account.password)
-                bikaPreferencesDataSource.setToken(token.token)
+                val token = account?.let { network.signIn(it.email, account.password) }
+                if (token != null) {
+                    bikaPreferencesDataSource.setToken(token.token)
+                }
             }
         )
     }

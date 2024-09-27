@@ -11,6 +11,6 @@ data class UserPreferences(
 
 @Serializable
 data class Account(
-    val email: String = "",
-    val password: String = "",
+    val email: String,
+    val password: String,
 )

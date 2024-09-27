@@ -79,7 +79,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
         animation = stackAnimation { _ -> slide() + fade() },
     ) {
         when (val child = it.instance) {
-            is RootComponent.Child.SignIn -> SignInScreen(component = child.component)
+            is RootComponent.Child.SignIn -> SignInScreen(component = child.component,{})
         }
     }
 }
