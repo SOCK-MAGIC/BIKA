@@ -1,5 +1,6 @@
 plugins {
-    alias(libs.plugins.bika.android.library)
+    alias(libs.plugins.bika.android.feature)
+    alias(libs.plugins.bika.android.compose)
     alias(libs.plugins.bika.hilt)
 }
 
@@ -8,4 +9,7 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.network)
+
+    implementation(libs.decompose)
 }
