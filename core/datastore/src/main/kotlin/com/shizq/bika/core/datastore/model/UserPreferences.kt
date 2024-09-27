@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 data class UserPreferences(
     val dns: Set<String> = setOf(),
     val token: String = "",
-    val account: Account = Account()
+    val account: Account? = null
 )
 
 @Serializable

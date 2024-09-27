@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(libs.decompose)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
 }
