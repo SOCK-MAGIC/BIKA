@@ -20,7 +20,9 @@ dependencies {
     implementation(libs.ktor.client.okhttp)
     implementation(libs.ktor.serialization.kotlinx.json)
 
+    implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
 
+    implementation(libs.coil.kt)
     implementation(libs.coil.network)
 }

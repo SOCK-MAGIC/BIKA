@@ -61,7 +61,16 @@ internal fun InterestContent(uiState: InterestsUiState, modifier: Modifier = Mod
                     Icon(R.drawable.feature_interest_cat_random, "随机本子", {})
                 }
                 items(uiState.interests, key = { it.title }) { item ->
-                    Icon(item.fileServer + "/" + item.path, item.title, item.originalName)
+                    Icon("https://s3.picacomic.com" + item.path, item.title, item.originalName) {
+                        if (item.isWeb){
+
+                        }else{
+                            // intent.putExtra("tag", "categories")
+                            // intent.putExtra("title", datas.title)
+                            // intent.putExtra("value", datas.title)
+                            // startActivity(intent)
+                        }
+                    }
                 }
             }
         }
@@ -69,7 +78,7 @@ internal fun InterestContent(uiState: InterestsUiState, modifier: Modifier = Mod
 }
 
 @Composable
-private fun Icon(imageUrl: String, title: String, contentDescription: String?) {
+private fun Icon(imageUrl: String, title: String, contentDescription: String?, action: () -> Unit) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -79,7 +88,7 @@ private fun Icon(imageUrl: String, title: String, contentDescription: String?) {
             modifier = Modifier
                 .size(100.dp)
                 .clip(RoundedCornerShape(32.dp))
-                .clickable { },
+                .clickable { action() },
         )
         Text(title, fontSize = 14.sp)
     }

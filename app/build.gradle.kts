@@ -116,7 +116,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.commons.codec)
@@ -141,4 +140,6 @@ dependencies {
     implementation(libs.decompose.compose)
 
     implementation(libs.coil.kt)
+    implementation(libs.okhttp)
+    implementation(libs.coil.network)
 }

@@ -20,7 +20,9 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImagePainter.State.*
+import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.request.ImageRequest
 import com.shizq.bika.core.designsystem.R
 import com.shizq.bika.core.designsystem.theme.LocalTintTheme
 
@@ -37,8 +39,12 @@ fun DynamicAsyncImage(
     val iconTint = LocalTintTheme.current.iconTint
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
+    val context = LocalPlatformContext.current
     val imageLoader = rememberAsyncImagePainter(
-        model = imageUrl,
+        model = ImageRequest.Builder(context)
+            .data(imageUrl)
+            .diskCacheKey(imageUrl.substringAfterLast("/"))
+            .build(),
         onState = { state ->
             isLoading = state is Loading
             isError = state is Error
