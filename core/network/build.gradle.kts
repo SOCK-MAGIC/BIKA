@@ -21,4 +21,6 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
 
     implementation(libs.okhttp.logging.interceptor)
+
+    implementation(libs.coil.network)
 }

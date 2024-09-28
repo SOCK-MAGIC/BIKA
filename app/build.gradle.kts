@@ -139,4 +139,6 @@ dependencies {
 
     implementation(libs.decompose)
     implementation(libs.decompose.compose)
+
+    implementation(libs.coil.kt)
 }

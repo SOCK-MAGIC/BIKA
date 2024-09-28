@@ -22,7 +22,7 @@ dependencies {
     api(libs.androidx.compose.runtime)
     api(libs.androidx.compose.ui.util)
 
-    implementation(libs.coil.kt)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.androidx.compose.ui.test)
     testImplementation(libs.androidx.compose.ui.testManifest)
