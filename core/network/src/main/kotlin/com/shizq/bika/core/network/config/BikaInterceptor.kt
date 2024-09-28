@@ -20,8 +20,8 @@ internal class BikaInterceptor @Inject constructor(
         val token = runBlocking { preferencesDataSource.userData.first().token }
         val time = (System.currentTimeMillis() / 1000).toString()
         val nonce = UUID.randomUUID().toString().replace("-", "")
-        val text =
-            (originalRequest.url.pathSegments.joinToString("/") + time + nonce + originalRequest.method + API_KEY).lowercase()
+        val url = originalRequest.url.toString().replace("https://picaapi.picacomic.com/", "")
+        val text = (url + time + nonce + originalRequest.method + API_KEY).lowercase()
         val request = originalRequest
             .newBuilder()
             .removeHeader(HttpHeaders.AcceptCharset)

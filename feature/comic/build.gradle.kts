@@ -9,6 +9,8 @@ android {
 }
 
 dependencies {
+    implementation(projects.core.network)
+
     val paging_version = "3.3.2"
 
     implementation("androidx.paging:paging-runtime:$paging_version")

@@ -5,11 +5,16 @@ import com.shizq.bika.core.network.model.NetworkInit
 import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
 import com.shizq.bika.core.network.model.NetworkToken
+import com.shizq.bika.core.network.model.Sort
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
+import io.ktor.http.encodeURLParameter
+import java.net.URLEncoder
 import javax.inject.Inject
 
 class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) {
@@ -23,4 +28,19 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
     suspend fun punchIn(): NetworkPunchIn = client.post("users/punch-in").body()
     suspend fun profile(): NetworkProfile = client.post("users/profile").body()
     suspend fun getCategories(): NetworkCategories = client.get("categories").body()
+    suspend fun getComicList(
+        sort: Sort,
+        page: Int,
+        category: String? = null,
+        tag: String? = null,
+        creatorId: String? = null,
+        chineseTeam: String? = null,
+    ) = client.get("comics") {
+        parameter("c", category?.encodeURLParameter())
+        parameter("t", tag?.encodeURLParameter())
+        parameter("ca", creatorId)
+        parameter("ct", chineseTeam)
+        parameter("s", sort.value)
+        parameter("page", page)
+    }.bodyAsText()
 }

@@ -17,7 +17,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.rememberDrawerState
@@ -27,13 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
-import androidx.compose.ui.text.Placeholder
 import com.arkivanov.decompose.extensions.compose.stack.Children
 import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.shizq.bika.core.designsystem.component.BikaNavigationSuiteScaffold
 import com.shizq.bika.feature.comic.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
 import com.shizq.bika.feature.signin.SignInScreen
@@ -101,8 +98,12 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 component::navigationToInterest
             )
 
-            is RootComponent.Child.Interest -> InterestScreen(component = child.component)
-            is RootComponent.Child.Comic -> ComicScreen(component = child.component)
+            is RootComponent.Child.Interest -> InterestScreen(
+                component = child.component,
+                navigationToComicList = component::navigationToComicList
+            )
+
+            is RootComponent.Child.ComicList -> ComicScreen(component = child.component)
         }
     }
 }

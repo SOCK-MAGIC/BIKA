@@ -9,7 +9,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
-import com.shizq.bika.feature.comic.ComicComponent
+import com.shizq.bika.feature.comic.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import dagger.assisted.Assisted
@@ -21,7 +21,7 @@ class DefaultRootComponent @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     private val signInComponentFactory: SignInComponent.Factory,
     private val interestComponentFactory: InterestComponent.Factory,
-    private val comicComponentFactory: ComicComponent.Factory,
+    private val comicListComponentFactory: ComicListComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
     override val stack: Value<ChildStack<*, RootComponent.Child>> =
@@ -38,7 +38,9 @@ class DefaultRootComponent @AssistedInject constructor(
             when (config) {
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
-                Config.Comic -> Comic(comicComponentFactory(componentContext))
+                is Config.ComicList -> ComicList(
+                    comicListComponentFactory(componentContext, config.title)
+                )
             }
         }
 
@@ -50,6 +52,10 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.Interest)
     }
 
+    override fun navigationToComicList(tag: String, title: String) {
+        navigation.push(Config.ComicList(tag, title))
+    }
+
     override fun onBack() {
         navigation.pop()
     }
@@ -58,7 +64,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private sealed interface Config {
         data object SignIn : Config
         data object Interest : Config
-        data object Comic : Config
+        data class ComicList(val tag: String, val title: String) : Config
     }
 
     @AssistedFactory

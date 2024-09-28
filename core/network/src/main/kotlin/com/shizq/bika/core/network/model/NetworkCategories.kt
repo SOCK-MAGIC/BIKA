@@ -17,12 +17,5 @@ data class NetworkCategories(
         val link: String = "",
         val thumb: Thumb = Thumb(),
         val title: String = "",
-    ) {
-        @Serializable
-        data class Thumb(
-            val fileServer: String = "",
-            val originalName: String = "",
-            val path: String = ""
-        )
-    }
+    )
 }

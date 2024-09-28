@@ -24,13 +24,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 
 @Composable
-fun InterestScreen(component: InterestComponent) {
+fun InterestScreen(component: InterestComponent, navigationToComicList: (String, String) -> Unit) {
     val uiState by component.interestUiState.collectAsStateWithLifecycle()
-    InterestContent(uiState = uiState)
+    InterestContent(uiState = uiState, navigationToComicList = navigationToComicList)
 }
 
 @Composable
-internal fun InterestContent(uiState: InterestsUiState, modifier: Modifier = Modifier) {
+internal fun InterestContent(
+    uiState: InterestsUiState,
+    navigationToComicList: (String, String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Scaffold { innerPadding ->
         when (uiState) {
             InterestsUiState.Empty -> Text("什么都没有")
@@ -61,14 +65,11 @@ internal fun InterestContent(uiState: InterestsUiState, modifier: Modifier = Mod
                     Icon(R.drawable.feature_interest_cat_random, "随机本子", {})
                 }
                 items(uiState.interests, key = { it.title }) { item ->
-                    Icon("https://s3.picacomic.com" + item.path, item.title, item.originalName) {
-                        if (item.isWeb){
+                    Icon("https://s3.picacomic.com/" + item.path, item.title, item.originalName) {
+                        if (item.isWeb) {
 
-                        }else{
-                            // intent.putExtra("tag", "categories")
-                            // intent.putExtra("title", datas.title)
-                            // intent.putExtra("value", datas.title)
-                            // startActivity(intent)
+                        } else {
+                            navigationToComicList("categories", item.title)
                         }
                     }
                 }

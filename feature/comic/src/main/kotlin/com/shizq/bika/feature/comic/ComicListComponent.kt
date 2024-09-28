@@ -2,10 +2,11 @@ package com.shizq.bika.feature.comic
 
 import com.arkivanov.decompose.ComponentContext
 
-interface ComicComponent {
+interface ComicListComponent {
     interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
-        ): ComicComponent
+            category: String,
+        ): ComicListComponent
     }
 }
