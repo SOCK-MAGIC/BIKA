@@ -66,8 +66,10 @@ android {
 }
 
 dependencies {
+    implementation(projects.feature.comic)
     implementation(projects.feature.interest)
     implementation(projects.feature.signin)
+    implementation(projects.feature.signup)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)
@@ -103,7 +105,6 @@ dependencies {
     implementation(libs.retrofit.converter.kotlinx.serialization)
 
     implementation(libs.glide)
-    ksp(libs.glide.compiler)
     implementation(libs.glide.okhttp3)
 
     implementation(libs.rxandroid)

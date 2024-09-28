@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.feature.comic.ComicComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import dagger.assisted.Assisted
@@ -20,6 +21,7 @@ class DefaultRootComponent @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     private val signInComponentFactory: SignInComponent.Factory,
     private val interestComponentFactory: InterestComponent.Factory,
+    private val comicComponentFactory: ComicComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
     override val stack: Value<ChildStack<*, RootComponent.Child>> =
@@ -36,6 +38,7 @@ class DefaultRootComponent @AssistedInject constructor(
             when (config) {
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
+                Config.Comic -> Comic(comicComponentFactory(componentContext))
             }
         }
 
@@ -55,6 +58,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private sealed interface Config {
         data object SignIn : Config
         data object Interest : Config
+        data object Comic : Config
     }
 
     @AssistedFactory

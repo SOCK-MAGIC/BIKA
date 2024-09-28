@@ -3,6 +3,7 @@ package com.shizq.bika.navigation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.feature.comic.ComicComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
 
@@ -15,6 +16,7 @@ interface RootComponent : ComponentContext {
     sealed class Child {
         data class SignIn(val component: SignInComponent) : Child()
         data class Interest(val component: InterestComponent) : Child()
+        data class Comic(val component: ComicComponent) : Child()
     }
 
     interface Factory {
