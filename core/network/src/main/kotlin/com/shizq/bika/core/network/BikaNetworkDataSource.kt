@@ -1,6 +1,7 @@
 package com.shizq.bika.core.network
 
 import com.shizq.bika.core.network.model.NetworkCategories
+import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.NetworkInit
 import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
@@ -12,9 +13,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.encodeURLParameter
-import java.net.URLEncoder
 import javax.inject.Inject
 
 class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) {
@@ -35,12 +34,12 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
         tag: String? = null,
         creatorId: String? = null,
         chineseTeam: String? = null,
-    ) = client.get("comics") {
-        parameter("c", category?.encodeURLParameter())
-        parameter("t", tag?.encodeURLParameter())
+    ): NetworkComicList = client.get("comics") {
+        parameter("c", category)
+        parameter("t", tag)
         parameter("ca", creatorId)
         parameter("ct", chineseTeam)
         parameter("s", sort.value)
         parameter("page", page)
-    }.bodyAsText()
+    }.body()
 }

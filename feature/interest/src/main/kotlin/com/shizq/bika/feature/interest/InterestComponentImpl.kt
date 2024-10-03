@@ -52,10 +52,8 @@ data class Interest(
     val id: String,
     val isWeb: Boolean,
     val link: String,
-    val fileServer: String = "",
-    val originalName: String = "",
-    val path: String = "",
     val title: String,
+    val imageUrl: String,
 )
 
 private fun NetworkCategories.mapToInterests() = categories.map {
@@ -63,9 +61,7 @@ private fun NetworkCategories.mapToInterests() = categories.map {
         it.id,
         it.isWeb,
         it.link,
-        it.thumb.fileServer,
-        it.thumb.originalName,
-        it.thumb.path,
-        it.title
+        it.title,
+        it.thumb.imageUrl
     )
 }

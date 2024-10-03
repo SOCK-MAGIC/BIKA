@@ -65,9 +65,8 @@ internal fun InterestContent(
                     Icon(R.drawable.feature_interest_cat_random, "随机本子", {})
                 }
                 items(uiState.interests, key = { it.title }) { item ->
-                    Icon("https://s3.picacomic.com/" + item.path, item.title, item.originalName) {
+                    Icon(item.imageUrl, item.title, null) {
                         if (item.isWeb) {
-
                         } else {
                             navigationToComicList("categories", item.title)
                         }

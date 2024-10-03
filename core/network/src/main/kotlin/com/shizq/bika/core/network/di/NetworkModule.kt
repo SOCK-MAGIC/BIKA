@@ -4,12 +4,18 @@ import android.content.Context
 import androidx.tracing.trace
 import coil3.ImageLoader
 import coil3.disk.DiskCache
-import coil3.network.okhttp.asNetworkClient
+import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.serviceLoaderEnabled
 import coil3.util.DebugLogger
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BuildConfig
+import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.BikaInterceptor
+import com.shizq.bika.core.network.util.PICA_API
+import com.shizq.bika.core.network.util.asExecutorService
+import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,21 +24,18 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.HttpSend
 import io.ktor.client.plugins.addDefaultResponseValidation
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.plugins.plugin
 import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
 import io.ktor.http.contentType
 import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import okhttp3.Cache
-import okhttp3.Call
 import okhttp3.Dns
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -48,9 +51,11 @@ internal class NetworkModule {
     fun okHttpCallFactory(
         preferencesDataSource: BikaPreferencesDataSource,
         @ApplicationContext application: Context,
+        @Dispatcher(BikaDispatchers.IO) ioDispatcher: CoroutineDispatcher,
         bikaInterceptor: BikaInterceptor,
     ): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
+            .dispatcher(okhttp3.Dispatcher(ioDispatcher.limitedParallelism(64).asExecutorService()))
             .dns {
                 val dns = runBlocking { preferencesDataSource.userData.first().dns }
                 dns.flatMap { Dns.SYSTEM.lookup(it) }
@@ -77,7 +82,7 @@ internal class NetworkModule {
                 preconfigured = okHttpClient
             }
             defaultRequest {
-                url("https://picaapi.picacomic.com/")
+                url(PICA_API)
                 userAgent("okhttp/3.8.1")
                 contentType(ContentType.parse("application/json; charset=UTF-8"))
             }
@@ -100,9 +105,20 @@ internal class NetworkModule {
     @Provides
     @Singleton
     fun imageLoader(
+        client: Lazy<OkHttpClient>,
         @ApplicationContext application: Context,
     ): ImageLoader = trace("BikaImageLoader") {
         ImageLoader.Builder(application)
+            .serviceLoaderEnabled(false)
+            .components {
+                add(
+                    OkHttpNetworkFetcherFactory {
+                        client.get().newBuilder()
+                            .apply { interceptors().clear() }
+                            .build()
+                    }
+                )
+            }
             .diskCache {
                 DiskCache.Builder()
                     .directory(File(application.cacheDir, "coil-cache").toOkioPath())

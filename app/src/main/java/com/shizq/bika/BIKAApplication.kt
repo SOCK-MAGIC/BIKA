@@ -9,22 +9,18 @@ import coil3.SingletonImageLoader
 import coil3.Uri
 import coil3.annotation.InternalCoilApi
 import coil3.fetch.Fetcher
-import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import coil3.util.CoilUtils
 import coil3.util.FetcherServiceLoaderTarget
-import coil3.util.ServiceLoaderComponentRegistry
 import com.google.android.material.color.DynamicColors
-import com.shizq.bika.sync.initializers.Sync
 import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-@OptIn(InternalCoilApi::class)
 @HiltAndroidApp
-class BIKAApplication : Application(), SingletonImageLoader.Factory ,
-    FetcherServiceLoaderTarget<Uri> {
+class BIKAApplication :
+    Application(),
+    SingletonImageLoader.Factory {
     @Inject
     lateinit var imageLoader: dagger.Lazy<ImageLoader>
 
@@ -36,11 +32,10 @@ class BIKAApplication : Application(), SingletonImageLoader.Factory ,
         lateinit var contextBase: Application
     }
 
-
     override fun onCreate() {
         super.onCreate()
         contextBase = this
-        DynamicColors.applyToActivitiesIfAvailable(this)// 根据壁纸修改App主题颜色
+        DynamicColors.applyToActivitiesIfAvailable(this) // 根据壁纸修改App主题颜色
 
         SPUtil.init(this)
         val nightMode = SPUtil.get("setting_night", "跟随系统") as String
@@ -54,15 +49,7 @@ class BIKAApplication : Application(), SingletonImageLoader.Factory ,
         )
 
         // Sync.initialize(this)
-        OkHttpNetworkFetcherFactory { client.get() }
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader = imageLoader.get()
-    override fun factory(): Fetcher.Factory<Uri>? {
-        TODO("Not yet implemented")
-    }
-
-    override fun type(): KClass<Uri>? {
-        TODO("Not yet implemented")
-    }
 }

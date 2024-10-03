@@ -3,6 +3,7 @@ package com.shizq.bika.core.network.config
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.network.util.API_KEY
 import com.shizq.bika.core.network.util.DIGEST_KEY
+import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.signature
 import io.ktor.http.HttpHeaders
 import kotlinx.coroutines.flow.first
@@ -16,12 +17,12 @@ internal class BikaInterceptor @Inject constructor(
     private val preferencesDataSource: BikaPreferencesDataSource
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
         val token = runBlocking { preferencesDataSource.userData.first().token }
+        val originalRequest = chain.request()
+        val parameter = originalRequest.url.toString().replace(PICA_API, "")
         val time = (System.currentTimeMillis() / 1000).toString()
         val nonce = UUID.randomUUID().toString().replace("-", "")
-        val url = originalRequest.url.toString().replace("https://picaapi.picacomic.com/", "")
-        val text = (url + time + nonce + originalRequest.method + API_KEY).lowercase()
+        val text = (parameter + time + nonce + originalRequest.method + API_KEY).lowercase()
         val request = originalRequest
             .newBuilder()
             .removeHeader(HttpHeaders.AcceptCharset)
