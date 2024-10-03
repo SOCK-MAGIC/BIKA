@@ -42,6 +42,7 @@ class ComicListPagingSource(
 }
 
 data class Comic(
+    val id: String,
     val title: String,
     val finished: Boolean,
     val author: String,
@@ -52,6 +53,7 @@ data class Comic(
 )
 
 private fun NetworkComicList.Comics.Doc.mapToComic() = Comic(
+    id,
     "$title${epsCount}E/${pagesCount}P",
     finished,
     author,

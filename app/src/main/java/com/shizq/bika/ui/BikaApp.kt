@@ -104,7 +104,10 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 navigationToComicList = component::navigationToComicList
             )
 
-            is RootComponent.Child.ComicList -> ComicScreen(component = child.component)
+            is RootComponent.Child.ComicList -> ComicScreen(
+                component = child.component,
+                navigationToComicInfo = component::navigationToComicInfo
+            )
             is RootComponent.Child.ComicInfo -> ComicInfoScreen(component = child.component)
         }
     }

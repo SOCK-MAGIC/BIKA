@@ -18,30 +18,40 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 
 @Composable
-fun ComicScreen(component: ComicListComponent) {
+fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -> Unit) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
-    ComicContent(comicsPagingItems)
+    ComicContent(comicsPagingItems, navigationToComicInfo = navigationToComicInfo)
 }
 
 @Composable
 internal fun ComicContent(
     items: LazyPagingItems<Comic>,
+    navigationToComicInfo: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
         items(items.itemCount) { index ->
             val doc = items[index]
             doc?.let {
-                ComicCard(it.thumbUrl, it.title, it.author, it.categories)
+                ComicCard(it.thumbUrl, it.title, it.author, it.categories) {
+                    navigationToComicInfo(it.id)
+                }
             }
         }
     }
 }
 
 @Composable
-private fun ComicCard(imageUrl: String, title: String, author: String, categories: String) {
+private fun ComicCard(
+    imageUrl: String,
+    title: String,
+    author: String,
+    categories: String,
+    onClick: () -> Unit
+) {
     Card(
-        Modifier
+        onClick = onClick,
+        modifier = Modifier
             .fillMaxWidth()
     ) {
         Row {

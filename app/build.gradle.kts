@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.shizq.bika"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.shizq.bika"

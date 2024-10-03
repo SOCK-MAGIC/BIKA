@@ -13,8 +13,8 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(SingletonComponent::class)
 interface ComicModule {
     @Binds
-    fun componentFactory(impl: ComicListComponentImpl.Factory): ComicListComponent.Factory
+    fun comicListComponentFactory(impl: ComicListComponentImpl.Factory): ComicListComponent.Factory
 
     @Binds
-    fun componentFactory(impl: ComicInfoComponentImpl.Factory): ComicInfoComponent.Factory
+    fun comicInfoComponentFactory(impl: ComicInfoComponentImpl.Factory): ComicInfoComponent.Factory
 }
