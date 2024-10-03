@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -43,7 +42,6 @@ internal fun ComicContent(
 
 @Composable
 private fun ComicCard(imageUrl: String, title: String, author: String, categories: String) {
-    ListItem({})
     Card(
         Modifier
             .fillMaxWidth()
@@ -59,16 +57,16 @@ private fun ComicCard(imageUrl: String, title: String, author: String, categorie
                     .padding(8.dp)
             ) {
                 Text(title, style = MaterialTheme.typography.titleMedium)
-                Text("1E305p", style = MaterialTheme.typography.labelSmall)
+                Text("1E305p", style = MaterialTheme.typography.bodyMedium)
                 Text(
                     author,
                     color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.bodyMedium
                 )
-                Text(categories, style = MaterialTheme.typography.labelMedium)
+                Text(categories, style = MaterialTheme.typography.bodyMedium)
                 Spacer(Modifier.weight(1f))
                 Row {
-                    Text("1234", modifier = Modifier.wrapContentHeight())
+                    Text("1234")
                 }
             }
         }
