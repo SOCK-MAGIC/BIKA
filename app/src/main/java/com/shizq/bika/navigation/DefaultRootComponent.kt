@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
@@ -22,6 +23,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private val signInComponentFactory: SignInComponent.Factory,
     private val interestComponentFactory: InterestComponent.Factory,
     private val comicListComponentFactory: ComicListComponent.Factory,
+    private val comicInfoComponentFactory: ComicInfoComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
     override val stack: Value<ChildStack<*, RootComponent.Child>> =
@@ -41,6 +43,10 @@ class DefaultRootComponent @AssistedInject constructor(
                 is Config.ComicList -> ComicList(
                     comicListComponentFactory(componentContext, config.title)
                 )
+
+                is Config.ComicInfo -> ComicInfo(
+                    comicInfoComponentFactory(componentContext, config.id)
+                )
             }
         }
 
@@ -56,6 +62,10 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.ComicList(tag, title))
     }
 
+    override fun navigationToComicInfo(id: String) {
+        navigation.push(Config.ComicInfo(id))
+    }
+
     override fun onBack() {
         navigation.pop()
     }
@@ -65,6 +75,7 @@ class DefaultRootComponent @AssistedInject constructor(
         data object SignIn : Config
         data object Interest : Config
         data class ComicList(val tag: String, val title: String) : Config
+        data class ComicInfo(val id: String) : Config
     }
 
     @AssistedFactory

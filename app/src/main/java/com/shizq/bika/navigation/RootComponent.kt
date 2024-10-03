@@ -3,6 +3,7 @@ package com.shizq.bika.navigation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
@@ -13,11 +14,13 @@ interface RootComponent : ComponentContext {
     fun navigationToSignIn()
     fun navigationToInterest()
     fun navigationToComicList(tag: String, title: String)
+    fun navigationToComicInfo(id: String)
     fun onBack()
     sealed class Child {
         data class SignIn(val component: SignInComponent) : Child()
         data class Interest(val component: InterestComponent) : Child()
         data class ComicList(val component: ComicListComponent) : Child()
+        data class ComicInfo(val component: ComicInfoComponent) : Child()
     }
 
     interface Factory {
