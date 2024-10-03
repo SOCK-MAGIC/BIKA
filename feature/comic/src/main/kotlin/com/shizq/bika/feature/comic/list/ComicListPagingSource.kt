@@ -1,4 +1,4 @@
-package com.shizq.bika.feature.comic
+package com.shizq.bika.feature.comic.list
 
 import androidx.compose.ui.util.fastJoinToString
 import androidx.compose.ui.util.fastMap
@@ -7,7 +7,6 @@ import androidx.paging.PagingState
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.Sort
-import com.shizq.bika.core.network.model.Thumb
 
 class ComicListPagingSource(
     private val network: BikaNetworkDataSource,

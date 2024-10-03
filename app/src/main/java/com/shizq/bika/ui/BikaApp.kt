@@ -31,7 +31,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
-import com.shizq.bika.feature.comic.ComicScreen
+import com.shizq.bika.feature.comic.list.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
 import com.shizq.bika.feature.signin.SignInScreen
 import com.shizq.bika.navigation.RootComponent

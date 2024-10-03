@@ -3,7 +3,7 @@ package com.shizq.bika.navigation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import com.shizq.bika.feature.comic.ComicListComponent
+import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
 

@@ -1,4 +1,4 @@
-package com.shizq.bika.feature.comic
+package com.shizq.bika.feature.comic.list
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig

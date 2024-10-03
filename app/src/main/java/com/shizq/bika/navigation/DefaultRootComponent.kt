@@ -9,7 +9,7 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
-import com.shizq.bika.feature.comic.ComicListComponent
+import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import dagger.assisted.Assisted
