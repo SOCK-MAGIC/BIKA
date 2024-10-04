@@ -57,11 +57,21 @@ data class Interest(
 )
 
 private fun NetworkCategories.mapToInterests() = categories.map {
-    Interest(
-        it.id,
-        it.isWeb,
-        it.link,
-        it.title,
-        it.thumb.imageUrl
-    )
+    if (!arrayOf("嗶咔小禮物", "嗶咔畫廊").contains(it.title)) {
+        Interest(
+            it.id,
+            it.isWeb,
+            it.link,
+            it.title,
+            it.thumb.imageUrl
+        )
+    } else {
+        Interest(
+            it.id,
+            it.isWeb,
+            it.link,
+            it.title,
+            "https://s3.picacomic.com/static/${it.thumb.path}"
+        )
+    }
 }

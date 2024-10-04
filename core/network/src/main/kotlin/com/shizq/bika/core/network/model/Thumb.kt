@@ -15,7 +15,7 @@ data class Thumb(
 ) {
     @Transient
     val imageUrl = if (fileServer.endsWith("/")) {
-        "$fileServer/$path"
+        "$fileServer$path"
     } else {
         "$fileServer/static/$path"
     }
