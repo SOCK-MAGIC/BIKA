@@ -46,19 +46,23 @@ data class Comic(
     val title: String,
     val finished: Boolean,
     val author: String,
-    val like: Int,
+    val likesCount: Int,
     val total: Int,
     val categories: String,
-    val thumbUrl: String
+    val thumbUrl: String,
+    val epsCount: Int,
+    val pagesCount: Int
 )
 
 private fun NetworkComicList.Comics.Doc.mapToComic() = Comic(
     id,
-    "$title${epsCount}E/${pagesCount}P",
+    title,
     finished,
     author,
     likesCount,
     totalViews,
     categories.fastJoinToString("\t", prefix = "分类: "),
-    thumb.imageUrl
+    thumb.imageUrl,
+    epsCount,
+    pagesCount,
 )
