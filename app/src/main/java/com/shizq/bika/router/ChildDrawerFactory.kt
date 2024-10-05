@@ -48,7 +48,7 @@ private data class DrawerNavState(
         listOf(
             SimpleChildNavState(
                 configuration = Unit,
-                status = if (isOpen) ChildNavState.Status.CREATED else ChildNavState.Status.DESTROYED,
+                status = if (isOpen) ChildNavState.Status.RESUMED else ChildNavState.Status.CREATED,
             ),
         )
 }

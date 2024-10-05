@@ -9,17 +9,11 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
-import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -36,51 +30,49 @@ import com.shizq.bika.feature.comic.list.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
 import com.shizq.bika.feature.signin.SignInScreen
 import com.shizq.bika.navigation.RootComponent
+import com.shizq.bika.router.rememberNavigationDrawerState
 
 @Composable
 fun BikaApp(
     component: RootComponent,
+    appState: BikaAppState,
     modifier: Modifier = Modifier,
-    placeholder: String? = null,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
     BikaApp(component, modifier)
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 internal fun BikaApp(
     component: RootComponent,
     modifier: Modifier = Modifier,
 ) {
-    ModalNavigationDrawer(
-        drawerContent = { Text("drawerContent") },
-        modifier = modifier,
-        drawerState = rememberDrawerState(DrawerValue.Closed),
-    ) {
-        Scaffold(
-            topBar = { SearchBar(inputField = {}, expanded = false, onExpandedChange = {}) { } },
-            containerColor = Color.Transparent,
-            contentColor = MaterialTheme.colorScheme.onBackground,
-            modifier = modifier.semantics {
-                testTagsAsResourceId = true
-            },
-            contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        ) { innerPadding ->
-            Surface(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .consumeWindowInsets(innerPadding)
-                    .windowInsetsPadding(
-                        WindowInsets.safeDrawing.only(
-                            WindowInsetsSides.Horizontal,
-                        ),
+    val drawerState = rememberNavigationDrawerState(
+        drawer = component.drawer,
+        onStateChanged = component::setDrawerState,
+    )
+    Scaffold(
+        containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        modifier = modifier.semantics {
+            testTagsAsResourceId = true
+        },
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
+    ) { innerPadding ->
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .consumeWindowInsets(innerPadding)
+                .windowInsetsPadding(
+                    WindowInsets.safeDrawing.only(
+                        WindowInsetsSides.Horizontal,
                     ),
-            ) {
-                Box(modifier = Modifier.consumeWindowInsets(WindowInsets(0, 0, 0, 0))) {
-                    RootContent(component)
-                }
+                ),
+        ) {
+            Box(modifier = Modifier.consumeWindowInsets(WindowInsets(0, 0, 0, 0))) {
+                RootContent(component)
             }
         }
     }

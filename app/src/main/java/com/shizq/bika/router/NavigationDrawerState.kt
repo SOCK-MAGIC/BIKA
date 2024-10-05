@@ -21,7 +21,8 @@ fun <T : Any> rememberNavigationDrawerState(
     onStateChanged: (isOpen: Boolean) -> Unit,
 ): NavigationDrawerState<T> {
     val childDrawer by drawer.subscribeAsState()
-    val drawerState = rememberDrawerState(initialValue = if (childDrawer.isOpen) DrawerValue.Open else DrawerValue.Closed)
+    val drawerState =
+        rememberDrawerState(initialValue = if (childDrawer.isOpen) DrawerValue.Open else DrawerValue.Closed)
 
     DisposableEffect(drawerState.isOpen) {
         onStateChanged(drawerState.isOpen)
