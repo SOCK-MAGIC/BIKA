@@ -10,6 +10,7 @@ class BikaPreferencesDataSource @Inject constructor(
 ) {
     val userData = userPreferences.data
 
+    @Deprecated("BikaUserCredentialDataSource")
     suspend fun setToken(token: String) {
         userPreferences.updateData {
             it.copy(token = token)
@@ -22,6 +23,7 @@ class BikaPreferencesDataSource @Inject constructor(
         }
     }
 
+    @Deprecated("BikaUserCredentialDataSource")
     suspend fun setAccount(email: String, password: String) {
         userPreferences.updateData {
             it.copy(account = Account(email, password))

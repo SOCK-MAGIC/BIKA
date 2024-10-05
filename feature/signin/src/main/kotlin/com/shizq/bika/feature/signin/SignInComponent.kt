@@ -5,7 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 interface SignInComponent {
-    val account: StateFlow<SignInViewState>
     val viewEvents: Flow<LoginViewEvent>
     fun signIn(account: String, password: String)
     interface Factory {
@@ -13,5 +12,9 @@ interface SignInComponent {
             componentContext: ComponentContext,
         ): SignInComponent
     }
+
+    val userCredential: StateFlow<UserCredential>
+    fun updateEmail(email: String)
+    fun updatePassword(password: String)
 }
 
