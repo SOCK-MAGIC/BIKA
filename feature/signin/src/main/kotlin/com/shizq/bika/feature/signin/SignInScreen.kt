@@ -16,6 +16,7 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,7 +40,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
-    val state by component.account.collectAsStateWithLifecycle()
+    val uiState by component.userCredential.collectAsStateWithLifecycle()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         component.viewEvents.collect { event ->
@@ -54,85 +55,93 @@ fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
         }
     }
 
-    SignInContent(state, component::signIn)
+    SignInContent(
+        uiState = uiState,
+        signIn = component::signIn,
+        updateEmail = component::updateEmail,
+        updatePassword = component::updatePassword
+    )
 }
 
 @Composable
 internal fun SignInContent(
-    model: SignInViewState,
+    uiState: UserCredential,
     signIn: (String, String) -> Unit,
+    updateEmail: (String) -> Unit,
+    updatePassword: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier
-            .padding(16.dp)
-            .fillMaxSize()
-    ) {
-        val (account, setAccount) = rememberSaveable(model) { mutableStateOf(model.account) }
-        val (password, setPassword) = rememberSaveable(model) { mutableStateOf(model.password) }
-        var passwordVisible by rememberSaveable { mutableStateOf(false) }
-
-        val localFocusManager = LocalFocusManager.current
-
-        OutlinedTextField(
-            value = account,
-            onValueChange = setAccount,
-            label = { Text("账号") },
-            singleLine = true,
-            placeholder = { Text("账号") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onNext = { localFocusManager.moveFocus(FocusDirection.Down) }
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        Spacer(Modifier.height(16.dp))
-        OutlinedTextField(
-            value = password,
-            onValueChange = setPassword,
-            label = { Text("密码") },
-            singleLine = true,
-            placeholder = { Text("密码") },
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Done
-            ),
-            trailingIcon = {
-                val image = if (passwordVisible) {
-                    Icons.Filled.Visibility
-                } else {
-                    Icons.Filled.VisibilityOff
-                }
-
-                val description = if (passwordVisible) "Hide password" else "Show password"
-
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(image, description)
-                }
-            },
-            keyboardActions = KeyboardActions(
-                onDone = { signIn(account, password) }
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-        )
-        TextButton({}) {
-            Text("注册账号")
-        }
-        TextButton({}) {
-            Text("忘记密码(接口暂时不可用)")
-        }
-        Spacer(Modifier.weight(1f))
-        ExtendedFloatingActionButton(
-            onClick = { signIn(account, password) },
-            modifier = Modifier.align(Alignment.End)
+    Scaffold { innerPadding ->
+        Column(
+            modifier
+                .padding(innerPadding)
+                .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+                .fillMaxSize()
         ) {
-            Text("登录", fontSize = 16.sp)
+            var passwordVisible by rememberSaveable { mutableStateOf(false) }
+
+            val localFocusManager = LocalFocusManager.current
+
+            OutlinedTextField(
+                value = uiState.email,
+                onValueChange = updateEmail,
+                label = { Text("账号") },
+                singleLine = true,
+                placeholder = { Text("账号") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            Spacer(Modifier.height(16.dp))
+            OutlinedTextField(
+                value = uiState.password,
+                onValueChange = updatePassword,
+                label = { Text("密码") },
+                singleLine = true,
+                placeholder = { Text("密码") },
+                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Password,
+                    imeAction = ImeAction.Done
+                ),
+                trailingIcon = {
+                    val image = if (passwordVisible) {
+                        Icons.Filled.Visibility
+                    } else {
+                        Icons.Filled.VisibilityOff
+                    }
+
+                    val description = if (passwordVisible) "Hide password" else "Show password"
+
+                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                        Icon(image, description)
+                    }
+                },
+                keyboardActions = KeyboardActions(
+                    onDone = { signIn(uiState.email, uiState.password) }
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+            TextButton({}) {
+                Text("注册账号")
+            }
+            TextButton({}) {
+                Text("忘记密码(接口暂时不可用)")
+            }
+            Spacer(Modifier.weight(1f))
+            ExtendedFloatingActionButton(
+                onClick = { signIn(uiState.email, uiState.password) },
+                modifier = Modifier.align(Alignment.End)
+            ) {
+                Text("登录", fontSize = 16.sp)
+            }
         }
     }
 }
