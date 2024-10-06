@@ -10,8 +10,6 @@ class DecomposeConventionPlugin : Plugin<Project> {
             apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
             dependencies {
                 "implementation"(libs.findLibrary("decompose").get())
-                "implementation"(libs.findLibrary("decompose.compose").get())
-                "implementation"(libs.findLibrary("molecule").get())
             }
         }
     }

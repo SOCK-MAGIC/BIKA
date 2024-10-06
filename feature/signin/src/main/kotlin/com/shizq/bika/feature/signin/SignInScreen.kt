@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,7 +41,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
-    val uiState by component.userCredential.collectAsStateWithLifecycle()
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         component.viewEvents.collect { event ->
@@ -56,8 +56,9 @@ fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
     }
 
     SignInContent(
-        uiState = uiState,
         signIn = component::signIn,
+        email = component.email,
+        password = component.password,
         updateEmail = component::updateEmail,
         updatePassword = component::updatePassword
     )
@@ -65,11 +66,12 @@ fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
 
 @Composable
 internal fun SignInContent(
-    uiState: UserCredential,
-    signIn: (String, String) -> Unit,
+    signIn: () -> Unit,
     updateEmail: (String) -> Unit,
     updatePassword: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    password: String,
+    email: String
 ) {
     Scaffold { innerPadding ->
         Column(
@@ -81,9 +83,8 @@ internal fun SignInContent(
             var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
             val localFocusManager = LocalFocusManager.current
-
             OutlinedTextField(
-                value = uiState.email,
+                value = email,
                 onValueChange = updateEmail,
                 label = { Text("账号") },
                 singleLine = true,
@@ -100,7 +101,7 @@ internal fun SignInContent(
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
-                value = uiState.password,
+                value = password,
                 onValueChange = updatePassword,
                 label = { Text("密码") },
                 singleLine = true,
@@ -117,14 +118,17 @@ internal fun SignInContent(
                         Icons.Filled.VisibilityOff
                     }
 
-                    val description = if (passwordVisible) "Hide password" else "Show password"
+                    val description =
+                        if (passwordVisible) "Hide password" else "Show password"
 
                     IconButton(onClick = { passwordVisible = !passwordVisible }) {
                         Icon(image, description)
                     }
                 },
                 keyboardActions = KeyboardActions(
-                    onDone = { signIn(uiState.email, uiState.password) }
+                    onDone = {
+                        signIn()
+                    }
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -137,7 +141,9 @@ internal fun SignInContent(
             }
             Spacer(Modifier.weight(1f))
             ExtendedFloatingActionButton(
-                onClick = { signIn(uiState.email, uiState.password) },
+                onClick = {
+                    signIn()
+                },
                 modifier = Modifier.align(Alignment.End)
             ) {
                 Text("登录", fontSize = 16.sp)

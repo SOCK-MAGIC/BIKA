@@ -4,6 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
 import com.arkivanov.essenty.lifecycle.Lifecycle
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlin.coroutines.CoroutineContext
@@ -26,7 +27,7 @@ val ComponentContext.componentScope: CoroutineScope
             }
         }
 
-        return DestroyableCoroutineScope(SupervisorJob() + kotlinx.coroutines.Dispatchers.Main.immediate).also {
+        return DestroyableCoroutineScope(Dispatchers.Main.immediate + SupervisorJob()).also {
             instanceKeeper.put(INSTANCE_KEY, it)
         }
     }
