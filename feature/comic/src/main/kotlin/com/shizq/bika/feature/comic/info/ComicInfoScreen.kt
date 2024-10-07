@@ -14,10 +14,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Link
-import androidx.compose.material3.Icon
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
-import java.util.Date
 
 @Composable
 fun ComicInfoScreen(component: ComicInfoComponent) {
@@ -40,29 +41,44 @@ fun ComicInfoScreen(component: ComicInfoComponent) {
 @Composable
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     when (uiState) {
         ComicInfoUiState.Error,
-        ComicInfoUiState.Loading -> Unit
+        ComicInfoUiState.Loading,
+        -> Unit
 
         is ComicInfoUiState.Success -> {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Info(
-                    uiState.coverUrl,
-                    title = uiState.title,
-                    author = uiState.author,
-                    translator = uiState.chineseTeam,
-                    total = uiState.totalViews,
-                    modifier = Modifier,
-                )
-                Creator(
-                    uiState.creator.avatar.imageUrl,
-                    uiState.creator.name,
-                )
-                Categories(uiState.categories)
-                Tags(uiState.tags)
-            }
+            ComicInfoContent(uiState, modifier)
+        }
+    }
+}
+
+@Composable
+private fun ComicInfoContent(uiState: ComicInfoUiState.Success, modifier: Modifier) {
+    Scaffold { innerPadding ->
+        Column(
+            modifier = modifier
+                .padding(innerPadding)
+                .padding(horizontal = 16.dp)
+                .fillMaxSize(),
+        ) {
+            Info(
+                uiState.coverUrl,
+                title = uiState.title,
+                author = uiState.author,
+                translator = uiState.chineseTeam,
+                total = uiState.totalViews,
+                modifier = Modifier,
+            )
+            Creator(
+                uiState.creator.avatar.fileServer,
+                uiState.creator.name,
+                uiState.updatedAt,
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
+            Text(uiState.description, modifier = Modifier.padding(vertical = 8.dp))
+            Tags(uiState.categories + uiState.tags)
         }
     }
 }
@@ -74,22 +90,39 @@ internal fun Info(
     author: String,
     translator: String,
     total: Int,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier) {
         DynamicAsyncImage(cover, "cover", Modifier.size(120.dp, 180.dp))
-        Column {
-            Text(title)
-            Text(author)
-            Text(translator)
+        Column(modifier = Modifier.padding(start = 8.dp)) {
+            Text(
+                title,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium,
+            )
+            Text(
+                author,
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                translator,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.bodyMedium,
+            )
             Text(total.toString())
         }
     }
 }
 
 @Composable
-private fun Creator(creatorAvatarUrl: String, creatorName: String, modifier: Modifier = Modifier) {
-    ElevatedCard(modifier = modifier.padding(8.dp), onClick = {}) {
+private fun Creator(
+    creatorAvatarUrl: String,
+    creatorName: String,
+    updatedAt: String,
+    modifier: Modifier = Modifier,
+) {
+    ElevatedCard(modifier = modifier, onClick = {}) {
         ListItem(
             leadingContent = {
                 DynamicAsyncImage(
@@ -97,46 +130,26 @@ private fun Creator(creatorAvatarUrl: String, creatorName: String, modifier: Mod
                     "avatar",
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
                 )
             },
             headlineContent = {
                 Text(creatorName)
             },
             supportingContent = {
-                Text("更新日期")
+                Text(updatedAt)
             },
-            modifier = Modifier
+            modifier = Modifier,
         )
     }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Categories(categories: List<String>, modifier: Modifier = Modifier) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton({}, enabled = false) {
-            Text("分类")
-        }
+fun Tags(categories: List<String>, modifier: Modifier = Modifier) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
         categories.fastForEach {
-            OutlinedButton({}) {
-                Text(it)
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun Tags(tags: List<String>, modifier: Modifier = Modifier) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        OutlinedButton({}, enabled = false) {
-            Text("标签")
-        }
-        tags.fastForEach {
-            OutlinedButton({}) {
-                Text(it)
-            }
+            SuggestionChip(onClick = {}, label = { Text(it) })
         }
     }
 }
@@ -148,7 +161,7 @@ fun Toolbar(modifier: Modifier = Modifier) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Icon(Icons.Default.Favorite, null)
             Text("1234")
@@ -156,7 +169,7 @@ fun Toolbar(modifier: Modifier = Modifier) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Icon(Icons.Default.Link, null)
             Text("1234")
@@ -164,7 +177,7 @@ fun Toolbar(modifier: Modifier = Modifier) {
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Icon(Icons.AutoMirrored.Filled.Message, null)
             Text("1234")

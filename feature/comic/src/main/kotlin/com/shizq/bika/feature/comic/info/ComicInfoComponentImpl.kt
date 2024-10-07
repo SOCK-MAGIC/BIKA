@@ -42,9 +42,9 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                         createdAt = comic.createdAt,
                         creator = NetworkComicInfo.Comic.Creator(
                             avatar = Thumb(
-                                fileServer = creator.avatar.imageUrl,
+                                fileServer = "${creator.avatar.fileServer}/static/${creator.avatar.path}",
                                 originalName = "",
-                                path = creator.avatar.path
+                                path = ""
                             ),
                             characters = creator.characters,
                             exp = creator.exp,
