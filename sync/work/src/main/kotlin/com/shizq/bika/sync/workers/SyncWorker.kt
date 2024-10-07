@@ -33,7 +33,8 @@ internal class SyncWorker @AssistedInject constructor(
     @Dispatcher(IO) private val ioDispatcher: CoroutineDispatcher,
     private val syncSubscriber: SyncSubscriber,
     private val dailyTaskRepository: DailyTaskRepository,
-) : CoroutineWorker(appContext, workerParams), Synchronizer {
+) : CoroutineWorker(appContext, workerParams),
+    Synchronizer {
 
     override suspend fun getForegroundInfo(): ForegroundInfo =
         appContext.syncForegroundInfo()

@@ -14,8 +14,7 @@ import javax.inject.Inject
 /**
  * An [androidx.datastore.core.Serializer] for the [UserPreferences] proto.
  */
-class UserCredentialSerializer @Inject constructor(private val json: Json) :
-    Serializer<UserCredential> {
+class UserCredentialSerializer @Inject constructor(private val json: Json) : Serializer<UserCredential> {
     override val defaultValue: UserCredential = UserCredential()
 
     @OptIn(ExperimentalSerializationApi::class)

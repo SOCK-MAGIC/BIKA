@@ -1,6 +1,6 @@
 package com.shizq.bika.core.network.config
 
-import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.util.API_KEY
 import com.shizq.bika.core.network.util.DIGEST_KEY
 import com.shizq.bika.core.network.util.PICA_API
@@ -14,10 +14,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 internal class BikaInterceptor @Inject constructor(
-    private val preferencesDataSource: BikaPreferencesDataSource
+    private val bikaUserCredentialDataSource: BikaUserCredentialDataSource,
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
-        val token = runBlocking { preferencesDataSource.userData.first().token }
+        val token = runBlocking { bikaUserCredentialDataSource.userData.first().token }
         val originalRequest = chain.request()
         val parameter = originalRequest.url.toString().replace(PICA_API, "")
         val time = (System.currentTimeMillis() / 1000).toString()

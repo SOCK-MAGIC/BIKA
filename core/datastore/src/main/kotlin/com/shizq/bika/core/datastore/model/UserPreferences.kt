@@ -8,7 +8,7 @@ data class UserPreferences(
     @Deprecated("UserCredential")
     val token: String = "",
     @Deprecated("UserCredential")
-    val account: Account? = null
+    val account: Account? = null,
 )
 
 @Deprecated("UserCredential")
@@ -17,4 +17,3 @@ data class Account(
     val email: String,
     val password: String,
 )
-

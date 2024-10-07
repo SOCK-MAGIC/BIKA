@@ -13,8 +13,7 @@ import javax.inject.Inject
 /**
  * An [androidx.datastore.core.Serializer] for the [UserPreferences] proto.
  */
-class UserPreferencesSerializer @Inject constructor(private val json: Json) :
-    Serializer<UserPreferences> {
+class UserPreferencesSerializer @Inject constructor(private val json: Json) : Serializer<UserPreferences> {
     override val defaultValue: UserPreferences = UserPreferences()
 
     @OptIn(ExperimentalSerializationApi::class)

@@ -1,7 +1,6 @@
 package com.shizq.bika.core.datastore
 
 import androidx.datastore.core.DataStore
-import com.shizq.bika.core.datastore.model.Account
 import com.shizq.bika.core.datastore.model.UserPreferences
 import javax.inject.Inject
 

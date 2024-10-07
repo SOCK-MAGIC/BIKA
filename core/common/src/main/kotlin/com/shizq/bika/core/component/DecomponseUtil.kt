@@ -33,8 +33,9 @@ val ComponentContext.componentScope: CoroutineScope
     }
 
 class DestroyableCoroutineScope(
-    context: CoroutineContext
-) : CoroutineScope, InstanceKeeper.Instance {
+    context: CoroutineContext,
+) : CoroutineScope,
+    InstanceKeeper.Instance {
 
     override val coroutineContext: CoroutineContext = context
 
