@@ -22,11 +22,4 @@ class BikaPreferencesDataSource @Inject constructor(
             it.copy(dns = it.dns + addresses)
         }
     }
-
-    @Deprecated("BikaUserCredentialDataSource")
-    suspend fun setAccount(email: String, password: String) {
-        userPreferences.updateData {
-            it.copy(account = Account(email, password))
-        }
-    }
 }

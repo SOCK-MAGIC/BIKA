@@ -70,6 +70,7 @@ dependencies {
     implementation(projects.feature.interest)
     implementation(projects.feature.signin)
     implementation(projects.feature.signup)
+    implementation(projects.feature.splash)
 
     implementation(projects.core.common)
     implementation(projects.core.ui)

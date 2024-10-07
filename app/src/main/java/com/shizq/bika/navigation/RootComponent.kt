@@ -7,6 +7,7 @@ import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
+import com.shizq.bika.feature.splash.SplashComponent
 import com.shizq.bika.router.ChildDrawer
 
 interface RootComponent : ComponentContext {
@@ -23,6 +24,7 @@ interface RootComponent : ComponentContext {
         data class Interest(val component: InterestComponent) : Child()
         data class ComicList(val component: ComicListComponent) : Child()
         data class ComicInfo(val component: ComicInfoComponent) : Child()
+        data class Splash(val component: SplashComponent) : Child()
     }
 
     interface Factory {

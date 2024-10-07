@@ -7,12 +7,14 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.signin.SignInComponent
+import com.shizq.bika.feature.splash.SplashComponent
 import com.shizq.bika.navigation.RootComponent.Child.*
 import com.shizq.bika.router.ChildDrawer
 import com.shizq.bika.router.childDrawer
@@ -28,6 +30,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private val comicListComponentFactory: ComicListComponent.Factory,
     private val comicInfoComponentFactory: ComicInfoComponent.Factory,
     private val drawerComponentFactory: DrawerComponent.Factory,
+    private val splashComponentFactory: SplashComponent.Factory
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
 
@@ -35,7 +38,7 @@ class DefaultRootComponent @AssistedInject constructor(
         childStack(
             source = navigation,
             serializer = Config.serializer(),
-            initialConfiguration = Config.SignIn,
+            initialConfiguration = Config.Splash,
             handleBackButton = true,
             childFactory = ::child,
         )
@@ -46,9 +49,11 @@ class DefaultRootComponent @AssistedInject constructor(
             source = drawerNavigation,
             childFactory = { drawerComponentFactory(componentContext) },
         )
+
     private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
         trace("Navigation: $config") {
             when (config) {
+                Config.Splash -> Splash(splashComponentFactory(componentContext))
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
                 is Config.ComicList -> ComicList(
@@ -66,6 +71,7 @@ class DefaultRootComponent @AssistedInject constructor(
     }
 
     override fun navigationToInterest() {
+        navigation.popTo(0)
         navigation.push(Config.Interest)
     }
 
@@ -80,6 +86,7 @@ class DefaultRootComponent @AssistedInject constructor(
     override fun onBack() {
         navigation.pop()
     }
+
     override fun setDrawerState(isOpen: Boolean) {
         drawerNavigation.navigate(isOpen)
     }
@@ -88,6 +95,8 @@ class DefaultRootComponent @AssistedInject constructor(
     private sealed interface Config {
         data object SignIn : Config
         data object Interest : Config
+        data object Splash : Config
+
         data class ComicList(val tag: String, val title: String) : Config
         data class ComicInfo(val id: String) : Config
     }

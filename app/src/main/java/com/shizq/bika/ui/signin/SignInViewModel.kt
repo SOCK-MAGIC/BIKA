@@ -64,7 +64,6 @@ class SignInViewModel @Inject constructor(
                         is Result.Success -> {
                             onSuccess()
                             preferencesDataSource.setToken(result.data.token)
-                            preferencesDataSource.setAccount(email, password)
                             SPUtil.put("token", result.data.token)
                             SPUtil.put("username", email)
                             SPUtil.put("password", password)

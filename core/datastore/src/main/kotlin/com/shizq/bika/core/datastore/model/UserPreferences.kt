@@ -7,7 +7,7 @@ data class UserPreferences(
     val dns: Set<String> = setOf(),
     @Deprecated("UserCredential")
     val token: String = "",
-    @Deprecated("")
+    @Deprecated("UserCredential")
     val account: Account? = null
 )
 

@@ -89,8 +89,6 @@ internal class NetworkModule {
             addDefaultResponseValidation()
             install(BikaClientPlugin) {
                 transform = json
-                account = runBlocking { preferencesDataSource.userData.first().account }
-                save = preferencesDataSource::setToken
             }
             install(ContentNegotiation) {
                 json(json)

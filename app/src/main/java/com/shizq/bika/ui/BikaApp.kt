@@ -29,6 +29,7 @@ import com.shizq.bika.feature.comic.info.ComicInfoScreen
 import com.shizq.bika.feature.comic.list.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
 import com.shizq.bika.feature.signin.SignInScreen
+import com.shizq.bika.feature.splash.SplashScreen
 import com.shizq.bika.navigation.RootComponent
 import com.shizq.bika.router.rememberNavigationDrawerState
 
@@ -86,6 +87,12 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
         animation = stackAnimation { _ -> slide() + fade() },
     ) {
         when (val child = it.instance) {
+            is RootComponent.Child.Splash -> SplashScreen(
+                component = child.component,
+                component::navigationToInterest,
+                component::navigationToSignIn,
+            )
+
             is RootComponent.Child.SignIn -> SignInScreen(
                 component = child.component,
                 component::navigationToInterest
@@ -100,6 +107,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 component = child.component,
                 navigationToComicInfo = component::navigationToComicInfo
             )
+
             is RootComponent.Child.ComicInfo -> ComicInfoScreen(component = child.component)
         }
     }
