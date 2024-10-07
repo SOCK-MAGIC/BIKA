@@ -13,6 +13,7 @@ import com.arkivanov.decompose.value.Value
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
+import com.shizq.bika.feature.reader.ReaderComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import com.shizq.bika.feature.splash.SplashComponent
 import com.shizq.bika.navigation.RootComponent.Child.*
@@ -30,7 +31,8 @@ class DefaultRootComponent @AssistedInject constructor(
     private val comicListComponentFactory: ComicListComponent.Factory,
     private val comicInfoComponentFactory: ComicInfoComponent.Factory,
     private val drawerComponentFactory: DrawerComponent.Factory,
-    private val splashComponentFactory: SplashComponent.Factory
+    private val splashComponentFactory: SplashComponent.Factory,
+    private val readerComponentFactory: ReaderComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
 
@@ -57,12 +59,14 @@ class DefaultRootComponent @AssistedInject constructor(
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
                 is Config.ComicList -> ComicList(
-                    comicListComponentFactory(componentContext, config.title)
+                    comicListComponentFactory(componentContext, config.title),
                 )
 
                 is Config.ComicInfo -> ComicInfo(
-                    comicInfoComponentFactory(componentContext, config.id)
+                    comicInfoComponentFactory(componentContext, config.id),
                 )
+
+                is Config.Reader -> Reader(readerComponentFactory(componentContext, config.id))
             }
         }
 
@@ -83,6 +87,10 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.ComicInfo(id))
     }
 
+    override fun navigationToReader(id: String) {
+        navigation.push(Config.Reader(id))
+    }
+
     override fun onBack() {
         navigation.pop()
     }
@@ -99,6 +107,7 @@ class DefaultRootComponent @AssistedInject constructor(
 
         data class ComicList(val tag: String, val title: String) : Config
         data class ComicInfo(val id: String) : Config
+        data class Reader(val id: String) : Config
     }
 
     @AssistedFactory

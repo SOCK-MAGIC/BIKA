@@ -28,6 +28,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.shizq.bika.feature.comic.info.ComicInfoScreen
 import com.shizq.bika.feature.comic.list.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
+import com.shizq.bika.feature.reader.ReaderScreen
 import com.shizq.bika.feature.signin.SignInScreen
 import com.shizq.bika.feature.splash.SplashScreen
 import com.shizq.bika.navigation.RootComponent
@@ -109,6 +110,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             )
 
             is RootComponent.Child.ComicInfo -> ComicInfoScreen(component = child.component)
+            is RootComponent.Child.Reader -> ReaderScreen(component = child.component)
         }
     }
 }

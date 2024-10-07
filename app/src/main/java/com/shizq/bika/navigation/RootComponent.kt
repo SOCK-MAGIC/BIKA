@@ -6,6 +6,7 @@ import com.arkivanov.decompose.value.Value
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
+import com.shizq.bika.feature.reader.ReaderComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import com.shizq.bika.feature.splash.SplashComponent
 import com.shizq.bika.router.ChildDrawer
@@ -17,6 +18,7 @@ interface RootComponent : ComponentContext {
     fun navigationToInterest()
     fun navigationToComicList(tag: String, title: String)
     fun navigationToComicInfo(id: String)
+    fun navigationToReader(id: String)
     fun onBack()
     fun setDrawerState(isOpen: Boolean)
     sealed class Child {
@@ -25,6 +27,7 @@ interface RootComponent : ComponentContext {
         data class ComicList(val component: ComicListComponent) : Child()
         data class ComicInfo(val component: ComicInfoComponent) : Child()
         data class Splash(val component: SplashComponent) : Child()
+        data class Reader(val component: ReaderComponent) : Child()
     }
 
     interface Factory {

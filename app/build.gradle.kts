@@ -68,6 +68,7 @@ android {
 dependencies {
     implementation(projects.feature.comic)
     implementation(projects.feature.interest)
+    implementation(projects.feature.reader)
     implementation(projects.feature.signin)
     implementation(projects.feature.signup)
     implementation(projects.feature.splash)
