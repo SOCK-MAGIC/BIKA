@@ -13,6 +13,7 @@ import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.BikaInterceptor
+import com.shizq.bika.core.network.config.MergeRequestInterceptor
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy
@@ -75,7 +76,6 @@ internal class NetworkModule {
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
-        preferencesDataSource: BikaPreferencesDataSource,
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -109,6 +109,7 @@ internal class NetworkModule {
         ImageLoader.Builder(application)
             .serviceLoaderEnabled(false)
             .components {
+                add(MergeRequestInterceptor())
                 add(
                     OkHttpNetworkFetcherFactory {
                         client.get().newBuilder()

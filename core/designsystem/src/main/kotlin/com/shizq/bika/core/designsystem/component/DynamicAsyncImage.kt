@@ -84,6 +84,5 @@ fun DynamicAsyncImage(
         model = imageUrl,
         contentDescription = null,
         modifier = modifier,
-        contentScale = ContentScale.Fit,
     )
 }
