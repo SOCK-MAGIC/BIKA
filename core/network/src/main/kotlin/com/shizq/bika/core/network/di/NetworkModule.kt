@@ -49,7 +49,7 @@ import javax.inject.Singleton
 internal class NetworkModule {
     @Provides
     @Singleton
-    fun okHttpCallFactory(
+    fun okHttpClient(
         preferencesDataSource: BikaPreferencesDataSource,
         @ApplicationContext application: Context,
         @Dispatcher(BikaDispatchers.IO) ioDispatcher: CoroutineDispatcher,
@@ -65,7 +65,7 @@ internal class NetworkModule {
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = HttpLoggingInterceptor.Level.BODY
-                }
+                },
             )
             .cache(Cache(File(application.cacheDir, "okhttp-cache"), 1024 * 1024 * 50))
             .build()
@@ -111,11 +111,11 @@ internal class NetworkModule {
             .components {
                 add(MergeRequestInterceptor())
                 add(
-                    OkHttpNetworkFetcherFactory {
+                    OkHttpNetworkFetcherFactory(
                         client.get().newBuilder()
                             .apply { interceptors().clear() }
                             .build()
-                    }
+                    )
                 )
             }
             .diskCache {
