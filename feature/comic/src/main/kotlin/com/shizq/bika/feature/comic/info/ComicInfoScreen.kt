@@ -1,5 +1,7 @@
 package com.shizq.bika.feature.comic.info
 
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,12 +11,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -28,37 +33,44 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 
 @Composable
-fun ComicInfoScreen(component: ComicInfoComponent) {
+fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) -> Unit) {
     val uiState by component.comicInfoUiState.collectAsStateWithLifecycle()
-    ComicInfoContent(uiState)
+    ComicInfoContent(uiState, navigationToReader)
 }
 
 @Composable
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
+    navigationToReader: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
         ComicInfoUiState.Error,
         ComicInfoUiState.Loading,
-        -> Unit
+            -> Unit
 
         is ComicInfoUiState.Success -> {
-            ComicInfoContent(uiState, modifier)
+            ComicInfoContent(uiState, navigationToReader = navigationToReader, modifier)
         }
     }
 }
 
 @Composable
-private fun ComicInfoContent(uiState: ComicInfoUiState.Success, modifier: Modifier) {
+private fun ComicInfoContent(
+    uiState: ComicInfoUiState.Success,
+    navigationToReader: (String) -> Unit,
+    modifier: Modifier,
+) {
     Scaffold { innerPadding ->
         Column(
             modifier = modifier
+                .verticalScroll(state = rememberScrollState())
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
                 .fillMaxSize(),
@@ -79,6 +91,16 @@ private fun ComicInfoContent(uiState: ComicInfoUiState.Success, modifier: Modifi
             )
             Text(uiState.description, modifier = Modifier.padding(vertical = 8.dp))
             Tags(uiState.categories + uiState.tags)
+            ExtendedFloatingActionButton(
+                onClick = {
+                    navigationToReader(uiState.id)
+                },
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .padding(bottom = 16.dp),
+            ) {
+                Text("开始阅读", fontSize = 16.sp)
+            }
         }
     }
 }

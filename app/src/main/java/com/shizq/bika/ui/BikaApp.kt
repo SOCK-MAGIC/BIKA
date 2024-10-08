@@ -96,20 +96,24 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
             is RootComponent.Child.SignIn -> SignInScreen(
                 component = child.component,
-                component::navigationToInterest
+                component::navigationToInterest,
             )
 
             is RootComponent.Child.Interest -> InterestScreen(
                 component = child.component,
-                navigationToComicList = component::navigationToComicList
+                navigationToComicList = component::navigationToComicList,
             )
 
             is RootComponent.Child.ComicList -> ComicScreen(
                 component = child.component,
-                navigationToComicInfo = component::navigationToComicInfo
+                navigationToComicInfo = component::navigationToComicInfo,
             )
 
-            is RootComponent.Child.ComicInfo -> ComicInfoScreen(component = child.component)
+            is RootComponent.Child.ComicInfo -> ComicInfoScreen(
+                component = child.component,
+                navigationToReader = component::navigationToReader
+            )
+
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)
         }
     }

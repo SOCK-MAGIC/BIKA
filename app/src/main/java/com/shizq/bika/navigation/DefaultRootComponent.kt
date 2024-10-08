@@ -101,12 +101,22 @@ class DefaultRootComponent @AssistedInject constructor(
 
     @Serializable
     private sealed interface Config {
+        @Serializable
         data object SignIn : Config
+
+        @Serializable
         data object Interest : Config
+
+        @Serializable
         data object Splash : Config
 
+        @Serializable
         data class ComicList(val tag: String, val title: String) : Config
+
+        @Serializable
         data class ComicInfo(val id: String) : Config
+
+        @Serializable
         data class Reader(val id: String) : Config
     }
 
