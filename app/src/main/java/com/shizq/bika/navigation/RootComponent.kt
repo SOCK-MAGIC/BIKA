@@ -19,6 +19,7 @@ interface RootComponent : ComponentContext {
     fun navigationToComicList(tag: String, title: String)
     fun navigationToComicInfo(id: String)
     fun navigationToReader(id: String)
+    fun navigationToSearch()
     fun onBack()
     fun setDrawerState(isOpen: Boolean)
     sealed class Child {
@@ -28,6 +29,7 @@ interface RootComponent : ComponentContext {
         data class ComicInfo(val component: ComicInfoComponent) : Child()
         data class Splash(val component: SplashComponent) : Child()
         data class Reader(val component: ReaderComponent) : Child()
+        data class Search(val component: SearchComponent) : Child()
     }
 
     interface Factory {

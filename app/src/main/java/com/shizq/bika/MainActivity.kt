@@ -5,6 +5,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
+import androidx.metrics.performance.JankStats
 import com.arkivanov.decompose.defaultComponentContext
 import com.shizq.bika.core.data.util.NetworkMonitor
 import com.shizq.bika.navigation.RootComponent
@@ -17,6 +18,12 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
+
+    /**
+     * Lazily inject [JankStats], which is used to track jank throughout the app.
+     */
+    @Inject
+    lateinit var lazyStats: dagger.Lazy<JankStats>
 
     @Inject
     lateinit var rootComponentFactory: RootComponent.Factory
@@ -32,5 +39,14 @@ class MainActivity : AppCompatActivity() {
                 BikaApp(component, appState)
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        lazyStats.get().isTrackingEnabled = true
+    }
+
+    override fun onPause() {
+        super.onPause()
+        lazyStats.get().isTrackingEnabled = false
     }
 }

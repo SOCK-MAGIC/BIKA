@@ -33,6 +33,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private val drawerComponentFactory: DrawerComponent.Factory,
     private val splashComponentFactory: SplashComponent.Factory,
     private val readerComponentFactory: ReaderComponent.Factory,
+    private val searchComponentFactory: SearchComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
 
@@ -67,6 +68,7 @@ class DefaultRootComponent @AssistedInject constructor(
                 )
 
                 is Config.Reader -> Reader(readerComponentFactory(componentContext, config.id))
+                is Config.Search -> Search(searchComponentFactory(componentContext))
             }
         }
 
@@ -89,6 +91,10 @@ class DefaultRootComponent @AssistedInject constructor(
 
     override fun navigationToReader(id: String) {
         navigation.push(Config.Reader(id))
+    }
+
+    override fun navigationToSearch() {
+        navigation.push(Config.Search)
     }
 
     override fun onBack() {
@@ -118,6 +124,9 @@ class DefaultRootComponent @AssistedInject constructor(
 
         @Serializable
         data class Reader(val id: String) : Config
+
+        @Serializable
+        data object Search : Config
     }
 
     @AssistedFactory
