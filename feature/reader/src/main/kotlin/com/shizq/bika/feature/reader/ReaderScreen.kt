@@ -43,7 +43,7 @@ fun ReaderContent(
             }
             .fillMaxSize(),
     ) { innerPadding ->
-        LazyColumn(Modifier.padding(innerPadding), state = clickControl.lazyListState,) {
+        LazyColumn(Modifier.padding(innerPadding), state = clickControl.lazyListState) {
             items(lazyPagingItems.itemCount, key = { it }) { index ->
                 lazyPagingItems[index]?.let {
                     DynamicAsyncImage(it.url, modifier = Modifier)

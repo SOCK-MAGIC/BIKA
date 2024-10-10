@@ -7,6 +7,7 @@ import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
 import com.shizq.bika.feature.reader.ReaderComponent
+import com.shizq.bika.feature.search.SearchComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import com.shizq.bika.feature.splash.SplashComponent
 import com.shizq.bika.router.ChildDrawer

@@ -13,31 +13,29 @@ class ComicListPagingSource(
     private val category: String,
 ) : PagingSource<Int, Comic>() {
     override suspend fun load(
-        params: LoadParams<Int>
+        params: LoadParams<Int>,
     ): LoadResult<Int, Comic> {
         val nextPageNumber = params.key ?: 1
         val comicList = network.getComicList(
             sort = Sort.SORT_TIME_NEWEST,
             page = nextPageNumber,
-            category = category
+            category = category,
         )
         val comics = comicList.comics
         return try {
             LoadResult.Page(
                 data = comics.docs.fastMap { it.mapToComic() },
                 prevKey = null,
-                nextKey = if (nextPageNumber < comics.pages) comics.page + 1 else null
+                nextKey = if (nextPageNumber < comics.pages) comics.page + 1 else null,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Comic>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
-        }
+    override fun getRefreshKey(state: PagingState<Int, Comic>): Int? = state.anchorPosition?.let { anchorPosition ->
+        val anchorPage = state.closestPageToPosition(anchorPosition)
+        anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
     }
 }
 
@@ -51,7 +49,7 @@ data class Comic(
     val categories: String,
     val thumbUrl: String,
     val epsCount: Int,
-    val pagesCount: Int
+    val pagesCount: Int,
 )
 
 private fun NetworkComicList.Comics.Doc.mapToComic() = Comic(

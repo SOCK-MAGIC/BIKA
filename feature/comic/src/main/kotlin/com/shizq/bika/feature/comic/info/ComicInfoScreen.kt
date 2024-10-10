@@ -1,7 +1,5 @@
 package com.shizq.bika.feature.comic.info
 
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -53,7 +51,7 @@ internal fun ComicInfoContent(
     when (uiState) {
         ComicInfoUiState.Error,
         ComicInfoUiState.Loading,
-            -> Unit
+        -> Unit
 
         is ComicInfoUiState.Success -> {
             ComicInfoContent(uiState, navigationToReader = navigationToReader, modifier)

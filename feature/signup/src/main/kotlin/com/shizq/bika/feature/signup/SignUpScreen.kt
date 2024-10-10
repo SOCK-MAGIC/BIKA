@@ -14,17 +14,16 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SignInScreen(component: SignUpComponent) {
-
     SignUpContent()
 }
 
 @Composable
 internal fun SignUpContent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         var name by remember { mutableStateOf("") }
         OutlinedTextField(name, {}, placeholder = { Text("") })

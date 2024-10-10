@@ -103,6 +103,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             is RootComponent.Child.Interest -> InterestScreen(
                 component = child.component,
                 navigationToComicList = component::navigationToComicList,
+                navigationToSearch = component::navigationToSearch,
             )
 
             is RootComponent.Child.ComicList -> ComicScreen(
@@ -112,11 +113,14 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
             is RootComponent.Child.ComicInfo -> ComicInfoScreen(
                 component = child.component,
-                navigationToReader = component::navigationToReader
+                navigationToReader = component::navigationToReader,
             )
 
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)
-            is RootComponent.Child.Search -> SearchScreen(component = child.component)
+            is RootComponent.Child.Search -> SearchScreen(
+                component = child.component,
+                onBackClick = component::onBack,
+            )
         }
     }
 }

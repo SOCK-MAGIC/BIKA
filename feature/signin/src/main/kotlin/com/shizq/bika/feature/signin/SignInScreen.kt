@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,7 +36,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
@@ -49,7 +47,7 @@ fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
                 is LoginViewEvent.ShowMessage -> Toast.makeText(
                     context,
                     event.message,
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_SHORT,
                 ).show()
             }
         }
@@ -60,7 +58,7 @@ fun SignInScreen(component: SignInComponent, navigationToInterest: () -> Unit) {
         email = component.email,
         password = component.password,
         updateEmail = component::updateEmail,
-        updatePassword = component::updatePassword
+        updatePassword = component::updatePassword,
     )
 }
 
@@ -71,14 +69,14 @@ internal fun SignInContent(
     updatePassword: (String) -> Unit,
     modifier: Modifier = Modifier,
     password: String,
-    email: String
+    email: String,
 ) {
     Scaffold { innerPadding ->
         Column(
             modifier
                 .padding(innerPadding)
                 .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
@@ -91,13 +89,13 @@ internal fun SignInContent(
                 placeholder = { Text("账号") },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Text,
-                    imeAction = ImeAction.Next
+                    imeAction = ImeAction.Next,
                 ),
                 keyboardActions = KeyboardActions(
-                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) }
+                    onNext = { localFocusManager.moveFocus(FocusDirection.Down) },
                 ),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
             Spacer(Modifier.height(16.dp))
             OutlinedTextField(
@@ -109,7 +107,7 @@ internal fun SignInContent(
                 visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
                 ),
                 trailingIcon = {
                     val image = if (passwordVisible) {
@@ -128,10 +126,10 @@ internal fun SignInContent(
                 keyboardActions = KeyboardActions(
                     onDone = {
                         signIn()
-                    }
+                    },
                 ),
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
             TextButton({}) {
                 Text("注册账号")
@@ -144,7 +142,7 @@ internal fun SignInContent(
                 onClick = {
                     signIn()
                 },
-                modifier = Modifier.align(Alignment.End)
+                modifier = Modifier.align(Alignment.End),
             ) {
                 Text("登录", fontSize = 16.sp)
             }

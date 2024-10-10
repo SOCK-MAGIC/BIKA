@@ -9,7 +9,7 @@ import androidx.compose.runtime.setValue
 fun SplashScreen(
     component: SplashComponent,
     navigationToInterest: () -> Unit,
-    navigationToSignIn: () -> Unit
+    navigationToSignIn: () -> Unit,
 ) {
     SideEffect {
         if (component.hasToken) {

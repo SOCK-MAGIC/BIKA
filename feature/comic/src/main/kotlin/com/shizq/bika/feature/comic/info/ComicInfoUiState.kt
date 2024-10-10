@@ -28,6 +28,6 @@ sealed interface ComicInfoUiState {
         val totalLikes: Int = 0,
         val totalViews: Int = 0,
         val updatedAt: String = "",
-        val viewsCount: Int = 0
+        val viewsCount: Int = 0,
     ) : ComicInfoUiState
 }

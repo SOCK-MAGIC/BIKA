@@ -12,8 +12,9 @@ import kotlinx.coroutines.runBlocking
 
 class SplashComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
-    private val userCredential: BikaUserCredentialDataSource
-) : SplashComponent, ComponentContext by componentContext {
+    private val userCredential: BikaUserCredentialDataSource,
+) : SplashComponent,
+    ComponentContext by componentContext {
     override val hasToken by mutableStateOf(runBlocking { userCredential.userData.first().token.isNotEmpty() })
 
     @AssistedFactory

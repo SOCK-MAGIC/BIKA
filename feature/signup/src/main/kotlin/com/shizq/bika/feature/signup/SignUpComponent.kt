@@ -9,4 +9,3 @@ interface SignUpComponent {
         ): SignUpComponent
     }
 }
-

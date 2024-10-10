@@ -14,7 +14,8 @@ class ReaderComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted id: String,
     private val network: BikaNetworkDataSource,
-) : ReaderComponent, ComponentContext by componentContext {
+) : ReaderComponent,
+    ComponentContext by componentContext {
     override val pictureFlow = Pager(
         PagingConfig(pageSize = 40),
     ) { ReaderPagingSource(network, id) }

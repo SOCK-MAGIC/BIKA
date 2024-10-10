@@ -14,9 +14,10 @@ class ComicListComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted category: String,
     private val network: BikaNetworkDataSource,
-) : ComicListComponent, ComponentContext by componentContext {
+) : ComicListComponent,
+    ComponentContext by componentContext {
     override val comicFlow = Pager(
-        PagingConfig(pageSize = 20)
+        PagingConfig(pageSize = 20),
     ) { ComicListPagingSource(network, category) }
         .flow
         .cachedIn(componentScope)

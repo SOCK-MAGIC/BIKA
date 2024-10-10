@@ -10,12 +10,10 @@ import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.Dispatcher
-import com.shizq.bika.core.network.di.ApplicationScope
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
@@ -28,7 +26,8 @@ class SignInComponentImpl @AssistedInject constructor(
     private val network: BikaNetworkDataSource,
     private val userCredentialDataSource: BikaUserCredentialDataSource,
     @Dispatcher(BikaDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
-) : SignInComponent, ComponentContext by componentContext {
+) : SignInComponent,
+    ComponentContext by componentContext {
     override var email by mutableStateOf(runBlocking { userCredentialDataSource.userData.first().email })
     override var password by mutableStateOf(runBlocking { userCredentialDataSource.userData.first().password })
 

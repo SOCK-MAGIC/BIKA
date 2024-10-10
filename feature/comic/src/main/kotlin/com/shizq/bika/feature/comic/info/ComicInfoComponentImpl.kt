@@ -20,7 +20,8 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted id: String,
     private val network: BikaNetworkDataSource,
-) : ComicInfoComponent, ComponentContext by componentContext {
+) : ComicInfoComponent,
+    ComponentContext by componentContext {
 
     override val comicInfoUiState = flowOf(id)
         .map { network.getComicInfo(it) }
@@ -44,7 +45,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                             avatar = Thumb(
                                 fileServer = "${creator.avatar.fileServer}/static/${creator.avatar.path}",
                                 originalName = "",
-                                path = ""
+                                path = "",
                             ),
                             characters = creator.characters,
                             exp = creator.exp,
@@ -55,7 +56,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                             role = creator.role,
                             slogan = creator.slogan,
                             title = creator.title,
-                            verified = creator.verified
+                            verified = creator.verified,
                         ),
                         description = comic.description,
                         epsCount = comic.epsCount,
@@ -71,14 +72,14 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                         totalLikes = comic.totalLikes,
                         totalViews = comic.totalViews,
                         updatedAt = comic.updatedAt,
-                        viewsCount = comic.viewsCount
+                        viewsCount = comic.viewsCount,
                     )
                 }
             }
         }.stateIn(
             componentScope,
             SharingStarted.WhileSubscribed(5_000),
-            ComicInfoUiState.Loading
+            ComicInfoUiState.Loading,
         )
 
     @AssistedFactory

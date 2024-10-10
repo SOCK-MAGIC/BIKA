@@ -1,4 +1,3 @@
 package com.shizq.bika.feature.signup
 
-class PreviewSignUpComponent : SignUpComponent {
-}
+class PreviewSignUpComponent : SignUpComponent
