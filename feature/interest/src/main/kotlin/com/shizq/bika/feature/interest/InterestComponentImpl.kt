@@ -1,6 +1,11 @@
 package com.shizq.bika.feature.interest
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.essenty.instancekeeper.getOrCreate
+import com.arkivanov.essenty.statekeeper.StateKeeper
+import com.arkivanov.essenty.statekeeper.StateKeeperOwner
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkCategories
@@ -13,6 +18,12 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlin.properties.PropertyDelegateProvider
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 class InterestComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
@@ -31,6 +42,18 @@ class InterestComponentImpl @AssistedInject constructor(
             started = SharingStarted.WhileSubscribed(5_000),
             initialValue = InterestsUiState.Loading,
         )
+    private val searchQueryHandle = instanceKeeper.getOrCreate { SavedSearchQueryHandle() }
+
+    override val searchQuery = searchQueryHandle.getStateFlow()
+    override fun onSearchQueryChanged(query: String) {
+        searchQueryHandle.set(query)
+    }
+
+    override fun onSearchTriggered(query: String) {
+        componentScope.launch {
+            network.advanced_search(query, 1)
+        }
+    }
 
     @AssistedFactory
     interface Factory : InterestComponent.Factory {
@@ -63,7 +86,7 @@ private fun NetworkCategories.mapToInterests() = categories.map {
             it.isWeb,
             it.link,
             it.title,
-            it.thumb.imageUrl
+            it.thumb.imageUrl,
         )
     } else {
         Interest(
@@ -71,7 +94,41 @@ private fun NetworkCategories.mapToInterests() = categories.map {
             it.isWeb,
             it.link,
             it.title,
-            "https://s3.picacomic.com/static/${it.thumb.path}"
+            "https://s3.picacomic.com/static/${it.thumb.path}",
         )
     }
 }
+
+@Deprecated("decompose experimental since version 3.2.0-alpha02")
+inline fun <T : Any> StateKeeper.saveable(
+    serializer: KSerializer<T>,
+    key: String? = null,
+    crossinline init: () -> T,
+): PropertyDelegateProvider<Any?, ReadWriteProperty<Any?, T>> =
+    PropertyDelegateProvider { _, property ->
+        val stateKey = key ?: "SAVEABLE_${property.name}"
+        var saveable = consume(key = stateKey, strategy = serializer) ?: init()
+        register(key = stateKey, strategy = serializer) { saveable }
+
+        object : ReadWriteProperty<Any?, T> {
+            override fun getValue(thisRef: Any?, property: KProperty<*>): T =
+                saveable
+
+            override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+                saveable = value
+            }
+        }
+    }
+
+inline fun <T : Any> StateKeeperOwner.saveable(
+    serializer: KSerializer<T>,
+    key: String? = null,
+    crossinline init: () -> T,
+): PropertyDelegateProvider<Any?, ReadWriteProperty<Any?, T>> =
+    stateKeeper.saveable(
+        serializer = serializer,
+        key = key,
+        init = init,
+    )
+
+private const val SEARCH_QUERY = "searchQuery"
