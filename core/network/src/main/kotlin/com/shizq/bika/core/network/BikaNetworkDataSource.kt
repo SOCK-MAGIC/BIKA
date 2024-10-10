@@ -1,6 +1,7 @@
 package com.shizq.bika.core.network
 
 import android.util.Log
+import com.shizq.bika.core.network.model.ComicInSearch
 import com.shizq.bika.core.network.model.NetworkCategories
 import com.shizq.bika.core.network.model.NetworkComicEpPicture
 import com.shizq.bika.core.network.model.NetworkComicInfo
@@ -10,6 +11,7 @@ import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.Sort
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -18,7 +20,6 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
@@ -63,25 +64,21 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
         }.body()
 
     @OptIn(ExperimentalSerializationApi::class)
-    suspend fun advanced_search(
+    suspend fun advancedSearch(
         query: String,
         page: Int,
         sort: Sort = Sort.SORT_DEFAULT,
         categories: List<String> = emptyList(),
-    ) {
-        // ComicInSearch
-        val text = client.post("comics/advanced-search") {
-            parameter("page", page)
-            setBody(
-                buildJsonObject {
-                    put("keyword", query)
-                    put("sort", sort.value)
-                    putJsonArray("categories") {
-                        addAll(categories.map { JsonPrimitive(it) })
-                    }
-                },
-            )
-        }.bodyAsText()
-        Log.d("advanced_search", text)
-    }
+    ): ComicInSearch = client.post("comics/advanced-search") {
+        parameter("page", page)
+        setBody(
+            buildJsonObject {
+                put("keyword", query)
+                put("sort", sort.value)
+                putJsonArray("categories") {
+                    addAll(categories.map { JsonPrimitive(it) })
+                }
+            },
+        )
+    }.body()
 }

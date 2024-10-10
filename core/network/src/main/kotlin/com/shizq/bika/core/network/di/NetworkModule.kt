@@ -22,6 +22,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
@@ -63,7 +64,9 @@ internal class NetworkModule {
             }
             .addInterceptor(bikaInterceptor)
             .addInterceptor(
-                HttpLoggingInterceptor().apply {
+                HttpLoggingInterceptor {
+                    Napier.i(it, tag = "okhttp.OkHttpClient")
+                }.apply {
                     level = HttpLoggingInterceptor.Level.BODY
                 },
             )

@@ -25,4 +25,8 @@ dependencies {
 
     implementation(libs.coil.kt)
     implementation(libs.coil.network)
+
+    implementation(libs.androidx.paging.runtime)
+
+    implementation(libs.napier)
 }
