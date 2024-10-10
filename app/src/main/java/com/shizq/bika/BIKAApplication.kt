@@ -6,16 +6,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
-import coil3.Uri
-import coil3.annotation.InternalCoilApi
-import coil3.fetch.Fetcher
-import coil3.util.FetcherServiceLoaderTarget
 import com.google.android.material.color.DynamicColors
+import com.shizq.bika.core.log.Logger
 import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
 import javax.inject.Inject
-import kotlin.reflect.KClass
 
 @HiltAndroidApp
 class BIKAApplication :
@@ -49,6 +45,7 @@ class BIKAApplication :
         )
 
         // Sync.initialize(this)
+        Logger.initialize()
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader = imageLoader.get()

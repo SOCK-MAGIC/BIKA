@@ -8,6 +8,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
@@ -16,7 +17,7 @@ class SearchComponentImpl @AssistedInject constructor(
     private val network: BikaNetworkDataSource,
 ) : SearchComponent,
     ComponentContext by componentContext {
-
+    override val recentSearchQueriesUiState: StateFlow<String> = MutableStateFlow("")
     private val searchQueryHandle = instanceKeeper.getOrCreateSimple { MutableStateFlow("") }
 
     override val searchQuery = searchQueryHandle.asStateFlow()
