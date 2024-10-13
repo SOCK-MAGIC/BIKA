@@ -33,13 +33,12 @@ class BikaClientPluginModule {
                 val parameter = request.url.toString().replace(PICA_API, "")
                 val time = (System.currentTimeMillis() / 1000).toString()
                 val nonce = UUID.randomUUID().toString().replace("-", "")
-                val text = (parameter + time + nonce + request.method + API_KEY).lowercase()
+                val text = (parameter + time + nonce + request.method.value + API_KEY).lowercase()
                 with(request) {
                     header(
                         HttpHeaders.Authorization,
                         bikaUserCredentialDataSource.userData.first().token,
                     )
-                    header(HttpHeaders.Accept, "application/vnd.picacomic.com.v1+json")
                     header("app-version", "2.2.1.2.3.4")
                     header("app-uuid", "defaultUuid")
                     header("app-platform", "android")
@@ -54,6 +53,7 @@ class BikaClientPluginModule {
             }
             on(Send) { request ->
                 request.headers.remove(HttpHeaders.AcceptCharset)
+                request.headers[HttpHeaders.Accept] = "application/vnd.picacomic.com.v1+json"
                 proceed(request)
             }
         }

@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 class SearchComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     private val network: BikaNetworkDataSource,
-    private val searchPagingSourceFactory: SearchPagingSource.Factory,
 ) : SearchComponent,
     ComponentContext by componentContext {
     override val recentSearchQueriesUiState: StateFlow<String> = MutableStateFlow("")
@@ -34,7 +33,7 @@ class SearchComponentImpl @AssistedInject constructor(
         .flatMapLatest {
             Pager(
                 PagingConfig(pageSize = 20),
-            ) { searchPagingSourceFactory(it) }
+            ) { SearchPagingSource(network, it) }
                 .flow
                 .cachedIn(componentScope)
         }
