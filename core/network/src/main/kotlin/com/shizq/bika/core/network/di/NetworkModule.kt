@@ -14,6 +14,7 @@ import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.BikaInterceptor
 import com.shizq.bika.core.network.config.MergeRequestInterceptor
+import com.shizq.bika.core.network.model.RequestSignatureConfig
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy
@@ -26,9 +27,12 @@ import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.addDefaultResponseValidation
+import io.ktor.client.plugins.api.ClientPlugin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.LogLevel
+import io.ktor.client.plugins.logging.Logger
+import io.ktor.client.plugins.logging.Logging
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.userAgent
@@ -40,7 +44,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import okio.Path.Companion.toOkioPath
 import java.io.File
 import javax.inject.Singleton
@@ -54,7 +57,7 @@ internal class NetworkModule {
         preferencesDataSource: BikaPreferencesDataSource,
         @ApplicationContext application: Context,
         @Dispatcher(BikaDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-        bikaInterceptor: BikaInterceptor,
+        // bikaInterceptor: BikaInterceptor,
     ): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
             .dispatcher(okhttp3.Dispatcher(ioDispatcher.limitedParallelism(64).asExecutorService()))
@@ -62,15 +65,8 @@ internal class NetworkModule {
                 val dns = runBlocking { preferencesDataSource.userData.first().dns }
                 dns.flatMap { Dns.SYSTEM.lookup(it) }
             }
-            .addInterceptor(bikaInterceptor)
-            .addInterceptor(
-                HttpLoggingInterceptor {
-                    Napier.i(it, tag = "okhttp.OkHttpClient")
-                }.apply {
-                    level = HttpLoggingInterceptor.Level.BODY
-                },
-            )
-            .cache(Cache(File(application.cacheDir, "okhttp-cache"), 1024 * 1024 * 50))
+            // .addInterceptor(bikaInterceptor)
+            .cache(Cache(File(application.cacheDir, "okhttp-cache"), 1024 * 1024 * 500))
             .build()
     }
 
@@ -79,6 +75,7 @@ internal class NetworkModule {
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
+        bikaPlugin1: ClientPlugin<RequestSignatureConfig>,
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -89,7 +86,6 @@ internal class NetworkModule {
                 userAgent("okhttp/3.8.1")
                 contentType(ContentType.parse("application/json; charset=UTF-8"))
             }
-            addDefaultResponseValidation()
             install(BikaClientPlugin) {
                 transform = json
             }
@@ -100,6 +96,15 @@ internal class NetworkModule {
                 retryOnServerErrors(maxRetries = 5)
                 exponentialDelay()
             }
+            Logging {
+                level = LogLevel.ALL
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        Napier.i(tag = "Ktor Client") { message }
+                    }
+                }
+            }
+            install(bikaPlugin1)
         }
     }
 
@@ -117,8 +122,8 @@ internal class NetworkModule {
                     OkHttpNetworkFetcherFactory(
                         client.get().newBuilder()
                             .apply { interceptors().clear() }
-                            .build()
-                    )
+                            .build(),
+                    ),
                 )
             }
             .diskCache {

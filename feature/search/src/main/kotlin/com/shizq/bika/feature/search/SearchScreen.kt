@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun SearchScreen(component: SearchComponent, onBackClick: () -> Unit,) {
+fun SearchScreen(component: SearchComponent, onBackClick: () -> Unit) {
     val recentSearchQueriesUiState by component.recentSearchQueriesUiState.collectAsStateWithLifecycle()
     // val searchResultUiState by component.searchResultUiState.collectAsStateWithLifecycle()
     val searchQuery by component.searchQuery.collectAsStateWithLifecycle()
@@ -61,7 +61,6 @@ fun SearchContent(
     onSearchQueryChanged: (String) -> Unit = {},
     onSearchTriggered: (String) -> Unit = {},
     onClearRecentSearches: () -> Unit = {},
-
     onBackClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
@@ -76,11 +75,11 @@ fun SearchContent(
     when (searchResultUiState) {
         SearchResultUiState.Loading,
         SearchResultUiState.LoadFailed,
-            -> Unit
+        -> Unit
 
-        SearchResultUiState.SearchNotReady -> Unit// SearchNotReadyBody()
+        SearchResultUiState.SearchNotReady -> Unit // SearchNotReadyBody()
         SearchResultUiState.EmptyQuery,
-            -> {
+        -> {
             if (recentSearchesUiState is RecentSearchQueriesUiState.Success) {
                 // RecentSearchesBody(
                 //     onClearRecentSearches = onClearRecentSearches,

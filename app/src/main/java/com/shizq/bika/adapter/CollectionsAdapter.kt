@@ -36,7 +36,7 @@ class CollectionsAdapter(val context: Context) : RecyclerView.Adapter<Collection
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private val mTextView: TextView = view.findViewById(R.id.item_collections_title)
-        private val text_null: TextView = view.findViewById(R.id.item_collections_null)
+        private val textView: TextView = view.findViewById(R.id.item_collections_null)
         private val mRecyclerView: RecyclerView = view.findViewById(R.id.item_collections_rv)
         private val adapter: CollectionsItemAdapter = CollectionsItemAdapter(context)
 
@@ -50,7 +50,7 @@ class CollectionsAdapter(val context: Context) : RecyclerView.Adapter<Collection
         fun setData(item: CollectionsBean.Collection) {
             mTextView.text = item.title
             if (item.comics.isEmpty()) {
-                text_null.visibility = View.VISIBLE
+                textView.visibility = View.VISIBLE
             }
             mRecyclerView.addItemDecoration(
                 SpacesItemDecoration(

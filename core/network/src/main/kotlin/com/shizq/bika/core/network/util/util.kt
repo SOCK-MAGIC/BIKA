@@ -1,3 +1,5 @@
+@file:Suppress("standard:filename")
+
 package com.shizq.bika.core.network.util
 
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,18 +22,19 @@ internal fun signature(key: String, text: String): String {
     return mac.doFinal(text.toByteArray()).toHexString()
 }
 
-fun CoroutineDispatcher.asExecutorService(): ExecutorService = object : Executor by asExecutor(), AbstractExecutorService() {
-    override fun shutdown() {
-        throw UnsupportedOperationException("shutdown is not implemented")
+fun CoroutineDispatcher.asExecutorService(): ExecutorService =
+    object : Executor by asExecutor(), AbstractExecutorService() {
+        override fun shutdown() {
+            throw UnsupportedOperationException("shutdown is not implemented")
+        }
+
+        override fun shutdownNow(): MutableList<Runnable> {
+            throw UnsupportedOperationException("shutdownNow is not implemented")
+        }
+
+        override fun isShutdown(): Boolean = false
+
+        override fun isTerminated(): Boolean = false
+
+        override fun awaitTermination(timeout: Long, unit: TimeUnit): Boolean = false
     }
-
-    override fun shutdownNow(): MutableList<Runnable> {
-        throw UnsupportedOperationException("shutdownNow is not implemented")
-    }
-
-    override fun isShutdown(): Boolean = false
-
-    override fun isTerminated(): Boolean = false
-
-    override fun awaitTermination(timeout: Long, unit: TimeUnit): Boolean = false
-}
