@@ -5,7 +5,7 @@ data class ComicResource(
     val imageUrl: String,
     val title: String,
     val author: String,
-    val categories: String,
+    val categories: List<String>,
     val finished: Boolean,
     val epsCount: Int,
     val pagesCount: Int,

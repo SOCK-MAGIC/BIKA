@@ -1,6 +1,5 @@
 package com.shizq.bika.core.network
 
-import android.util.Log
 import com.shizq.bika.core.network.model.ComicInSearch
 import com.shizq.bika.core.network.model.NetworkCategories
 import com.shizq.bika.core.network.model.NetworkComicEpPicture
@@ -11,14 +10,12 @@ import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.Sort
-import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -27,7 +24,7 @@ import kotlinx.serialization.json.putJsonArray
 import javax.inject.Inject
 
 class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) {
-    suspend fun networkInit(): NetworkInit = client.get("init").body()
+    suspend fun networkInit(): NetworkInit = client.get("http://68.183.234.72/init").body()
 
     suspend fun signIn(username: String, password: String): NetworkToken =
         client.post("auth/sign-in") {

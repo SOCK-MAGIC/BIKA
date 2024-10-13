@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
 import androidx.compose.foundation.layout.windowInsetsTopHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -34,17 +35,21 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun SearchScreen(component: SearchComponent, onBackClick: () -> Unit) {
     val recentSearchQueriesUiState by component.recentSearchQueriesUiState.collectAsStateWithLifecycle()
-    // val searchResultUiState by component.searchResultUiState.collectAsStateWithLifecycle()
+    val searchResultUiState = component.searchResultUiState.collectAsLazyPagingItems()
     val searchQuery by component.searchQuery.collectAsStateWithLifecycle()
     SearchContent(
         modifier = Modifier,
         searchQuery = searchQuery,
         recentSearchesUiState = RecentSearchQueriesUiState.Loading,
-        searchResultUiState = SearchResultUiState.Loading,
+        searchResultUiState = searchResultUiState,
         onSearchQueryChanged = component::onSearchQueryChanged,
         onSearchTriggered = component::onSearchTriggered,
         onClearRecentSearches = {},
@@ -54,14 +59,14 @@ fun SearchScreen(component: SearchComponent, onBackClick: () -> Unit) {
 
 @Composable
 fun SearchContent(
+    searchQuery: String,
+    recentSearchesUiState: RecentSearchQueriesUiState,
+    searchResultUiState: LazyPagingItems<ComicResource>,
+    onSearchQueryChanged: (String) -> Unit,
+    onSearchTriggered: (String) -> Unit,
+    onClearRecentSearches: () -> Unit,
+    onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
-    searchQuery: String = "",
-    recentSearchesUiState: RecentSearchQueriesUiState = RecentSearchQueriesUiState.Loading,
-    searchResultUiState: SearchResultUiState = SearchResultUiState.Loading,
-    onSearchQueryChanged: (String) -> Unit = {},
-    onSearchTriggered: (String) -> Unit = {},
-    onClearRecentSearches: () -> Unit = {},
-    onBackClick: () -> Unit = {},
 ) {
     Column(modifier = modifier) {
         Spacer(Modifier.windowInsetsTopHeight(WindowInsets.safeDrawing))
@@ -71,58 +76,12 @@ fun SearchContent(
             onSearchTriggered = onSearchTriggered,
             searchQuery = searchQuery,
         )
-    }
-    when (searchResultUiState) {
-        SearchResultUiState.Loading,
-        SearchResultUiState.LoadFailed,
-        -> Unit
-
-        SearchResultUiState.SearchNotReady -> Unit // SearchNotReadyBody()
-        SearchResultUiState.EmptyQuery,
-        -> {
-            if (recentSearchesUiState is RecentSearchQueriesUiState.Success) {
-                // RecentSearchesBody(
-                //     onClearRecentSearches = onClearRecentSearches,
-                //     onRecentSearchClicked = {
-                //         onSearchQueryChanged(it)
-                //         onSearchTriggered(it)
-                //     },
-                //     recentSearchQueries = recentSearchesUiState.recentQueries.map { it.query },
-                // )
+        LazyColumn {
+            comicCardItems(searchResultUiState) {
             }
         }
-
-        is SearchResultUiState.Success -> {
-            // if (searchResultUiState.isEmpty()) {
-            // EmptySearchResultBody(
-            //     searchQuery = searchQuery,
-            //     onInterestsClick = onInterestsClick,
-            // )
-            if (recentSearchesUiState is RecentSearchQueriesUiState.Success) {
-                // RecentSearchesBody(
-                //     onClearRecentSearches = onClearRecentSearches,
-                //     onRecentSearchClicked = {
-                //         onSearchQueryChanged(it)
-                //         onSearchTriggered(it)
-                //     },
-                //     recentSearchQueries = recentSearchesUiState.recentQueries.map { it.query },
-                // )
-            }
-            // } else {
-            // SearchResultBody(
-            //     searchQuery = searchQuery,
-            //     topics = searchResultUiState.topics,
-            //     newsResources = searchResultUiState.newsResources,
-            //     onSearchTriggered = onSearchTriggered,
-            //     onTopicClick = onTopicClick,
-            //     onNewsResourcesCheckedChanged = onNewsResourcesCheckedChanged,
-            //     onNewsResourceViewed = onNewsResourceViewed,
-            //     onFollowButtonClick = onFollowButtonClick,
-            // )
-            // }
-        }
+        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }
-    Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
 }
 
 @Composable

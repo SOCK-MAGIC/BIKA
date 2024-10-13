@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.util.fastJoinToString
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.model.ComicResource
 
@@ -63,7 +64,10 @@ fun ComicCard(
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium,
                 )
-                Text(comicResource.categories, style = MaterialTheme.typography.bodyMedium)
+                Text(
+                    comicResource.categories.fastJoinToString(" "),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
                 Spacer(Modifier.weight(1f))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Image(Icons.Default.Favorite, null, Modifier.size(20.dp))
@@ -75,7 +79,7 @@ fun ComicCard(
     }
 }
 
-@Preview
+@DevicePreviews
 @Composable
 private fun ComicCardPreview() {
     ComicCard(
@@ -84,7 +88,7 @@ private fun ComicCardPreview() {
             imageUrl = "",
             title = "petentiumdddddddddddddddddddddddddddddddddddddddddddddddddd",
             author = "etiam",
-            categories = "tractatos",
+            categories = listOf("tractatos", "aractatos"),
             finished = false,
             epsCount = 7864,
             pagesCount = 2924,

@@ -13,4 +13,6 @@ dependencies {
     api(projects.core.model)
 
     implementation(libs.coil.kt)
+
+    implementation(libs.androidx.paging.compose)
 }

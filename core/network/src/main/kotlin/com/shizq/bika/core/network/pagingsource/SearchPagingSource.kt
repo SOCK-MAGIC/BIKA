@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.ComicInSearch
 
-class SearchPagingSource (
+class SearchPagingSource(
     private val network: BikaNetworkDataSource,
     private val query: String,
 ) : PagingSource<Int, ComicInSearch.Comics.Doc>() {
@@ -33,4 +33,3 @@ class SearchPagingSource (
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
 }
-

@@ -30,6 +30,7 @@ class BikaClientPluginModule {
     ): ClientPlugin<RequestSignatureConfig> =
         createClientPlugin("BikaRequestSignature", ::RequestSignatureConfig) {
             onRequest { request, _ ->
+                if (request.url.encodedPathSegments.contains("init")) return@onRequest
                 val parameter = request.url.toString().replace(PICA_API, "")
                 val time = (System.currentTimeMillis() / 1000).toString()
                 val nonce = UUID.randomUUID().toString().replace("-", "")
