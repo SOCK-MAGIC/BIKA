@@ -13,11 +13,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.rounded.HideSource
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,36 +35,50 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
+import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -> Unit) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
-    ComicContent(comicsPagingItems, navigationToComicInfo = navigationToComicInfo)
+    var showSealTagDialog by rememberSaveable { mutableStateOf(false) }
+    ComicContent(
+        comicsPagingItems,
+        showSealTagDialog = showSealTagDialog,
+        onDismissed = { showSealTagDialog = false },
+        onTopAppBarActionClick = { showSealTagDialog = true },
+        navigationToComicInfo = navigationToComicInfo,
+    )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ComicContent(
-    items: LazyPagingItems<Comic>,
+    lazyPagingItems: LazyPagingItems<ComicResource>,
     navigationToComicInfo: (String) -> Unit,
+    showSealTagDialog: Boolean,
+    onDismissed: () -> Unit,
+    onTopAppBarActionClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Scaffold { innerPadding ->
-        LazyColumn(modifier = modifier.padding(innerPadding)) {
-            items(items.itemCount) { index ->
-                items[index]?.let {
-                    ComicCard(
-                        imageUrl = it.thumbUrl,
-                        title = it.title,
-                        author = it.author,
-                        categories = it.categories,
-                        finished = it.finished,
-                        epsCount = it.epsCount,
-                        pagesCount = it.pagesCount,
-                        likeCount = it.likesCount,
-                    ) {
-                        navigationToComicInfo(it.id)
+    if (showSealTagDialog) {
+        SettingsDialog { onDismissed() }
+    }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                {},
+                actions = {
+                    IconButton(onTopAppBarActionClick) {
+                        Icon(Icons.Rounded.HideSource, "hide tag")
                     }
-                }
+                },
+            )
+        },
+    ) { innerPadding ->
+        LazyColumn(modifier = modifier.padding(innerPadding)) {
+            comicCardItems(lazyPagingItems) {
+                navigationToComicInfo(it)
             }
         }
     }
