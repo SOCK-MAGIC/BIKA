@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.Sort
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.rounded.HideSource
 import androidx.compose.material3.Card
@@ -36,17 +37,25 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.network.model.Sort
 import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -> Unit) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
     var showSealTagDialog by rememberSaveable { mutableStateOf(false) }
+    var showSortDialog by rememberSaveable { mutableStateOf(false) }
     ComicContent(
         comicsPagingItems,
         showSealTagDialog = showSealTagDialog,
-        onDismissed = { showSealTagDialog = false },
+        onDismissed = {
+            showSealTagDialog = false
+            showSortDialog = false
+        },
         onTopAppBarActionClick = { showSealTagDialog = true },
+        showSortDialog = showSortDialog,
+        onDismissedSortDialog = { showSortDialog = false },
+        onActionSortDialogClick = { showSortDialog = true },
         navigationToComicInfo = navigationToComicInfo,
     )
 }
@@ -60,18 +69,28 @@ internal fun ComicContent(
     onDismissed: () -> Unit,
     onTopAppBarActionClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showSortDialog: Boolean,
+    onDismissedSortDialog: () -> Unit,
+    onActionSortDialogClick: () -> Unit,
 ) {
     if (showSealTagDialog) {
         SettingsDialog { onDismissed() }
+    }
+    if (showSortDialog) {
+        SortDialog { onDismissed() }
     }
     Scaffold(
         topBar = {
             TopAppBar(
                 {},
                 actions = {
+                    IconButton(onActionSortDialogClick) {
+                        Icon(Icons.AutoMirrored.Rounded.Sort, "sort")
+                    }
                     IconButton(onTopAppBarActionClick) {
                         Icon(Icons.Rounded.HideSource, "hide tag")
                     }
+                    Text("1/1")
                 },
             )
         },

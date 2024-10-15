@@ -87,7 +87,7 @@ private fun ColumnScope.SettingsTagPanel() {
 }
 
 @Composable
-fun SettingsDialogChooserRow(
+private fun SettingsDialogChooserRow(
     text: String,
     checked: Boolean,
     onClick: (Boolean) -> Unit,
