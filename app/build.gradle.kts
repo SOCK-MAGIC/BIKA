@@ -2,19 +2,14 @@ plugins {
     id("kotlin-kapt")
     alias(libs.plugins.bika.android.application)
     alias(libs.plugins.bika.android.compose)
+    alias(libs.plugins.bika.decompose)
     alias(libs.plugins.bika.hilt)
-    alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.kotlin.android)
 }
 
 android {
     namespace = "com.shizq.bika"
-    compileSdk = 35
-
     defaultConfig {
         applicationId = "com.shizq.bika"
-        minSdk = 24
-        targetSdk = 34
         versionCode = 8
         versionName = "1.0.7"
 
@@ -44,18 +39,16 @@ android {
             )
         }
     }
-
+    packaging {
+        resources {
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+        }
+    }
     buildFeatures {
         viewBinding = true
         dataBinding = true
         buildConfig = true
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
     applicationVariants.all {
         outputs
             .map { it as com.android.build.gradle.internal.api.ApkVariantOutputImpl }
