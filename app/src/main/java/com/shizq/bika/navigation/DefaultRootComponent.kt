@@ -13,6 +13,7 @@ import com.arkivanov.decompose.value.Value
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
+import com.shizq.bika.feature.ranking.RankingComponent
 import com.shizq.bika.feature.reader.ReaderComponent
 import com.shizq.bika.feature.search.SearchComponent
 import com.shizq.bika.feature.signin.SignInComponent
@@ -34,6 +35,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private val drawerComponentFactory: DrawerComponent.Factory,
     private val splashComponentFactory: SplashComponent.Factory,
     private val readerComponentFactory: ReaderComponent.Factory,
+    private val rankingComponentFactory: RankingComponent.Factory,
     private val searchComponentFactory: SearchComponent.Factory,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<Config>()
@@ -70,6 +72,7 @@ class DefaultRootComponent @AssistedInject constructor(
 
                 is Config.Reader -> Reader(readerComponentFactory(componentContext, config.id))
                 is Config.Search -> Search(searchComponentFactory(componentContext))
+                is Config.Ranking -> Ranking(rankingComponentFactory(componentContext))
             }
         }
 
@@ -96,6 +99,10 @@ class DefaultRootComponent @AssistedInject constructor(
 
     override fun navigationToSearch() {
         navigation.push(Config.Search)
+    }
+
+    override fun navigationToRanking() {
+        navigation.push(Config.Ranking)
     }
 
     override fun onBack() {
@@ -125,6 +132,9 @@ class DefaultRootComponent @AssistedInject constructor(
 
         @Serializable
         data class Reader(val id: String) : Config
+
+        @Serializable
+        data object Ranking : Config
 
         @Serializable
         data object Search : Config

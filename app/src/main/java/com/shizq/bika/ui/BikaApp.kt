@@ -28,6 +28,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.shizq.bika.feature.comic.info.ComicInfoScreen
 import com.shizq.bika.feature.comic.list.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
+import com.shizq.bika.feature.ranking.RankingScreen
 import com.shizq.bika.feature.reader.ReaderScreen
 import com.shizq.bika.feature.search.SearchScreen
 import com.shizq.bika.feature.signin.SignInScreen
@@ -104,6 +105,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 component = child.component,
                 navigationToComicList = component::navigationToComicList,
                 navigationToSearch = component::navigationToSearch,
+                navigationToRanking = component::navigationToRanking,
             )
 
             is RootComponent.Child.ComicList -> ComicScreen(
@@ -117,6 +119,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             )
 
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)
+            is RootComponent.Child.Ranking -> RankingScreen(component = child.component)
             is RootComponent.Child.Search -> SearchScreen(
                 component = child.component,
                 onBackClick = component::onBack,

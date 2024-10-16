@@ -2,7 +2,6 @@ package com.shizq.bika.feature.interest
 
 import android.content.Context
 import android.net.Uri
-import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.foundation.Image
@@ -37,7 +36,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.BikaLoadingWheel
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 
@@ -46,12 +44,14 @@ fun InterestScreen(
     component: InterestComponent,
     navigationToComicList: (String, String) -> Unit,
     navigationToSearch: () -> Unit,
+    navigationToRanking: () -> Unit,
 ) {
     val uiState by component.interestUiState.collectAsState()
     InterestContent(
         uiState = uiState,
         navigationToSearch = navigationToSearch,
         navigationToComicList = navigationToComicList,
+        navigationToRanking = navigationToRanking,
     )
 }
 
@@ -60,6 +60,7 @@ fun InterestScreen(
 internal fun InterestContent(
     uiState: InterestsUiState,
     navigationToSearch: () -> Unit,
+    navigationToRanking: () -> Unit,
     navigationToComicList: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -99,7 +100,11 @@ internal fun InterestContent(
                     Image(R.drawable.feature_interest_bika, "推荐", {})
                 }
                 item {
-                    Image(R.drawable.feature_interest_cat_leaderboard, "排行榜", {})
+                    Image(
+                        R.drawable.feature_interest_cat_leaderboard,
+                        "排行榜",
+                        navigationToRanking,
+                    )
                 }
                 item {
                     Image(R.drawable.feature_interest_cat_game, "游戏推荐", {})
@@ -120,7 +125,7 @@ internal fun InterestContent(
                     val context = LocalContext.current
                     Image(item.imageUrl, item.title, null) {
                         if (item.isWeb) {
-                            launchCustomChromeTab(context, item.link.toUri(),)
+                            launchCustomChromeTab(context, item.link.toUri())
                         } else {
                             navigationToComicList("categories", item.title)
                         }
@@ -182,7 +187,7 @@ private fun launchCustomChromeTab(context: Context, uri: Uri) {
 @Preview
 @Composable
 private fun InterestComponentPreviewLoading() {
-    InterestScreen(PreviewInterestComponent(), { _, _ -> }, {})
+    InterestScreen(PreviewInterestComponent(), { _, _ -> }, {}, {})
 }
 
 @Preview
@@ -193,6 +198,7 @@ private fun InterestComponentPreviewEmpty() {
             interestUiState.value = InterestsUiState.Empty
         },
         { _, _ -> },
+        {},
         {},
     )
 }
@@ -223,6 +229,7 @@ private fun InterestComponentPreview() {
                 )
             },
         { _, _ -> },
+        {},
         {},
     )
 }
