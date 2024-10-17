@@ -6,16 +6,9 @@ import androidx.compose.runtime.Composable
 fun RankingScreen(
     component: RankingComponent,
 ) {
-
-    RankingContent(
-
-    )
+    RankingContent()
 }
 
-
 @Composable
-internal fun RankingContent(
-
-) {
-
+internal fun RankingContent() {
 }

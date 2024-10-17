@@ -26,7 +26,7 @@ class ComicListComponentImpl @AssistedInject constructor(
     override val comicFlow = combine(hideCategoriesFlow, sortFlow, ::Pair)
         .flatMapLatest { (hide, sort) ->
             Pager(
-                PagingConfig(pageSize = 20,),
+                PagingConfig(pageSize = 20),
             ) { ComicListPagingSource(network, category, sort) }
                 .flow
                 .map { pagingData ->

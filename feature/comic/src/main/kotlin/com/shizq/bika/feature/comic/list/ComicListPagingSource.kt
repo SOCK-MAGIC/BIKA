@@ -1,6 +1,5 @@
 package com.shizq.bika.feature.comic.list
 
-import androidx.compose.ui.util.fastMap
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.shizq.bika.core.model.ComicResource
