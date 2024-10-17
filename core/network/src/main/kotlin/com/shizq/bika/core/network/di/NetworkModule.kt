@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.tracing.trace
 import coil3.ImageLoader
 import coil3.disk.DiskCache
+import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.serviceLoaderEnabled
 import coil3.util.DebugLogger
@@ -128,7 +129,7 @@ internal class NetworkModule {
             }
             .diskCache {
                 DiskCache.Builder()
-                    .directory(File(application.cacheDir, "coil-cache").toOkioPath())
+                    .directory(application.cacheDir.resolve("coil-cache"))
                     .build()
             }
             .apply {
