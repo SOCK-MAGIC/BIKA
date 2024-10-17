@@ -34,7 +34,6 @@ internal class ClickControl(
     private val width: Int,
     private val height: Int,
 ) {
-    @Stable
     val lazyListState = LazyListState()
     private var scrollPosition = lazyListState.firstVisibleItemIndex
     private fun click(action: Action?) {

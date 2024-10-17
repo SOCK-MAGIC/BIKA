@@ -2,6 +2,7 @@ package com.shizq.bika.feature.reader
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.shizq.bika.core.model.Picture
 import com.shizq.bika.core.network.BikaNetworkDataSource
 
 class ReaderPagingSource(
@@ -33,5 +34,3 @@ class ReaderPagingSource(
         anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
     }
 }
-
-data class Picture(val id: String, val url: String)

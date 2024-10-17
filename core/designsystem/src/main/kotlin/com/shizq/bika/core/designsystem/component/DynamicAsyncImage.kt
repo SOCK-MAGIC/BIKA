@@ -3,9 +3,11 @@ package com.shizq.bika.core.designsystem.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,8 +23,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Loading
+import coil3.compose.LocalAsyncImagePreviewHandler
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.imageLoader
+import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.shizq.bika.core.designsystem.R
 import com.shizq.bika.core.designsystem.theme.LocalTintTheme
