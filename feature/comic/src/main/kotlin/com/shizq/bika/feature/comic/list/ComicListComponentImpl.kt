@@ -18,30 +18,37 @@ import kotlinx.coroutines.flow.map
 
 class ComicListComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
-    @Assisted category: String,
+    @Assisted category: String?,
     private val network: BikaNetworkDataSource,
 ) : ComicListComponent,
     ComponentContext by componentContext {
 
     override val comicFlow = combine(hideCategoriesFlow, sortFlow, ::Pair)
         .flatMapLatest { (hide, sort) ->
-            Pager(
-                PagingConfig(pageSize = 20),
-            ) { ComicListPagingSource(network, category, sort) }
-                .flow
-                .map { pagingData ->
-                    if (hide.isEmpty()) return@map pagingData
-                    pagingData.filter { comic ->
-                        for (h in hide) {
-                            for (c in comic.categories) {
-                                if (h == c) {
-                                    return@filter false
+            if (category == "random") {
+                Pager(
+                    config = PagingConfig(pageSize = 20),
+                ) { ComicRandomPagingSource(network) }.flow
+            } else {
+                Pager(
+                    config = PagingConfig(pageSize = 20),
+                    initialKey = 1,
+                ) { ComicListPagingSource(network, category, sort) }
+                    .flow
+                    .map { pagingData ->
+                        if (hide.isEmpty()) return@map pagingData
+                        pagingData.filter { comic ->
+                            for (h in hide) {
+                                for (c in comic.categories) {
+                                    if (h == c) {
+                                        return@filter false
+                                    }
                                 }
                             }
+                            return@filter true
                         }
-                        return@filter true
                     }
-                }
+            }
         }
         .cachedIn(componentScope)
 
@@ -49,9 +56,7 @@ class ComicListComponentImpl @AssistedInject constructor(
     interface Factory : ComicListComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
-            category: String,
+            category: String?,
         ): ComicListComponentImpl
     }
 }
-
-sealed interface ComicListUiState

@@ -4,12 +4,12 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.Sort
+import com.shizq.bika.feature.comic.model.asComicResource
 
 class ComicListPagingSource(
     private val network: BikaNetworkDataSource,
-    private val category: String,
+    private val category: String?,
     private val sort: Sort,
 ) : PagingSource<Int, ComicResource>() {
     override suspend fun load(
@@ -43,28 +43,3 @@ class ComicListPagingSource(
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
 }
-
-fun NetworkComicList.Comics.Doc.asComicResource() = ComicResource(
-    id,
-    thumb.imageUrl,
-    title,
-    author,
-    categories,
-    finished,
-    epsCount,
-    pagesCount,
-    likesCount,
-)
-
-data class Comic(
-    val id: String,
-    val title: String,
-    val finished: Boolean,
-    val author: String,
-    val likesCount: Int,
-    val total: Int,
-    val categories: String,
-    val thumbUrl: String,
-    val epsCount: Int,
-    val pagesCount: Int,
-)

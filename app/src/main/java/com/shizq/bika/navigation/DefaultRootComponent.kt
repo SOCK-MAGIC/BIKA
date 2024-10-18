@@ -63,7 +63,7 @@ class DefaultRootComponent @AssistedInject constructor(
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
                 is Config.ComicList -> ComicList(
-                    comicListComponentFactory(componentContext, config.title),
+                    comicListComponentFactory(componentContext, config.category),
                 )
 
                 is Config.ComicInfo -> ComicInfo(
@@ -85,8 +85,8 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.Interest)
     }
 
-    override fun navigationToComicList(tag: String, title: String) {
-        navigation.push(Config.ComicList(tag, title))
+    override fun navigationToComicList(category: String?) {
+        navigation.push(Config.ComicList(category))
     }
 
     override fun navigationToComicInfo(id: String) {
@@ -125,7 +125,7 @@ class DefaultRootComponent @AssistedInject constructor(
         data object Splash : Config
 
         @Serializable
-        data class ComicList(val tag: String, val title: String) : Config
+        data class ComicList(val category: String?) : Config
 
         @Serializable
         data class ComicInfo(val id: String) : Config

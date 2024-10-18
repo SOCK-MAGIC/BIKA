@@ -42,7 +42,7 @@ import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 @Composable
 fun InterestScreen(
     component: InterestComponent,
-    navigationToComicList: (String, String) -> Unit,
+    navigationToComicList: (String?) -> Unit,
     navigationToSearch: () -> Unit,
     navigationToRanking: () -> Unit,
 ) {
@@ -61,7 +61,7 @@ internal fun InterestContent(
     uiState: InterestsUiState,
     navigationToSearch: () -> Unit,
     navigationToRanking: () -> Unit,
-    navigationToComicList: (String, String) -> Unit,
+    navigationToComicList: (String?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Scaffold(
@@ -116,10 +116,14 @@ internal fun InterestContent(
                     Image(R.drawable.feature_interest_cat_forum, "留言板", {})
                 }
                 item {
-                    Image(R.drawable.feature_interest_cat_latest, "最近更新", {})
+                    Image(R.drawable.feature_interest_cat_latest, "最近更新") {
+                        navigationToComicList(null)
+                    }
                 }
                 item {
-                    Image(R.drawable.feature_interest_cat_random, "随机本子", {})
+                    Image(R.drawable.feature_interest_cat_random, "随机本子") {
+                        navigationToComicList("random")
+                    }
                 }
                 items(uiState.interests, key = { it.title }) { item ->
                     val context = LocalContext.current
@@ -127,7 +131,7 @@ internal fun InterestContent(
                         if (item.isWeb) {
                             launchCustomChromeTab(context, item.link.toUri())
                         } else {
-                            navigationToComicList("categories", item.title)
+                            navigationToComicList(item.title)
                         }
                     }
                 }
@@ -187,7 +191,7 @@ private fun launchCustomChromeTab(context: Context, uri: Uri) {
 @Preview
 @Composable
 private fun InterestComponentPreviewLoading() {
-    InterestScreen(PreviewInterestComponent(), { _, _ -> }, {}, {})
+    InterestScreen(PreviewInterestComponent(), { _ -> }, {}, {})
 }
 
 @Preview
@@ -197,7 +201,7 @@ private fun InterestComponentPreviewEmpty() {
         PreviewInterestComponent().apply {
             interestUiState.value = InterestsUiState.Empty
         },
-        { _, _ -> },
+        { _ -> },
         {},
         {},
     )
@@ -228,7 +232,7 @@ private fun InterestComponentPreview() {
                     ),
                 )
             },
-        { _, _ -> },
+        { _ -> },
         {},
         {},
     )

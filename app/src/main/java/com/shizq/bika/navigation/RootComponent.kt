@@ -18,7 +18,7 @@ interface RootComponent : ComponentContext {
     val drawer: Value<ChildDrawer<DrawerComponent>>
     fun navigationToSignIn()
     fun navigationToInterest()
-    fun navigationToComicList(tag: String, title: String)
+    fun navigationToComicList(category: String?)
     fun navigationToComicInfo(id: String)
     fun navigationToReader(id: String)
     fun navigationToSearch()

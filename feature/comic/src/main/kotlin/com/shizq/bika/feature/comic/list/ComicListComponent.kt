@@ -11,7 +11,7 @@ interface ComicListComponent {
     interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
-            category: String,
+            category: String?,
         ): ComicListComponent
     }
 }
