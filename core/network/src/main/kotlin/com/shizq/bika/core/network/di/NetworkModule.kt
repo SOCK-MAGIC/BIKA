@@ -31,6 +31,7 @@ import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.api.ClientPlugin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
+import io.ktor.client.plugins.logging.ANDROID
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
@@ -61,7 +62,7 @@ internal class NetworkModule {
         // bikaInterceptor: BikaInterceptor,
     ): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
-            .dispatcher(okhttp3.Dispatcher(ioDispatcher.limitedParallelism(64).asExecutorService()))
+            .dispatcher(okhttp3.Dispatcher(ioDispatcher.asExecutorService()))
             .dns {
                 val dns = runBlocking { preferencesDataSource.userData.first().dns }
                 dns.flatMap { Dns.SYSTEM.lookup(it) }
@@ -99,11 +100,7 @@ internal class NetworkModule {
             }
             Logging {
                 level = LogLevel.ALL
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        Napier.i(tag = "Ktor Client") { message }
-                    }
-                }
+                logger = Logger.ANDROID
             }
             install(bikaPlugin1)
         }

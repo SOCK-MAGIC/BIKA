@@ -2,18 +2,19 @@ package com.shizq.bika.core.designsystem.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
@@ -23,11 +24,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Loading
-import coil3.compose.LocalAsyncImagePreviewHandler
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
-import coil3.imageLoader
-import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.shizq.bika.core.designsystem.R
 import com.shizq.bika.core.designsystem.theme.LocalTintTheme
@@ -91,3 +89,26 @@ fun DynamicAsyncImage(
         modifier = modifier,
     )
 }
+
+@Composable
+fun AvatarAsyncImage(
+    avatarUrl: String,
+    avatarBorderUrl: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier.size(64.dp), contentAlignment = Alignment.Center) {
+        AsyncImage(
+            avatarUrl,
+            "Avatar",
+            modifier = Modifier
+                .size(48.dp)
+                .clip(CircleShape),
+        )
+        AsyncImage(
+            avatarBorderUrl,
+            "Avatar Border",
+            Modifier.fillMaxSize(),
+        )
+    }
+}
+

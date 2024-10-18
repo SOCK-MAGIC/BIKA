@@ -6,8 +6,10 @@ import com.shizq.bika.core.network.model.NetworkComicEpPicture
 import com.shizq.bika.core.network.model.NetworkComicInfo
 import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.NetworkInit
+import com.shizq.bika.core.network.model.NetworkKnight
 import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
+import com.shizq.bika.core.network.model.NetworkRankingDetail
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.Sort
 import io.ktor.client.HttpClient
@@ -16,6 +18,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -78,4 +81,13 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
             },
         )
     }.body()
+
+    suspend fun getRankingDetail(titleType: String): NetworkRankingDetail =
+        client.get("comics/leaderboard") {
+            parameter("tt", titleType)
+            parameter("ct", "VC")
+        }.body()
+
+    suspend fun getKnightRankingDetail(): NetworkKnight =
+        client.get("comics/knight-leaderboard").body()
 }
