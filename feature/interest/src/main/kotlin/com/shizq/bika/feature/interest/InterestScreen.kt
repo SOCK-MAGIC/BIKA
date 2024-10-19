@@ -8,6 +8,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -49,6 +51,7 @@ fun InterestScreen(
     navigationToComicList: (String?) -> Unit,
     navigationToSearch: () -> Unit,
     navigationToRanking: () -> Unit,
+    openDrawer: () -> Unit,
 ) {
     val uiState by component.interestUiState.collectAsState()
     val interestVisibilityState by component.interestVisibilityUiState.collectAsState()
@@ -65,6 +68,7 @@ fun InterestScreen(
         showHideInterestsDialog = showHideInterestsDialog,
         interestVisibilityState = interestVisibilityState,
         onChangeInterestVisibility = component::updateInterestVisibility,
+        openDrawer = openDrawer,
     )
 }
 
@@ -81,6 +85,7 @@ internal fun InterestContent(
     showHideInterestsDialog: Boolean,
     interestVisibilityState: Map<String, Boolean>,
     onChangeInterestVisibility: (String, Boolean) -> Unit,
+    openDrawer: () -> Unit,
 ) {
     if (showHideInterestsDialog) {
         HideInterestDialog(
@@ -98,6 +103,11 @@ internal fun InterestContent(
                     }
                     IconButton(navigationToSearch) {
                         Icon(Icons.Rounded.Search, "Search")
+                    }
+                },
+                navigationIcon = {
+                    IconButton(openDrawer) {
+                        Icon(BikaIcons.Menu, "Open Drawer")
                     }
                 },
             )
@@ -234,7 +244,7 @@ private fun launchCustomChromeTab(context: Context, uri: Uri) {
 @Preview
 @Composable
 private fun InterestComponentPreviewLoading() {
-    InterestScreen(PreviewInterestComponent(), { _ -> }, {}, {})
+    InterestScreen(PreviewInterestComponent(), { _ -> }, {}, {}, {})
 }
 
 @Preview
@@ -245,6 +255,7 @@ private fun InterestComponentPreviewEmpty() {
             interestUiState.value = InterestsUiState.Empty
         },
         { _ -> },
+        {},
         {},
         {},
     )
@@ -276,6 +287,7 @@ private fun InterestComponentPreview() {
                 )
             },
         { _ -> },
+        {},
         {},
         {},
     )

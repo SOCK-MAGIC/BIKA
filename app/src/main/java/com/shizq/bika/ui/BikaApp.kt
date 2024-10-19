@@ -1,17 +1,23 @@
 package com.shizq.bika.ui
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.add
 import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -52,10 +58,6 @@ internal fun BikaApp(
     component: RootComponent,
     modifier: Modifier = Modifier,
 ) {
-    val drawerState = rememberNavigationDrawerState(
-        drawer = component.drawer,
-        onStateChanged = component::setDrawerState,
-    )
     Scaffold(
         containerColor = Color.Transparent,
         contentColor = MaterialTheme.colorScheme.onBackground,
@@ -64,7 +66,7 @@ internal fun BikaApp(
         },
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) { innerPadding ->
-        Surface(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -74,8 +76,21 @@ internal fun BikaApp(
                         WindowInsetsSides.Horizontal,
                     ),
                 ),
-        ) {
-            Box(modifier = Modifier.consumeWindowInsets(WindowInsets(0, 0, 0, 0))) {
+        ) {}
+        Box(modifier = Modifier.consumeWindowInsets(WindowInsets(0, 0, 0, 0))) {
+            val drawerState = rememberNavigationDrawerState(
+                drawer = component.drawer,
+                onStateChanged = component::setDrawerState,
+            )
+            ModalNavigationDrawer(
+                drawerContent = {
+                    ModalDrawerSheet {
+                        Text("drawerContent")
+                        // drawer content
+                    }
+                },
+                drawerState = drawerState.drawerState,
+            ) {
                 RootContent(component)
             }
         }
@@ -106,6 +121,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 navigationToComicList = component::navigationToComicList,
                 navigationToSearch = component::navigationToSearch,
                 navigationToRanking = component::navigationToRanking,
+                openDrawer = { component.setDrawerState(true) },
             )
 
             is RootComponent.Child.ComicList -> ComicScreen(
