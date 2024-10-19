@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.shizq.bika.core.designsystem.component.BikaLoadingWheel
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
+import com.shizq.bika.core.designsystem.icon.BikaIcons
 
 @Composable
 fun InterestScreen(
@@ -69,6 +70,9 @@ internal fun InterestContent(
             TopAppBar(
                 {},
                 actions = {
+                    IconButton({}) {
+                        Icon(BikaIcons.VisibilityOff, "Search")
+                    }
                     IconButton(navigationToSearch) {
                         Icon(Icons.Rounded.Search, "Search")
                     }
@@ -129,7 +133,7 @@ internal fun InterestContent(
                 }
                 items(uiState.interests, key = { it.title }) { item ->
                     val context = LocalContext.current
-                    Image(item.imageUrl, item.title, null) {
+                    Image(item.imageUrl, item.title, item.title) {
                         if (item.isWeb) {
                             launchCustomChromeTab(context, item.link.toUri())
                         } else {
