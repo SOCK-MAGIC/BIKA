@@ -51,7 +51,7 @@ internal fun ComicInfoContent(
     when (uiState) {
         ComicInfoUiState.Error,
         ComicInfoUiState.Loading,
-        -> Unit
+            -> Unit
 
         is ComicInfoUiState.Success -> {
             ComicInfoContent(uiState, navigationToReader = navigationToReader, modifier)
@@ -65,9 +65,20 @@ private fun ComicInfoContent(
     navigationToReader: (String) -> Unit,
     modifier: Modifier,
 ) {
-    Scaffold { innerPadding ->
+    Scaffold(
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    navigationToReader(uiState.id)
+                },
+                modifier = Modifier
+            ) {
+                Text("开始阅读", fontSize = 16.sp)
+            }
+        },modifier = modifier
+    ) { innerPadding ->
         Column(
-            modifier = modifier
+            modifier = Modifier
                 .verticalScroll(state = rememberScrollState())
                 .padding(innerPadding)
                 .padding(horizontal = 16.dp)
@@ -89,16 +100,6 @@ private fun ComicInfoContent(
             )
             Text(uiState.description, modifier = Modifier.padding(vertical = 8.dp))
             Tags(uiState.categories + uiState.tags)
-            ExtendedFloatingActionButton(
-                onClick = {
-                    navigationToReader(uiState.id)
-                },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(bottom = 16.dp),
-            ) {
-                Text("开始阅读", fontSize = 16.sp)
-            }
         }
     }
 }
