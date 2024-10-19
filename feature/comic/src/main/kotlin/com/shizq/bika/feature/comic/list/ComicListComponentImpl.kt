@@ -25,29 +25,37 @@ class ComicListComponentImpl @AssistedInject constructor(
 
     override val comicFlow = combine(hideCategoriesFlow, sortFlow, ::Pair)
         .flatMapLatest { (hide, sort) ->
-            if (category == "random") {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                ) { ComicRandomPagingSource(network) }.flow
-            } else {
-                Pager(
-                    config = PagingConfig(pageSize = 20),
-                    initialKey = 1,
-                ) { ComicListPagingSource(network, category, sort) }
-                    .flow
-                    .map { pagingData ->
-                        if (hide.isEmpty()) return@map pagingData
-                        pagingData.filter { comic ->
-                            for (h in hide) {
-                                for (c in comic.categories) {
-                                    if (h == c) {
-                                        return@filter false
+            when (category) {
+                "recommend" -> {
+                    Pager(
+                        config = PagingConfig(pageSize = 20),
+                    ) { ComicRecommendPagingSource(network) }.flow
+                }
+                "random" -> {
+                    Pager(
+                        config = PagingConfig(pageSize = 20),
+                    ) { ComicRandomPagingSource(network) }.flow
+                }
+                else -> {
+                    Pager(
+                        config = PagingConfig(pageSize = 20),
+                        initialKey = 1,
+                    ) { ComicListPagingSource(network, category, sort) }
+                        .flow
+                        .map { pagingData ->
+                            if (hide.isEmpty()) return@map pagingData
+                            pagingData.filter { comic ->
+                                for (h in hide) {
+                                    for (c in comic.categories) {
+                                        if (h == c) {
+                                            return@filter false
+                                        }
                                     }
                                 }
+                                return@filter true
                             }
-                            return@filter true
                         }
-                    }
+                }
             }
         }
         .cachedIn(componentScope)

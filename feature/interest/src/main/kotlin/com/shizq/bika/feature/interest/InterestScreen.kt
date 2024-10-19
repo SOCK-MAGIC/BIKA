@@ -97,7 +97,9 @@ internal fun InterestContent(
                 modifier = modifier.padding(innerPadding),
             ) {
                 item {
-                    Image(R.drawable.feature_interest_bika, "推荐", {})
+                    Image(R.drawable.feature_interest_bika, "推荐") {
+                        navigationToComicList("recommend")
+                    }
                 }
                 item {
                     Image(

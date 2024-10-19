@@ -11,5 +11,5 @@ dependencies {
     implementation(libs.decompose)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.napier)
+    api(libs.napier)
 }
