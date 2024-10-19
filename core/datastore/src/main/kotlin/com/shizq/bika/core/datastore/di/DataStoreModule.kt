@@ -5,8 +5,10 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.shizq.bika.core.datastore.UserCredentialSerializer
+import com.shizq.bika.core.datastore.UserInterestsSerializer
 import com.shizq.bika.core.datastore.UserPreferencesSerializer
 import com.shizq.bika.core.datastore.model.UserCredential
+import com.shizq.bika.core.datastore.model.UserInterests
 import com.shizq.bika.core.datastore.model.UserPreferences
 import com.shizq.bika.core.network.BikaDispatchers.IO
 import com.shizq.bika.core.network.Dispatcher
@@ -51,5 +53,20 @@ class DataStoreModule {
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
         ) {
             context.dataStoreFile("user_credential.pb")
+        }
+
+    @Provides
+    @Singleton
+    internal fun providesUserInterestsDataStore(
+        @ApplicationContext context: Context,
+        @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
+        @ApplicationScope scope: CoroutineScope,
+        userInterestsSerializer: UserInterestsSerializer,
+    ): DataStore<UserInterests> =
+        DataStoreFactory.create(
+            serializer = userInterestsSerializer,
+            scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
+        ) {
+            context.dataStoreFile("user_interests.pb")
         }
 }
