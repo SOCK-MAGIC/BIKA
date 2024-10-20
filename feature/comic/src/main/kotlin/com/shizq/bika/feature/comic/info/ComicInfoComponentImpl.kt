@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 class ComicInfoComponentImpl @AssistedInject constructor(
@@ -81,6 +82,12 @@ class ComicInfoComponentImpl @AssistedInject constructor(
             SharingStarted.WhileSubscribed(5_000),
             ComicInfoUiState.Loading,
         )
+
+    override fun onClickTrigger(id: String) {
+        componentScope.launch {
+            recentSearchRepository.insertOrReplaceRecentSearch(searchQuery = query)
+        }
+    }
 
     @AssistedFactory
     interface Factory : ComicInfoComponent.Factory {
