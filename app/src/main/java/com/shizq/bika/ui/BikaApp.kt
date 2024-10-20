@@ -83,7 +83,12 @@ internal fun BikaApp(
                 onStateChanged = component::setDrawerState,
             )
             ModalNavigationDrawer(
-                drawerContent = { DrawerScreen(drawerState.instance) },
+                drawerContent = {
+                    DrawerScreen(
+                        drawerState.instance,
+                        navigationToComicList = component::navigationToComicList,
+                    )
+                },
                 drawerState = drawerState.drawerState,
             ) {
                 RootContent(component)

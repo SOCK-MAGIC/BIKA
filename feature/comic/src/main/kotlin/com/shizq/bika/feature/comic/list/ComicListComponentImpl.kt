@@ -6,6 +6,7 @@ import androidx.paging.cachedIn
 import androidx.paging.filter
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
+import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
 import com.shizq.bika.core.datastore.BikaInterestsDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.feature.comic.list.SortDialog.sortFlow
@@ -25,6 +26,7 @@ class ComicListComponentImpl @AssistedInject constructor(
     @Assisted category: String?,
     private val network: BikaNetworkDataSource,
     private val userInterests: BikaInterestsDataSource,
+    private val recentlyViewedComicRepository: RecentlyViewedComicRepository
 ) : ComicListComponent,
     ComponentContext by componentContext {
     override val categoryVisibilityUiState = userInterests.userData.map { it.categoriesVisibility }
@@ -46,6 +48,11 @@ class ComicListComponentImpl @AssistedInject constructor(
                     Pager(
                         config = PagingConfig(pageSize = 20),
                     ) { ComicRandomPagingSource(network) }.flow
+                }
+
+                "recently" -> {
+                    recentlyViewedComicRepository.getRecentWatchedComicQueries()
+                        .map {  }
                 }
 
                 else -> {

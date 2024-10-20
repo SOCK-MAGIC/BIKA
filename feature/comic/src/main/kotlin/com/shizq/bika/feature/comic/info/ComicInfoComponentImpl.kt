@@ -2,6 +2,7 @@ package com.shizq.bika.feature.comic.info
 
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
+import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkComicInfo
 import com.shizq.bika.core.network.model.Thumb
@@ -15,12 +16,12 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
 
 class ComicInfoComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted id: String,
     private val network: BikaNetworkDataSource,
+    private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
 ) : ComicInfoComponent,
     ComponentContext by componentContext {
 
@@ -85,15 +86,14 @@ class ComicInfoComponentImpl @AssistedInject constructor(
 
     override fun onClickTrigger(id: String) {
         componentScope.launch {
-            recentSearchRepository.insertOrReplaceRecentSearch(searchQuery = query)
+            recentlyViewedComicRepository.insertOrReplaceRecentWatchedComic(id = id)
         }
     }
 
     @AssistedFactory
     interface Factory : ComicInfoComponent.Factory {
         override fun invoke(
-            componentContext: @Serializable
-            ComponentContext,
+            componentContext: ComponentContext,
             id: String,
         ): ComicInfoComponentImpl
     }

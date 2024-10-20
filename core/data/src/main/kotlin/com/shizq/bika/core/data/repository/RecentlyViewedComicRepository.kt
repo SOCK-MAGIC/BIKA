@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import javax.inject.Inject
 
-class RecentlyViewedRepository @Inject constructor(
+class RecentlyViewedComicRepository @Inject constructor(
     private val recentSearchQueryDao: RecentViewedQueryDao,
 ) {
-    suspend fun insertOrReplaceRecentSearch(id: String) {
+    suspend fun insertOrReplaceRecentWatchedComic(id: String) {
         recentSearchQueryDao.insertOrReplaceRecentViewedQuery(
             RecentViewedQueryEntity(
                 id = id,
@@ -25,7 +25,7 @@ class RecentlyViewedRepository @Inject constructor(
         )
     }
 
-    fun getRecentViewedQueries(): Flow<PagingData<RecentViewedQuery>> {
+    fun getRecentWatchedComicQueries(): Flow<PagingData<RecentViewedQuery>> {
         return Pager(
             config = PagingConfig(20),
             pagingSourceFactory = { recentSearchQueryDao.getRecentViewedQueryEntities() },
@@ -33,5 +33,5 @@ class RecentlyViewedRepository @Inject constructor(
             .map { pagingData -> pagingData.map { it.asExternalModel() } }
     }
 
-    suspend fun clearRecentSearches() = recentSearchQueryDao.clearRecentSearchQueries()
+    suspend fun clearRecentWatchedComic() = recentSearchQueryDao.clearRecentSearchQueries()
 }
