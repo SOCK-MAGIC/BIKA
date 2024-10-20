@@ -47,7 +47,13 @@ fun SortDialog(onDismiss: () -> Unit) {
         text = {
             HorizontalDivider()
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                SettingsTagPanel()
+                Column(Modifier.selectableGroup()) {
+                    Sort.entries.forEach { s ->
+                        SortDialogChooserRow(s.description, SortDialog.sort == s) {
+                            SortDialog.sort = s
+                        }
+                    }
+                }
                 HorizontalDivider(Modifier.padding(top = 8.dp))
             }
         },
@@ -62,17 +68,6 @@ fun SortDialog(onDismiss: () -> Unit) {
             )
         },
     )
-}
-
-@Composable
-private fun SettingsTagPanel() {
-    Column(Modifier.selectableGroup()) {
-        Sort.entries.forEach { s ->
-            SortDialogChooserRow(s.description, SortDialog.sort == s) {
-                SortDialog.sort = s
-            }
-        }
-    }
 }
 
 @Composable

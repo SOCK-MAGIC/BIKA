@@ -33,30 +33,32 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.model.ComicResource
-import com.shizq.bika.core.network.model.Sort
 import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -> Unit) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
+    val categoryVisibilityUiState by component.categoryVisibilityUiState.collectAsStateWithLifecycle()
     var showSealTagDialog by rememberSaveable { mutableStateOf(false) }
     var showSortDialog by rememberSaveable { mutableStateOf(false) }
     ComicContent(
         comicsPagingItems,
-        showSealTagDialog = showSealTagDialog,
+        navigationToComicInfo = navigationToComicInfo,
+        showSealCategoriesDialog = showSealTagDialog,
         onDismissed = {
             showSealTagDialog = false
             showSortDialog = false
         },
         onTopAppBarActionClick = { showSealTagDialog = true },
         showSortDialog = showSortDialog,
-        onDismissedSortDialog = { showSortDialog = false },
         onActionSortDialogClick = { showSortDialog = true },
-        navigationToComicInfo = navigationToComicInfo,
+        categoryVisibilityUiState = categoryVisibilityUiState,
+        onChangeCategoryState = component::updateCategoryState,
     )
 }
 
@@ -65,16 +67,17 @@ fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -
 internal fun ComicContent(
     lazyPagingItems: LazyPagingItems<ComicResource>,
     navigationToComicInfo: (String) -> Unit,
-    showSealTagDialog: Boolean,
+    showSealCategoriesDialog: Boolean,
     onDismissed: () -> Unit,
     onTopAppBarActionClick: () -> Unit,
     modifier: Modifier = Modifier,
     showSortDialog: Boolean,
-    onDismissedSortDialog: () -> Unit,
     onActionSortDialogClick: () -> Unit,
+    categoryVisibilityUiState: Map<String, Boolean>,
+    onChangeCategoryState: (String, Boolean) -> Unit,
 ) {
-    if (showSealTagDialog) {
-        SettingsDialog { onDismissed() }
+    if (showSealCategoriesDialog) {
+        SettingsDialog(categoryVisibilityUiState, onChangeCategoryState) { onDismissed() }
     }
     if (showSortDialog) {
         SortDialog { onDismissed() }

@@ -20,18 +20,17 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateMapOf
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 
 @Composable
 fun SettingsDialog(
+    categoryVisibilityUiState: Map<String, Boolean>,
+    onChangeCategoryState: (String, Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -58,7 +57,13 @@ fun SettingsDialog(
         text = {
             HorizontalDivider()
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                SettingsTagPanel()
+                Column(Modifier.selectableGroup()) {
+                    categoryVisibilityUiState.forEach { (name, state) ->
+                        SettingsDialogChooserRow(name, state) {
+                            onChangeCategoryState(name, it)
+                        }
+                    }
+                }
                 HorizontalDivider(Modifier.padding(top = 8.dp))
             }
         },
@@ -73,17 +78,6 @@ fun SettingsDialog(
             )
         },
     )
-}
-
-@Composable
-private fun ColumnScope.SettingsTagPanel() {
-    Column(Modifier.selectableGroup()) {
-        SealTag.categoriesState.forEach { (name, state) ->
-            SettingsDialogChooserRow(name, state) {
-                SealTag.categoriesState[name] = it
-            }
-        }
-    }
 }
 
 @Composable
@@ -107,71 +101,4 @@ private fun SettingsDialogChooserRow(
         Spacer(Modifier.width(8.dp))
         Text(text)
     }
-}
-
-@Preview
-@Composable
-private fun PreviewSettingsDialog() {
-    SettingsDialog(
-        onDismiss = {},
-    )
-}
-
-@Preview
-@Composable
-private fun PreviewSettingsDialogLoading() {
-    SettingsDialog(
-        onDismiss = {},
-    )
-}
-
-internal object SealTag {
-    val categoriesState = mutableStateMapOf(
-        "全彩" to false,
-        "長篇" to false,
-        "同人" to false,
-        "短篇" to false,
-        "圓神領域" to false,
-        "碧藍幻想" to false,
-        "CG雜圖" to false,
-        "英語 ENG" to false,
-        "生肉" to false,
-        "純愛" to false,
-        "百合花園" to false,
-        "耽美花園" to false,
-        "偽娘哲學" to false,
-        "後宮閃光" to false,
-        "扶他樂園" to false,
-        "單行本" to false,
-        "姐姐系" to false,
-        "妹妹系" to false,
-        "SM" to false,
-        "性轉換" to false,
-        "足の恋" to false,
-        "人妻" to false,
-        "NTR" to false,
-        "強暴" to false,
-        "非人類" to false,
-        "艦隊收藏" to false,
-        "Love Live" to false,
-        "SAO 刀劍神域" to false,
-        "Fate" to false,
-        "東方" to false,
-        "WEBTOON" to false,
-        "禁書目錄" to false,
-        "歐美" to false,
-        "Cosplay" to false,
-        "重口地帶" to false,
-    )
-    val hideCategoriesFlow = snapshotFlow { hideCategories }
-    val hideCategories: List<String>
-        get() {
-            val result = mutableListOf<String>()
-            categoriesState.forEach { (k, v) ->
-                if (v) {
-                    result.add(k)
-                }
-            }
-            return result
-        }
 }

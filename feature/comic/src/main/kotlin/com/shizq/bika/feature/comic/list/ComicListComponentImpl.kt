@@ -6,24 +6,34 @@ import androidx.paging.cachedIn
 import androidx.paging.filter
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
+import com.shizq.bika.core.datastore.BikaInterestsDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.feature.comic.list.SealTag.hideCategoriesFlow
 import com.shizq.bika.feature.comic.list.SortDialog.sortFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.github.aakira.napier.Napier
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class ComicListComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted category: String?,
     private val network: BikaNetworkDataSource,
+    private val userInterests: BikaInterestsDataSource,
 ) : ComicListComponent,
     ComponentContext by componentContext {
-
-    override val comicFlow = combine(hideCategoriesFlow, sortFlow, ::Pair)
+    override val categoryVisibilityUiState = userInterests.userData.map { it.categoriesVisibility }
+        .stateIn(
+            componentScope,
+            SharingStarted.WhileSubscribed(5000),
+            emptyMap(),
+        )
+    override val comicFlow = combine(userInterests.userHideCategories, sortFlow, ::Pair)
         .flatMapLatest { (hide, sort) ->
             when (category) {
                 "recommend" -> {
@@ -31,11 +41,13 @@ class ComicListComponentImpl @AssistedInject constructor(
                         config = PagingConfig(pageSize = 20),
                     ) { ComicRecommendPagingSource(network) }.flow
                 }
+
                 "random" -> {
                     Pager(
                         config = PagingConfig(pageSize = 20),
                     ) { ComicRandomPagingSource(network) }.flow
                 }
+
                 else -> {
                     Pager(
                         config = PagingConfig(pageSize = 20),
@@ -43,13 +55,11 @@ class ComicListComponentImpl @AssistedInject constructor(
                     ) { ComicListPagingSource(network, category, sort) }
                         .flow
                         .map { pagingData ->
-                            if (hide.isEmpty()) return@map pagingData
                             pagingData.filter { comic ->
-                                for (h in hide) {
-                                    for (c in comic.categories) {
-                                        if (h == c) {
-                                            return@filter false
-                                        }
+                                Napier.i(tag = "filter category") { hide.joinToString() }
+                                for (c in comic.categories) {
+                                    if (hide.contains(c)) {
+                                        return@filter false
                                     }
                                 }
                                 return@filter true
@@ -59,6 +69,12 @@ class ComicListComponentImpl @AssistedInject constructor(
             }
         }
         .cachedIn(componentScope)
+
+    override fun updateCategoryState(name: String, state: Boolean) {
+        componentScope.launch {
+            userInterests.setCategoriesVisibility(name, state)
+        }
+    }
 
     @AssistedFactory
     interface Factory : ComicListComponent.Factory {
