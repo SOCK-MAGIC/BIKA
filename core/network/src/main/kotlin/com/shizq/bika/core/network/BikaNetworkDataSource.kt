@@ -20,7 +20,6 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
-import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -98,4 +97,10 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
      */
     suspend fun comicsRandom(): NetworkComicRandom = client.get("comics/random").body()
     suspend fun getRecommend(): NetworkRecommend = client.get("collections").body()
+
+    suspend fun favouriteComics(page: Int, sort: Sort = Sort.SORT_DEFAULT): NetworkComicList =
+        client.get("users/favourite") {
+            parameter("s", sort.value)
+            parameter("page", page)
+        }.body()
 }

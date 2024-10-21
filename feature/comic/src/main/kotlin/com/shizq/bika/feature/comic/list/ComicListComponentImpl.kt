@@ -9,6 +9,7 @@ import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
 import com.shizq.bika.core.datastore.BikaInterestsDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
+import com.shizq.bika.feature.comic.favourite.FavouritePagingSource
 import com.shizq.bika.feature.comic.list.SortDialog.sortFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -26,9 +27,10 @@ class ComicListComponentImpl @AssistedInject constructor(
     @Assisted category: String?,
     private val network: BikaNetworkDataSource,
     private val userInterests: BikaInterestsDataSource,
-    private val recentlyViewedComicRepository: RecentlyViewedComicRepository
+    private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
 ) : ComicListComponent,
     ComponentContext by componentContext {
+
     override val categoryVisibilityUiState = userInterests.userData.map { it.categoriesVisibility }
         .stateIn(
             componentScope,
@@ -53,7 +55,11 @@ class ComicListComponentImpl @AssistedInject constructor(
                 "recently" -> {
                     recentlyViewedComicRepository.getRecentWatchedComicQueries()
                 }
-
+                "favourite" -> {
+                    Pager(
+                        config = PagingConfig(pageSize = 20),
+                    ) { FavouritePagingSource(network, sort) }.flow
+                }
                 else -> {
                     Pager(
                         config = PagingConfig(pageSize = 20),
