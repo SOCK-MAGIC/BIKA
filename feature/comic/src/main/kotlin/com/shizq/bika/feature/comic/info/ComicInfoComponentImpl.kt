@@ -76,8 +76,8 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                             comic.finished,
                             comic.epsCount,
                             comic.pagesCount,
-                            comic.likesCount
-                        )
+                            comic.likesCount,
+                        ),
                     )
                 }
             }

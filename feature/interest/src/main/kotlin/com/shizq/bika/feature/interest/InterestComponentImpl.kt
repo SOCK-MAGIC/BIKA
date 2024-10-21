@@ -98,7 +98,7 @@ private fun NetworkCategories.Category.asInterest(token: String): Interest {
             "https://s3.picacomic.com/static/${thumb.path}"
         } else {
             thumb.imageUrl
-        }
+        },
     )
 }
 

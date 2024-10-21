@@ -14,7 +14,7 @@ class FavouritePagingSource(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
         val nextPageNumber = params.key ?: 1
-        val comicList = network.favouriteComics(sort = sort, page = nextPageNumber,)
+        val comicList = network.favouriteComics(sort = sort, page = nextPageNumber)
         val comics = comicList.comics
 
         val page = comicList.comics.page

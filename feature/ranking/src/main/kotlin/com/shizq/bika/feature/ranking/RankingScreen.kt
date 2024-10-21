@@ -73,7 +73,7 @@ private fun TabContent(second: List<NetworkKnight.User>, function: () -> Unit) {
         items(second) { item ->
             ListItem(
                 leadingContent = {
-                    AvatarAsyncImage(item.avatar.imageUrl, item.character,)
+                    AvatarAsyncImage(item.avatar.imageUrl, item.character)
                 },
                 headlineContent = {
                     Text(item.name)

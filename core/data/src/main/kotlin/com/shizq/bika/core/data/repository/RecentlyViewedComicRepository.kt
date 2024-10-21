@@ -33,13 +33,11 @@ class RecentlyViewedComicRepository @Inject constructor(
         )
     }
 
-    fun getRecentWatchedComicQueries(): Flow<PagingData<ComicResource>> {
-        return Pager(
-            config = PagingConfig(20),
-            pagingSourceFactory = { recentSearchQueryDao.getRecentViewedQueryEntities() },
-        ).flow
-            .map { pagingData -> pagingData.map { it.asExternalModel() } }
-    }
+    fun getRecentWatchedComicQueries(): Flow<PagingData<ComicResource>> = Pager(
+        config = PagingConfig(20),
+        pagingSourceFactory = { recentSearchQueryDao.getRecentViewedQueryEntities() },
+    ).flow
+        .map { pagingData -> pagingData.map { it.asExternalModel() } }
 
     suspend fun clearRecentWatchedComic() = recentSearchQueryDao.clearRecentSearchQueries()
 }
