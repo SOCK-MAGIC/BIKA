@@ -86,7 +86,10 @@ internal fun BikaApp(
                 drawerContent = {
                     DrawerScreen(
                         drawerState.instance,
-                        navigationToComicList = component::navigationToComicList,
+                        navigationToComicList = {
+                            component.navigationToComicList(it)
+                            component.setDrawerState(false)
+                        },
                     )
                 },
                 drawerState = drawerState.drawerState,

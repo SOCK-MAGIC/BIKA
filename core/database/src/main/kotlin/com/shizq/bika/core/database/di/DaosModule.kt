@@ -1,7 +1,7 @@
 package com.shizq.bika.core.database.di
 
 import com.shizq.bika.core.database.BikaDatabase
-import com.shizq.bika.core.database.dao.RecentViewedQueryDao
+import com.shizq.bika.core.database.dao.RecentWatchedComicQueryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,5 +13,5 @@ internal class DaosModule {
     @Provides
     fun providesRecentViewedQueryDao(
         database: BikaDatabase,
-    ): RecentViewedQueryDao = database.recentViewedQueryDao()
+    ): RecentWatchedComicQueryDao = database.recentWatchedComicQueryDao()
 }

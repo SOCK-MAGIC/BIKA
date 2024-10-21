@@ -52,7 +52,6 @@ class ComicListComponentImpl @AssistedInject constructor(
 
                 "recently" -> {
                     recentlyViewedComicRepository.getRecentWatchedComicQueries()
-                        .map {  }
                 }
 
                 else -> {

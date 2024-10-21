@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
+import com.shizq.bika.core.model.ComicResource
 
 @Composable
 fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) -> Unit) {
@@ -38,7 +39,7 @@ fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) 
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
     navigationToReader: (String) -> Unit,
-    onClickTrigger: (String) -> Unit,
+    onClickTrigger: (ComicResource) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -51,8 +52,8 @@ internal fun ComicInfoContent(
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            navigationToReader(uiState.id)
-                            onClickTrigger(uiState.id)
+                            navigationToReader(uiState.comicResource.id)
+                            onClickTrigger(uiState.comicResource)
                         },
                         modifier = Modifier,
                     ) {
@@ -69,9 +70,9 @@ internal fun ComicInfoContent(
                         .fillMaxSize(),
                 ) {
                     Info(
-                        uiState.coverUrl,
-                        title = uiState.title,
-                        author = uiState.author,
+                        uiState.comicResource.imageUrl,
+                        title = uiState.comicResource.title,
+                        author = uiState.comicResource.author,
                         translator = uiState.chineseTeam,
                         total = uiState.totalViews,
                         modifier = Modifier,
@@ -83,7 +84,7 @@ internal fun ComicInfoContent(
                         modifier = Modifier.padding(vertical = 8.dp),
                     )
                     Text(uiState.description, modifier = Modifier.padding(vertical = 8.dp))
-                    Tags(uiState.categories + uiState.tags)
+                    Tags(uiState.comicResource.categories + uiState.tags)
                 }
             }
         }

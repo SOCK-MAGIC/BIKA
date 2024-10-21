@@ -1,9 +1,20 @@
 package com.shizq.bika.core.data.model
 
-import com.shizq.bika.core.database.model.RecentViewedQueryEntity
+import com.shizq.bika.core.database.model.RecentWatchedComicQueryEntity
+import com.shizq.bika.core.model.ComicResource
 
 data class RecentViewedQuery(
     val id: String,
 )
 
-fun RecentViewedQueryEntity.asExternalModel() = RecentViewedQuery(id = id)
+fun RecentWatchedComicQueryEntity.asExternalModel() = ComicResource(
+    id = id,
+    imageUrl = imageUrl,
+    title = title,
+    author = author,
+    categories = categories.split(","),
+    finished = finished,
+    epsCount = epsCount,
+    pagesCount = pagesCount,
+    likeCount = likeCount,
+)

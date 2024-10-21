@@ -3,6 +3,7 @@ package com.shizq.bika.feature.comic.info
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
+import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkComicInfo
 import com.shizq.bika.core.network.model.Thumb
@@ -38,8 +39,6 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                     ComicInfoUiState.Success(
                         allowComment = comic.allowComment,
                         allowDownload = comic.allowDownload,
-                        author = comic.author,
-                        categories = comic.categories,
                         chineseTeam = comic.chineseTeam,
                         commentsCount = comic.commentsCount,
                         createdAt = comic.createdAt,
@@ -61,20 +60,24 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                             verified = creator.verified,
                         ),
                         description = comic.description,
-                        epsCount = comic.epsCount,
-                        finished = comic.finished,
-                        id = comic.id,
                         isFavourite = comic.isFavourite,
                         isLiked = comic.isLiked,
-                        likesCount = comic.likesCount,
-                        pagesCount = comic.pagesCount,
                         tags = comic.tags,
-                        coverUrl = comic.thumb.imageUrl,
-                        title = comic.title,
                         totalLikes = comic.totalLikes,
                         totalViews = comic.totalViews,
                         updatedAt = comic.updatedAt,
                         viewsCount = comic.viewsCount,
+                        comicResource = ComicResource(
+                            comic.id,
+                            comic.thumb.imageUrl,
+                            comic.title,
+                            comic.author,
+                            comic.categories,
+                            comic.finished,
+                            comic.epsCount,
+                            comic.pagesCount,
+                            comic.likesCount
+                        )
                     )
                 }
             }
@@ -84,9 +87,9 @@ class ComicInfoComponentImpl @AssistedInject constructor(
             ComicInfoUiState.Loading,
         )
 
-    override fun onClickTrigger(id: String) {
+    override fun onClickTrigger(comicResource: ComicResource) {
         componentScope.launch {
-            recentlyViewedComicRepository.insertOrReplaceRecentWatchedComic(id = id)
+            recentlyViewedComicRepository.insertOrReplaceRecentWatchedComic(comicResource)
         }
     }
 
