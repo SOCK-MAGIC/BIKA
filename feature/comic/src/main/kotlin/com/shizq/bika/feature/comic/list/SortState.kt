@@ -49,8 +49,8 @@ fun SortDialog(onDismiss: () -> Unit) {
             Column(Modifier.verticalScroll(rememberScrollState())) {
                 Column(Modifier.selectableGroup()) {
                     Sort.entries.forEach { s ->
-                        SortDialogChooserRow(s.description, SortDialog.sort == s) {
-                            SortDialog.sort = s
+                        SortDialogChooserRow(s.description, SortState.sort == s) {
+                            SortState.sort = s
                         }
                     }
                 }
@@ -93,7 +93,7 @@ private fun SortDialogChooserRow(
     }
 }
 
-internal object SortDialog {
+internal object SortState {
     var sort by mutableStateOf(Sort.SORT_DEFAULT)
-    val sortFlow = snapshotFlow { sort }
+    val flow = snapshotFlow { sort }
 }

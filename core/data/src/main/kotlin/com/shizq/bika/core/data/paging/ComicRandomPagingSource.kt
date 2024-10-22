@@ -1,15 +1,14 @@
-package com.shizq.bika.feature.comic.list
+package com.shizq.bika.core.data.paging
 
-import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.shizq.bika.core.data.util.asComicResource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.core.network.model.NetworkComicSimple
-import com.shizq.bika.feature.comic.model.asComicResource
+import javax.inject.Inject
 
-class ComicRandomPagingSource(
+class ComicRandomPagingSource @Inject constructor(
     private val network: BikaNetworkDataSource,
-) : PagingSource<Int, ComicResource>() {
+) : BikaComicListPagingSource() {
     override suspend fun load(
         params: LoadParams<Int>,
     ): LoadResult<Int, ComicResource> {
@@ -28,15 +27,3 @@ class ComicRandomPagingSource(
 
     override fun getRefreshKey(state: PagingState<Int, ComicResource>): Int? = null
 }
-
-fun NetworkComicSimple.asComicResource(): ComicResource = ComicResource(
-    id,
-    thumb.imageUrl,
-    title,
-    author,
-    categories,
-    finished,
-    epsCount,
-    pagesCount,
-    likesCount,
-)

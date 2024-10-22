@@ -3,14 +3,11 @@ package com.shizq.bika.feature.search
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.cachedIn
-import androidx.paging.map
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
 import com.shizq.bika.core.component.componentScope
-import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.data.paging.SearchPagingSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.core.network.model.ComicInSearch
-import com.shizq.bika.core.network.pagingsource.SearchPagingSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -21,7 +18,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterNot
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class SearchComponentImpl @AssistedInject constructor(
@@ -43,9 +39,6 @@ class SearchComponentImpl @AssistedInject constructor(
                 PagingConfig(pageSize = 20),
             ) { SearchPagingSource(network, it) }
                 .flow
-                .map { pagingData ->
-                    pagingData.map { it.asComicResource() }
-                }
                 .cachedIn(componentScope)
         }
 
@@ -67,15 +60,3 @@ class SearchComponentImpl @AssistedInject constructor(
 }
 
 private const val SEARCH_MIN_FTS_ENTITY_COUNT = 1
-private fun ComicInSearch.Comics.Doc.asComicResource() =
-    ComicResource(
-        id,
-        thumb.imageUrl,
-        title,
-        author,
-        categories,
-        finished,
-        0,
-        0,
-        likesCount,
-    )

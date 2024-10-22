@@ -1,15 +1,11 @@
 package com.shizq.bika.core.data.repository
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.map
+import androidx.paging.PagingSource
 import com.shizq.bika.core.data.model.asExternalModel
+import com.shizq.bika.core.data.paging.MappingPagingSource
 import com.shizq.bika.core.database.dao.RecentWatchedComicQueryDao
 import com.shizq.bika.core.database.model.RecentWatchedComicQueryEntity
 import com.shizq.bika.core.model.ComicResource
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Clock
 import javax.inject.Inject
 
@@ -33,11 +29,12 @@ class RecentlyViewedComicRepository @Inject constructor(
         )
     }
 
-    fun getRecentWatchedComicQueries(): Flow<PagingData<ComicResource>> = Pager(
-        config = PagingConfig(20),
-        pagingSourceFactory = { recentSearchQueryDao.getRecentViewedQueryEntities() },
-    ).flow
-        .map { pagingData -> pagingData.map { it.asExternalModel() } }
+    fun getRecentWatchedComicQueries(): PagingSource<Int, ComicResource> {
+        return MappingPagingSource(
+            originalSource = recentSearchQueryDao.getRecentViewedQueryEntities(),
+            mapper = { it.asExternalModel() },
+        )
+    }
 
     suspend fun clearRecentWatchedComic() = recentSearchQueryDao.clearRecentSearchQueries()
 }

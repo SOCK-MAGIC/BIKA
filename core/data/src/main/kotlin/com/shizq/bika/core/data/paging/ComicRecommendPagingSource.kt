@@ -1,11 +1,14 @@
-package com.shizq.bika.feature.comic.list
+package com.shizq.bika.core.data.paging
 
-import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.shizq.bika.core.data.util.asComicResource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
+import javax.inject.Inject
 
-class ComicRecommendPagingSource(private val network: BikaNetworkDataSource) : PagingSource<Int, ComicResource>() {
+class ComicRecommendPagingSource @Inject constructor(
+    private val network: BikaNetworkDataSource,
+) : BikaComicListPagingSource() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
         val comicList = network.getRecommend().collections
