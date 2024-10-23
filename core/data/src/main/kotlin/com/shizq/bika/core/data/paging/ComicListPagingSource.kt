@@ -22,6 +22,11 @@ class ComicListPagingSource @AssistedInject constructor(
     @Assisted("chineseTeam") private val chineseTeam: String? = null,
 ) : BikaComicListPagingSource() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
+        val hide = userInterests.userHideCategories.first()
+        Napier.i(tag = "filter category") { hide.joinToString() }
+        // todo 当分类 与 主页面 相同时会造成无线加载
+        // 例如 hide 中有 cos 与 category=“cos”
+        if (hide.contains(category)) return LoadResult.Invalid()
         val nextPageNumber = params.key ?: 1
         val originalComicList = network.getComicList(
             sort = sort,
@@ -36,8 +41,7 @@ class ComicListPagingSource @AssistedInject constructor(
         val page = originalComicList.comics.page
         val pages = originalComicList.comics.pages
         val total = originalComicList.comics.total
-        val hide = userInterests.userHideCategories.first()
-        Napier.i(tag = "filter category") { hide.joinToString() }
+
         val comicList = comics.docs.filter { doc ->
             for (c in doc.categories) {
                 if (hide.contains(c)) {

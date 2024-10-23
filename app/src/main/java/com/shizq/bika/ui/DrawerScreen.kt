@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DrawerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.Text
@@ -19,8 +20,9 @@ fun DrawerScreen(
     component: DrawerComponent,
     navigationToComicList: (String?) -> Unit,
     modifier: Modifier = Modifier,
+    drawerState: DrawerState,
 ) {
-    ModalDrawerSheet(modifier = modifier) {
+    ModalDrawerSheet(drawerState, modifier) {
         DrawerScreenNavigationRow(BikaIcons.History, "最近观看") {
             navigationToComicList("recently")
         }
