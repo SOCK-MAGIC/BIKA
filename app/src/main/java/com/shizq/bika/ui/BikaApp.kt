@@ -89,6 +89,7 @@ internal fun BikaApp(
                         },
                     )
                 },
+                gesturesEnabled = false,
                 drawerState = drawerState.drawerState,
             ) {
                 RootContent(component)
