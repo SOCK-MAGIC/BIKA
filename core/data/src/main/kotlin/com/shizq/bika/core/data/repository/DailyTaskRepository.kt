@@ -1,5 +1,6 @@
 package com.shizq.bika.core.data.repository
 
+import android.util.Log
 import com.shizq.bika.core.data.Syncable
 import com.shizq.bika.core.data.Synchronizer
 import com.shizq.bika.core.data.dailyWork
@@ -18,8 +19,12 @@ class DailyTaskRepository @Inject constructor(
         networkInit = {
             val (addresses, _) = network.networkInit()
             bikaPreferencesDataSource.setResolveAddress(addresses)
+            Log.i("DailyTaskRepository", addresses.toString())
         },
-        punchIn = { network.punchIn() },
+        punchIn = {
+            val response = network.punchIn()
+            Log.i("DailyTaskRepository", response.toString())
+        },
         signIn = {
             val userCredential = bikaUserCredentialDataSource.userData.first()
             val email = userCredential.email
@@ -27,6 +32,7 @@ class DailyTaskRepository @Inject constructor(
             if (userCredential.token.isNotEmpty()) {
                 val token = network.signIn(email, password)
                 bikaUserCredentialDataSource.setToken(token.token)
+                Log.i("DailyTaskRepository", token.toString())
             }
         },
     )

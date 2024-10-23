@@ -8,6 +8,7 @@ import coil3.PlatformContext
 import coil3.SingletonImageLoader
 import com.google.android.material.color.DynamicColors
 import com.shizq.bika.core.log.Logger
+import com.shizq.bika.sync.initializers.Sync
 import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.HiltAndroidApp
 import okhttp3.OkHttpClient
@@ -44,7 +45,7 @@ class BIKAApplication :
             }
         )
 
-        // Sync.initialize(this)
+        Sync.initialize(this)
         Logger.initialize()
     }
 
