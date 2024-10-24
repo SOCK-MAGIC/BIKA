@@ -4,8 +4,6 @@ import androidx.paging.PagingData
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
-import com.shizq.bika.core.network.model.Sort
-import dagger.assisted.Assisted
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
