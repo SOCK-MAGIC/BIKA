@@ -40,7 +40,7 @@ class SearchComponentImpl @AssistedInject constructor(
         .flatMapLatest {
             Pager(
                 PagingConfig(pageSize = 20),
-            ) { SearchPagingSource(network, it, Sort.SORT_DEFAULT) }
+            ) { SearchPagingSource(network, it, Sort.SORT_DEFAULT) {} }
                 .flow
                 .cachedIn(componentScope)
         }

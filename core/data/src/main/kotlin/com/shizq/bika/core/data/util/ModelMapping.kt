@@ -5,6 +5,10 @@ import com.shizq.bika.core.network.model.ComicInSearch
 import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.NetworkComicSimple
 
+fun ComicInSearch.Comics.asComicResource(): List<ComicResource> {
+    return docs.map { it.asComicResource() }
+}
+
 fun ComicInSearch.Comics.Doc.asComicResource() =
     ComicResource(
         id,
@@ -18,7 +22,11 @@ fun ComicInSearch.Comics.Doc.asComicResource() =
         likesCount,
     )
 
-fun NetworkComicList.Comics.Doc.asComicResource() = ComicResource(
+fun NetworkComicList.Comics.asComicResource(): List<ComicResource> {
+    return docs.map { it.asComicResource() }
+}
+
+fun NetworkComicList.Comics.Doc.asComicResource(): ComicResource = ComicResource(
     id,
     thumb.imageUrl,
     title,
@@ -29,8 +37,6 @@ fun NetworkComicList.Comics.Doc.asComicResource() = ComicResource(
     pagesCount,
     likesCount,
 )
-
-fun NetworkComicList.Comics.asComicResource() = docs.map { it.asComicResource() }
 
 fun NetworkComicSimple.asComicResource(): ComicResource = ComicResource(
     id,

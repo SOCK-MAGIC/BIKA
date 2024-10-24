@@ -3,7 +3,7 @@ package com.shizq.bika.core.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 
-class MappingPagingSource<Key : Any, Value : Any, MappedValue : Any>(
+internal class MappingPagingSource<Key : Any, Value : Any, MappedValue : Any>(
     private val originalSource: PagingSource<Key, Value>,
     private val mapper: (Value) -> MappedValue,
 ) : PagingSource<Key, MappedValue>() {

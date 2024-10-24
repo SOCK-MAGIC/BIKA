@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.shizq.bika.core.data.model.PagingMetadata
 import com.shizq.bika.core.data.paging.ComicListPagingSource
 import com.shizq.bika.core.data.paging.ComicRandomPagingSource
 import com.shizq.bika.core.data.paging.ComicRecommendPagingSource
@@ -23,23 +24,25 @@ class CompositeComicListRepository @Inject constructor(
     @ApplicationScope private val scope: CoroutineScope,
     private val comicRecommendPagingSource: ComicRecommendPagingSource,
     private val comicRandomPagingSource: ComicRandomPagingSource,
-    private val favouritePagingSource: FavouritePagingSource,
+    private val favouritePagingSourceFactory: FavouritePagingSource.Factory,
     private val comicListPagingSourceFactory: ComicListPagingSource.Factory,
 ) {
     fun getPagingFlowByCategories(
         comics: Comics,
-        page: Int? = null,
+        skipPage: Int? = null,
+        pagingMetadata: (PagingMetadata) -> Unit,
     ): Flow<PagingData<ComicResource>> =
         Pager(PagingConfig(20), 1) {
             when (comics.category) {
                 "recommend" -> comicRecommendPagingSource
                 "random" -> comicRandomPagingSource
                 "recently" -> recentlyViewedComicRepository.getRecentWatchedComicQueries()
-                "favourite" -> favouritePagingSource
+                "favourite" -> favouritePagingSourceFactory(pagingMetadata)
                 else -> comicListPagingSourceFactory(
                     sort = Sort.SORT_DEFAULT,
-                    page = page,
+                    page = skipPage,
                     comics = comics,
+                    pagingMetadata = pagingMetadata,
                 )
             }
         }.flow
