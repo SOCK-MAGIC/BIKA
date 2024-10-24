@@ -13,7 +13,6 @@ import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
-import com.shizq.bika.core.network.config.BikaInterceptor
 import com.shizq.bika.core.network.config.MergeRequestInterceptor
 import com.shizq.bika.core.network.model.RequestSignatureConfig
 import com.shizq.bika.core.network.util.PICA_API
@@ -24,7 +23,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
@@ -46,8 +44,6 @@ import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import okio.Path.Companion.toOkioPath
-import java.io.File
 import javax.inject.Singleton
 
 @Module
@@ -68,7 +64,7 @@ internal class NetworkModule {
                 dns.flatMap { Dns.SYSTEM.lookup(it) }
             }
             // .addInterceptor(bikaInterceptor)
-            .cache(Cache(File(application.cacheDir, "okhttp-cache"), 1024 * 1024 * 500))
+            .cache(Cache(application.cacheDir.resolve("okhttp-cache"), 1024 * 1024 * 500))
             .build()
     }
 

@@ -1,18 +1,20 @@
 package com.shizq.bika.core.data.paging
 
-import androidx.paging.PagingState
 import com.shizq.bika.core.data.util.asComicResource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
+import com.shizq.bika.core.network.model.Sort
 
 class SearchPagingSource(
     private val network: BikaNetworkDataSource,
     private val query: String,
+    private val sort: Sort,
 ) : BikaComicListPagingSource() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
         val nextPageNumber = params.key ?: 1
         val comicList = network.advancedSearch(
             query = query,
+            sort = sort,
             page = nextPageNumber,
         )
         val page = comicList.comics.page

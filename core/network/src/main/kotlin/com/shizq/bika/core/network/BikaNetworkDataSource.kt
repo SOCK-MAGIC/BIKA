@@ -1,6 +1,7 @@
 package com.shizq.bika.core.network
 
 import com.shizq.bika.core.network.model.ComicInSearch
+import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.core.network.model.NetworkCategories
 import com.shizq.bika.core.network.model.NetworkComicEpPicture
 import com.shizq.bika.core.network.model.NetworkComicInfo
@@ -41,15 +42,12 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
     suspend fun getComicList(
         sort: Sort,
         page: Int,
-        category: String? = null,
-        tag: String? = null,
-        creatorId: String? = null,
-        chineseTeam: String? = null,
+        comics: Comics? = null,
     ): NetworkComicList = client.get("comics") {
-        parameter("c", category)
-        parameter("t", tag)
-        parameter("ca", creatorId)
-        parameter("ct", chineseTeam)
+        parameter("c", comics?.category)
+        parameter("t", comics?.tag)
+        parameter("ca", comics?.creatorId)
+        parameter("ct", comics?.chineseTeam)
         parameter("s", sort.value)
         parameter("page", page)
     }.body()

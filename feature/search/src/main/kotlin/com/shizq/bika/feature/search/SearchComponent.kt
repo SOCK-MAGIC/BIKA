@@ -17,6 +17,7 @@ interface SearchComponent {
     interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
+            query: String?
         ): SearchComponent
     }
 }

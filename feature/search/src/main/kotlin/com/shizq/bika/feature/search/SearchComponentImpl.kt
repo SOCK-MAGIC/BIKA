@@ -8,6 +8,7 @@ import com.arkivanov.essenty.instancekeeper.getOrCreateSimple
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.paging.SearchPagingSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
+import com.shizq.bika.core.network.model.Sort
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -23,10 +24,12 @@ import kotlinx.coroutines.launch
 class SearchComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     private val network: BikaNetworkDataSource,
+    @Assisted query: String?,
 ) : SearchComponent,
     ComponentContext by componentContext {
     override val recentSearchQueriesUiState: StateFlow<String> = MutableStateFlow("")
-    private val searchQueryHandle = instanceKeeper.getOrCreateSimple { MutableStateFlow("") }
+    private val searchQueryHandle =
+        instanceKeeper.getOrCreateSimple { MutableStateFlow(query ?: "") }
 
     override val searchQuery = searchQueryHandle.asStateFlow()
 
@@ -37,7 +40,7 @@ class SearchComponentImpl @AssistedInject constructor(
         .flatMapLatest {
             Pager(
                 PagingConfig(pageSize = 20),
-            ) { SearchPagingSource(network, it) }
+            ) { SearchPagingSource(network, it, Sort.SORT_DEFAULT) }
                 .flow
                 .cachedIn(componentScope)
         }
@@ -55,6 +58,7 @@ class SearchComponentImpl @AssistedInject constructor(
     interface Factory : SearchComponent.Factory {
         override fun invoke(
             componentContext: ComponentContext,
+            query: String?,
         ): SearchComponentImpl
     }
 }

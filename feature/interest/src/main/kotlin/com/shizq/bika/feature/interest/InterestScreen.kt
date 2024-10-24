@@ -48,7 +48,7 @@ import com.shizq.bika.core.designsystem.icon.BikaIcons
 fun InterestScreen(
     component: InterestComponent,
     navigationToComicList: (String?) -> Unit,
-    navigationToSearch: () -> Unit,
+    navigationToSearch: (String?) -> Unit,
     navigationToRanking: () -> Unit,
     openDrawer: () -> Unit,
 ) {
@@ -75,7 +75,7 @@ fun InterestScreen(
 @Composable
 internal fun InterestContent(
     uiState: InterestsUiState,
-    navigationToSearch: () -> Unit,
+    navigationToSearch: (String?) -> Unit,
     navigationToRanking: () -> Unit,
     navigationToComicList: (String?) -> Unit,
     modifier: Modifier = Modifier,
@@ -98,9 +98,9 @@ internal fun InterestContent(
                 {},
                 actions = {
                     IconButton(onTopAppBarActionClick) {
-                        Icon(BikaIcons.VisibilityOff, "Search")
+                        Icon(BikaIcons.VisibilityOff, "VisibilityOff")
                     }
-                    IconButton(navigationToSearch) {
+                    IconButton({ navigationToSearch(null) }) {
                         Icon(Icons.Rounded.Search, "Search")
                     }
                 },

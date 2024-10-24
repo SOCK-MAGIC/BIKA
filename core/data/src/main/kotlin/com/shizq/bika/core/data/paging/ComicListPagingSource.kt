@@ -4,6 +4,7 @@ import com.shizq.bika.core.data.util.asComicResource
 import com.shizq.bika.core.datastore.BikaInterestsDataSource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
+import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.core.network.model.Sort
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -14,27 +15,21 @@ import kotlinx.coroutines.flow.first
 class ComicListPagingSource @AssistedInject constructor(
     private val network: BikaNetworkDataSource,
     private val userInterests: BikaInterestsDataSource,
-    @Assisted("category") private val category: String?,
-    @Assisted("sort") private val sort: Sort,
-    @Assisted("page") private val page: Int? = null,
-    @Assisted("tag") private val tag: String? = null,
-    @Assisted("creatorId") private val creatorId: String? = null,
-    @Assisted("chineseTeam") private val chineseTeam: String? = null,
+    @Assisted private val sort: Sort,
+    @Assisted private val comics: Comics,
+    @Assisted private val page: Int?,
 ) : BikaComicListPagingSource() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
         val hide = userInterests.userHideCategories.first()
-        Napier.i(tag = "filter category") { hide.joinToString() }
+        Napier.i(tag = "filter category") { hide.toString() }
         // todo 当分类 与 主页面 相同时会造成无线加载
         // 例如 hide 中有 cos 与 category=“cos”
-        if (hide.contains(category)) return LoadResult.Invalid()
+        if (hide.contains(comics.category)) return LoadResult.Invalid()
         val nextPageNumber = params.key ?: 1
         val originalComicList = network.getComicList(
             sort = sort,
             page = nextPageNumber,
-            category = category,
-            tag = tag,
-            creatorId = creatorId,
-            chineseTeam = chineseTeam,
+            comics = comics,
         )
         val comics = originalComicList.comics
 
@@ -65,12 +60,9 @@ class ComicListPagingSource @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         operator fun invoke(
-            @Assisted("category") category: String?,
-            @Assisted("sort") sort: Sort,
-            @Assisted("page") page: Int? = null,
-            @Assisted("tag") tag: String? = null,
-            @Assisted("creatorId") creatorId: String? = null,
-            @Assisted("chineseTeam") chineseTeam: String? = null,
+            @Assisted sort: Sort,
+            @Assisted page: Int? = null,
+            @Assisted comics: Comics,
         ): ComicListPagingSource
     }
 }

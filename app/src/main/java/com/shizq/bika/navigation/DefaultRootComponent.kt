@@ -10,6 +10,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
@@ -63,7 +64,7 @@ class DefaultRootComponent @AssistedInject constructor(
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
                 is Config.ComicList -> ComicList(
-                    comicListComponentFactory(componentContext, config.category),
+                    comicListComponentFactory(componentContext, config.comics),
                 )
 
                 is Config.ComicInfo -> ComicInfo(
@@ -71,7 +72,7 @@ class DefaultRootComponent @AssistedInject constructor(
                 )
 
                 is Config.Reader -> Reader(readerComponentFactory(componentContext, config.id))
-                is Config.Search -> Search(searchComponentFactory(componentContext))
+                is Config.Search -> Search(searchComponentFactory(componentContext, config.query))
                 is Config.Ranking -> Ranking(rankingComponentFactory(componentContext))
             }
         }
@@ -85,8 +86,8 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.Interest)
     }
 
-    override fun navigationToComicList(category: String?) {
-        navigation.push(Config.ComicList(category))
+    override fun navigationToComicList(comics: Comics) {
+        navigation.push(Config.ComicList(comics))
     }
 
     override fun navigationToComicInfo(id: String) {
@@ -97,8 +98,8 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.Reader(id))
     }
 
-    override fun navigationToSearch() {
-        navigation.push(Config.Search)
+    override fun navigationToSearch(query: String?) {
+        navigation.push(Config.Search(query))
     }
 
     override fun navigationToRanking() {
@@ -125,7 +126,7 @@ class DefaultRootComponent @AssistedInject constructor(
         data object Splash : Config
 
         @Serializable
-        data class ComicList(val category: String?) : Config
+        data class ComicList(val comics: Comics) : Config
 
         @Serializable
         data class ComicInfo(val id: String) : Config
@@ -137,7 +138,7 @@ class DefaultRootComponent @AssistedInject constructor(
         data object Ranking : Config
 
         @Serializable
-        data object Search : Config
+        data class Search(val query: String?) : Config
     }
 
     @AssistedFactory

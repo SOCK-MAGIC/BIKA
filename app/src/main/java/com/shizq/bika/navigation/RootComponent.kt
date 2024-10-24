@@ -3,6 +3,7 @@ package com.shizq.bika.navigation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
+import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
 import com.shizq.bika.feature.comic.list.ComicListComponent
 import com.shizq.bika.feature.interest.InterestComponent
@@ -18,10 +19,10 @@ interface RootComponent : ComponentContext {
     val drawer: Value<ChildDrawer<DrawerComponent>>
     fun navigationToSignIn()
     fun navigationToInterest()
-    fun navigationToComicList(category: String?)
+    fun navigationToComicList(comics: Comics)
     fun navigationToComicInfo(id: String)
     fun navigationToReader(id: String)
-    fun navigationToSearch()
+    fun navigationToSearch(query: String?)
     fun navigationToRanking()
     fun onBack()
     fun setDrawerState(isOpen: Boolean)

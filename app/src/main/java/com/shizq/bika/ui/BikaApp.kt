@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
@@ -27,6 +26,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.plus
 import com.arkivanov.decompose.extensions.compose.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
+import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.feature.comic.info.ComicInfoScreen
 import com.shizq.bika.feature.comic.list.ComicScreen
 import com.shizq.bika.feature.interest.InterestScreen
@@ -84,7 +84,7 @@ internal fun BikaApp(
                         component = drawerState.instance,
                         drawerState = drawerState.drawerState,
                         navigationToComicList = {
-                            component.navigationToComicList(it)
+                            component.navigationToComicList(Comics(it))
                             component.setDrawerState(false)
                         },
                     )
@@ -104,8 +104,8 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
         stack = component.stack,
         modifier = modifier,
         animation = stackAnimation { _ -> slide() + fade() },
-    ) {
-        when (val child = it.instance) {
+    ) { created ->
+        when (val child = created.instance) {
             is RootComponent.Child.Splash -> SplashScreen(
                 component = child.component,
                 component::navigationToInterest,
@@ -119,7 +119,9 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
             is RootComponent.Child.Interest -> InterestScreen(
                 component = child.component,
-                navigationToComicList = component::navigationToComicList,
+                navigationToComicList = {
+                    component.navigationToComicList(Comics(it))
+                },
                 navigationToSearch = component::navigationToSearch,
                 navigationToRanking = component::navigationToRanking,
                 openDrawer = { component.setDrawerState(true) },
@@ -136,7 +138,14 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             )
 
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)
-            is RootComponent.Child.Ranking -> RankingScreen(component = child.component)
+            is RootComponent.Child.Ranking -> RankingScreen(
+                component = child.component,
+                navigationToComicInfo = component::navigationToComicInfo,
+                navigationToSearch = {
+                    component.navigationToComicList(Comics(creatorId = it))
+                },
+            )
+
             is RootComponent.Child.Search -> SearchScreen(
                 component = child.component,
                 onBackClick = component::onBack,

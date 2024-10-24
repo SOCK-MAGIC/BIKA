@@ -1,5 +1,6 @@
 package com.shizq.bika.feature.ranking
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,13 +29,23 @@ import com.shizq.bika.core.ui.comicCardItems
 @Composable
 fun RankingScreen(
     component: RankingComponent,
+    navigationToComicInfo: (String) -> Unit,
+    navigationToSearch: (String?) -> Unit,
 ) {
     val rankingUiState by component.rankingUiState.collectAsStateWithLifecycle()
-    RankingContent(rankingUiState)
+    RankingContent(
+        rankingUiState,
+        navigationToComicInfo = navigationToComicInfo,
+        navigationToSearch = navigationToSearch,
+    )
 }
 
 @Composable
-internal fun RankingContent(uiState: RankUiState) {
+internal fun RankingContent(
+    uiState: RankUiState,
+    navigationToComicInfo: (String) -> Unit,
+    navigationToSearch: (String?) -> Unit,
+) {
     var selectedIndex by remember { mutableIntStateOf(0) }
     Scaffold { innerPadding ->
         when (uiState) {
@@ -51,13 +62,15 @@ internal fun RankingContent(uiState: RankUiState) {
                         BikaTab(selectedIndex == 3, "骑士榜") { selectedIndex = 3 }
                     }
                     when (selectedIndex) {
-                        0 -> TabContent(uiState.h24) {}
+                        0 -> TabContent(uiState.h24, navigationToComicInfo)
 
-                        1 -> TabContent(uiState.d7) {}
+                        1 -> TabContent(uiState.d7, navigationToComicInfo)
 
-                        2 -> TabContent(uiState.d30) {}
+                        2 -> TabContent(uiState.d30, navigationToComicInfo)
 
-                        3 -> TabContent(uiState.second) {}
+                        3 -> KnightTabContent(uiState.second) {
+                            navigationToSearch(it)
+                        }
 
                         else -> throw IllegalArgumentException("Unknown parameter $selectedIndex")
                     }
@@ -68,7 +81,7 @@ internal fun RankingContent(uiState: RankUiState) {
 }
 
 @Composable
-private fun TabContent(second: List<NetworkKnight.User>, function: () -> Unit) {
+private fun KnightTabContent(second: List<NetworkKnight.User>, onClick: (String) -> Unit) {
     LazyColumn {
         items(second) { item ->
             ListItem(
@@ -78,6 +91,7 @@ private fun TabContent(second: List<NetworkKnight.User>, function: () -> Unit) {
                 headlineContent = {
                     Text(item.name)
                 },
+                modifier = Modifier.clickable { onClick(item.id) },
             )
         }
     }
