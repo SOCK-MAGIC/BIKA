@@ -50,7 +50,7 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     @SuppressLint("SetTextI18n")

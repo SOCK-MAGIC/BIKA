@@ -3,9 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="viewModel"
-            type="com.shizq.bika.ui.leaderboard.LeaderboardKnightViewModel" />
     </data>
 
     <RelativeLayout

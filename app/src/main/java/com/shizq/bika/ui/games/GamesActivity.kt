@@ -22,7 +22,7 @@ class GamesActivity : BaseActivity<ActivityGamesBinding, GamesViewModel>() {
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {

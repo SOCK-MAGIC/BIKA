@@ -23,7 +23,6 @@ import com.shizq.bika.bean.UpdateBean
 import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
 import com.shizq.bika.network.base.BaseResponse
-import com.shizq.bika.ui.account.AccountActivity
 import com.shizq.bika.utils.AppVersion
 import com.shizq.bika.utils.GlideCacheUtil
 import com.shizq.bika.utils.SPUtil
@@ -209,7 +208,6 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat(),
                         .setPositiveButton("确定") { _, _ ->
                             SPUtil.remove("token")
                             SPUtil.remove("chat_token")
-                            startActivity(Intent(activity, AccountActivity::class.java))
                             activity?.finishAffinity()
                         }
                         .setNegativeButton("取消", null)

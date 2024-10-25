@@ -57,7 +57,7 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {

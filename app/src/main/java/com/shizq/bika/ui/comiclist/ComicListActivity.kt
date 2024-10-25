@@ -126,7 +126,7 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {

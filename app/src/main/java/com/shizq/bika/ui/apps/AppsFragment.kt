@@ -32,7 +32,7 @@ class AppsFragment : BaseFragment<FragmentAppsBinding, AppsFragmentViewModel>() 
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {

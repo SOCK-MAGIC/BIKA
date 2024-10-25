@@ -5,10 +5,11 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -17,19 +18,18 @@ import com.shizq.bika.R
 import com.shizq.bika.adapter.CategoriesAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityMainBinding
-import com.shizq.bika.ui.account.AccountActivity
 import com.shizq.bika.ui.apps.AppsActivity
 import com.shizq.bika.ui.chatroom.current.roomlist.ChatRoomListActivity
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.games.GamesActivity
 import com.shizq.bika.ui.image.ImageActivity
-import com.shizq.bika.ui.leaderboard.LeaderboardActivity
 import com.shizq.bika.ui.mycomments.MyCommentsActivity
 import com.shizq.bika.ui.notifications.NotificationsActivity
 import com.shizq.bika.ui.settings.SettingsActivity
 import com.shizq.bika.ui.user.UserActivity
-import com.shizq.bika.utils.*
+import com.shizq.bika.utils.GlideUrlNewKey
+import com.shizq.bika.utils.SPUtil
 import dagger.hilt.android.AndroidEntryPoint
 import me.jingbin.library.skeleton.ByRVItemSkeletonScreen
 import me.jingbin.library.skeleton.BySkeleton
@@ -48,7 +48,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {
@@ -229,10 +229,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             val datas = adapter_categories.getItemData(position)
             when (datas.imageRes) {
                 // 根据ResId来判断 以后改
-                R.drawable.cat_leaderboard -> {
-                    startActivity(Intent(this, LeaderboardActivity::class.java))
-                }
-
                 R.drawable.cat_game -> {
                     startActivity(Intent(this, GamesActivity::class.java))
                 }

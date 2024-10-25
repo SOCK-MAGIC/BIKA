@@ -17,7 +17,7 @@ class AppsActivity : BaseActivity<ActivityAppsBinding, AppsViewModel>() {
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {

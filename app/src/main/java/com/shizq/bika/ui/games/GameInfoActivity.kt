@@ -37,7 +37,7 @@ class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {

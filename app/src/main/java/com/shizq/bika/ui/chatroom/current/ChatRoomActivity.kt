@@ -63,7 +63,7 @@ class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     @SuppressLint("ResourceType")

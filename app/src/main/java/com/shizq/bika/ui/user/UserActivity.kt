@@ -25,7 +25,7 @@ class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
     }
 
     override fun initVariableId(): Int {
-        return BR.viewModel
+        return 1
     }
 
     override fun initData() {
