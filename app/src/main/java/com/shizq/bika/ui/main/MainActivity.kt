@@ -23,7 +23,6 @@ import com.shizq.bika.ui.chatroom.current.roomlist.ChatRoomListActivity
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.games.GamesActivity
-import com.shizq.bika.ui.history.HistoryActivity
 import com.shizq.bika.ui.image.ImageActivity
 import com.shizq.bika.ui.leaderboard.LeaderboardActivity
 import com.shizq.bika.ui.mycomments.MyCommentsActivity
@@ -220,10 +219,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.mainNavView.setNavigationItemSelectedListener {
             binding.mainNavView.setCheckedItem(it)
             when (it.itemId) {
-                R.id.drawer_menu_history -> {
-                    startActivity(HistoryActivity::class.java)
-                }
-
                 R.id.drawer_menu_bookmark -> {
                     val intent = Intent(this@MainActivity, ComicListActivity::class.java)
                     intent.putExtra("tag", "favourite")

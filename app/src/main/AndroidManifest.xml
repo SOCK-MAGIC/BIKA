@@ -59,9 +59,6 @@
         <activity android:name=".ui.account.AccountActivity" />
         <activity android:name=".ui.main.MainActivity" />
         <activity
-            android:name=".ui.history.HistoryActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.notifications.NotificationsActivity"
             android:exported="false" />
         <activity
