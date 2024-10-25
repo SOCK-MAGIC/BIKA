@@ -219,14 +219,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.mainNavView.setNavigationItemSelectedListener {
             binding.mainNavView.setCheckedItem(it)
             when (it.itemId) {
-                R.id.drawer_menu_bookmark -> {
-                    val intent = Intent(this@MainActivity, ComicListActivity::class.java)
-                    intent.putExtra("tag", "favourite")
-                    intent.putExtra("title", "我的收藏")
-                    intent.putExtra("value", "我的收藏")
-                    startActivity(intent)
-                }
-
                 R.id.drawer_menu_mail -> {
                     startActivity(NotificationsActivity::class.java)
                 }
