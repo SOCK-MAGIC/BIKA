@@ -56,10 +56,6 @@
         <activity
             android:name=".ui.signin.SignInActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.splash.SplashActivity"
-            android:exported="false">
-        </activity>
         <activity android:name=".ui.account.AccountActivity" />
         <activity android:name=".ui.main.MainActivity" />
         <activity
