@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.CommentsAdapter
 import com.shizq.bika.base.BaseActivity

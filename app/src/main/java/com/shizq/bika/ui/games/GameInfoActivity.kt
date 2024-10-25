@@ -10,7 +10,6 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.GameScreenshotAdapter
 import com.shizq.bika.base.BaseActivity

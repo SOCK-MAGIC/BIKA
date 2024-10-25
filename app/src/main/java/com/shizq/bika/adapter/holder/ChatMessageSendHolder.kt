@@ -10,7 +10,6 @@ import com.shizq.bika.bean.ChatMessageBean
 import com.shizq.bika.databinding.ItemChatMessageSendBinding
 import com.bumptech.glide.Glide
 import com.shizq.bika.utils.GlideUrlNewKey
-import com.shizq.bika.utils.dp
 import com.shizq.bika.widget.UserViewDialog
 
 //新聊天室 我发送的消息
