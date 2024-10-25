@@ -29,7 +29,7 @@ class CompositeComicListRepository @Inject constructor(
 ) {
     fun getPagingFlowByCategories(
         comics: Comics,
-        skipPage: Int? = null,
+        page: Int? = null,
         pagingMetadata: (PagingMetadata) -> Unit,
     ): Flow<PagingData<ComicResource>> =
         Pager(PagingConfig(20), 1) {
@@ -40,7 +40,6 @@ class CompositeComicListRepository @Inject constructor(
                 "favourite" -> favouritePagingSourceFactory(pagingMetadata)
                 else -> comicListPagingSourceFactory(
                     sort = Sort.SORT_DEFAULT,
-                    page = skipPage,
                     comics = comics,
                     pagingMetadata = pagingMetadata,
                 )

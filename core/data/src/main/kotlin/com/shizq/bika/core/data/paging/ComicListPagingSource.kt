@@ -18,7 +18,6 @@ class ComicListPagingSource @AssistedInject constructor(
     private val userInterests: BikaInterestsDataSource,
     @Assisted private val sort: Sort,
     @Assisted private val comics: Comics,
-    @Assisted private val page: Int?,
     @Assisted private val pagingMetadata: (PagingMetadata) -> Unit,
 ) : BikaComicListPagingSource() {
     override val jumpingSupported = true
@@ -26,7 +25,6 @@ class ComicListPagingSource @AssistedInject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
         val hide = userInterests.userHideCategories.first()
         Napier.i(tag = "ComicListPagingSource") { "filter category: $hide" }
-        Napier.i(tag = "ComicListPagingSource") { "page: " + page.toString() }
         // todo 当分类 与 主页面 相同时会造成无线加载
         // 例如 hide 中有 cos 与 category=“cos”
         if (hide.contains(comics.category)) return LoadResult.Invalid()
@@ -68,7 +66,6 @@ class ComicListPagingSource @AssistedInject constructor(
         operator fun invoke(
             @Assisted sort: Sort,
             @Assisted comics: Comics,
-            @Assisted page: Int? = null,
             @Assisted pagingMetadata: (PagingMetadata) -> Unit,
         ): ComicListPagingSource
     }
