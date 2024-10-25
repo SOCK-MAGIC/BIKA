@@ -80,9 +80,6 @@
             android:name=".ui.leaderboard.LeaderboardActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.collections.CollectionsActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.comment.CommentsActivity"
             android:exported="false" />
         <activity

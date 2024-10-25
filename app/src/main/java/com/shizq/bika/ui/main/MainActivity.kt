@@ -20,7 +20,6 @@ import com.shizq.bika.databinding.ActivityMainBinding
 import com.shizq.bika.ui.account.AccountActivity
 import com.shizq.bika.ui.apps.AppsActivity
 import com.shizq.bika.ui.chatroom.current.roomlist.ChatRoomListActivity
-import com.shizq.bika.ui.collections.CollectionsActivity
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.games.GamesActivity
@@ -253,10 +252,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
             val datas = adapter_categories.getItemData(position)
             when (datas.imageRes) {
                 // 根据ResId来判断 以后改
-                R.drawable.bika -> {
-                    startActivity(Intent(this, CollectionsActivity::class.java))
-                }
-
                 R.drawable.cat_leaderboard -> {
                     startActivity(Intent(this, LeaderboardActivity::class.java))
                 }
