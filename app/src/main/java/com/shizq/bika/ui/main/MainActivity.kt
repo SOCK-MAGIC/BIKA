@@ -27,7 +27,6 @@ import com.shizq.bika.ui.image.ImageActivity
 import com.shizq.bika.ui.leaderboard.LeaderboardActivity
 import com.shizq.bika.ui.mycomments.MyCommentsActivity
 import com.shizq.bika.ui.notifications.NotificationsActivity
-import com.shizq.bika.ui.search.SearchActivity
 import com.shizq.bika.ui.settings.SettingsActivity
 import com.shizq.bika.ui.user.UserActivity
 import com.shizq.bika.utils.*
@@ -159,15 +158,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_menu_main, menu)
         return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.action_search -> {
-                startActivity(SearchActivity::class.java)
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun initListener() {
