@@ -6,7 +6,6 @@ import com.shizq.bika.BIKAApplication
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.ComicListBean
 import com.shizq.bika.bean.ComicListBean2
-import com.shizq.bika.database.BikaDatabase
 import com.shizq.bika.database.model.SearchEntity
 import com.shizq.bika.network.Result
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,13 +42,6 @@ class ComicListViewModel : BaseViewModel() {
             repository.getRandomFlow().collect {
                 _comicList2.value = it
             }
-        }
-    }
-
-    private val searchDao = BikaDatabase(BIKAApplication.contextBase).searchDao()
-    fun insertSearch(vararg searchEntities: SearchEntity) {
-        viewModelScope.launch {
-            searchDao.insertSearch(*searchEntities)
         }
     }
 }

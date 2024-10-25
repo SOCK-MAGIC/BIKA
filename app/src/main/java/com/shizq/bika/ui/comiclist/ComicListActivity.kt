@@ -194,10 +194,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
     private fun intiListener() {
         binding.searchView.setOnKeyListener { v, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
-                //监听回车键
-                val searchEntity = SearchEntity(binding.searchView.text.toString())
-                viewModel.insertSearch(searchEntity)//添加搜索记录
-
                 viewModel.value = binding.searchView.text.toString()
                 viewModel.tag = "search"
                 viewModel.page = 0

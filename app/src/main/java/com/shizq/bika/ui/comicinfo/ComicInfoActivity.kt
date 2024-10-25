@@ -525,50 +525,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
                             //上传者 更新时间
                             binding.comicinfoCreatorUpdatedAt.text =
                                 TimeUtil().time(it.data.comic.updated_at) + getString(R.string.updated_at)
-
-                            //记录历史
-                            val historyList = viewModel.getHistory()
-                            if (historyList.isNotEmpty()) {
-                                val historyEntity = HistoryEntity(
-                                    System.currentTimeMillis(),
-                                    historyList[0].title,
-                                    historyList[0].fileServer,
-                                    historyList[0].path,
-                                    historyList[0].comic_or_game,
-                                    historyList[0].author,
-                                    historyList[0].comic_or_game_id,
-                                    historyList[0].sort,
-                                    historyList[0].epsCount,
-                                    historyList[0].pagesCount,
-                                    historyList[0].finished,
-                                    historyList[0].likeCount,
-                                    historyList[0].ep,
-                                    historyList[0].page
-                                )
-                                historyEntity.id = historyList[0].id
-                                //这个进行更新 //更新好象要主键
-                                viewModel.updateHistory(historyEntity)//更新搜索记录
-
-                            } else {
-                                val historyEntity = HistoryEntity(
-                                    System.currentTimeMillis(),
-                                    viewModel.title.toString(),
-                                    fileserver,
-                                    imageurl,
-                                    "comic",
-                                    viewModel.author.toString(),
-                                    viewModel.bookId.toString(),
-                                    "",
-                                    "",
-                                    "",
-                                    false,
-                                    "",
-                                    "",
-                                    ""
-                                )
-                                //这个进行更新 //更新好象要主键
-                                viewModel.insertHistory(historyEntity)//添加搜索记录
-                            }
                         }
                     }
 
