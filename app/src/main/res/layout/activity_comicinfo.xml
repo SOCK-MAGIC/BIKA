@@ -35,17 +35,6 @@
                 app:layout_collapseMode="pin" />
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-            android:id="@+id/comicinfo_btn_read"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:onClick="@{()->clickListener.Read()}"
-            android:text="开始阅读"
-            android:visibility="gone" />
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

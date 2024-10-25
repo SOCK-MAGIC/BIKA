@@ -26,7 +26,6 @@ import com.shizq.bika.network.Result
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.image.ImageActivity
-import com.shizq.bika.ui.reader.ReaderActivity
 import com.shizq.bika.utils.*
 import com.shizq.bika.widget.SpacesItemDecoration
 import com.shizq.bika.widget.UserViewDialog
@@ -207,15 +206,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
             if (viewModel.creator != null) {
                 userViewDialog.showUserDialog(viewModel.creator!!)
             }
-        }
-
-        fun Read() {
-            //开始阅读 默认从第一话开始 以后加历史记录
-            val intent = Intent(this@ComicInfoActivity, ReaderActivity::class.java)
-            intent.putExtra("bookId", viewModel.bookId)
-            intent.putExtra("order", 1)//查看的第几个章节
-            intent.putExtra("totalEps", viewModel.totalEps)//总共多少章节
-            startActivity(intent)
         }
     }
 
@@ -618,7 +608,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
                 when (it) {
                     is Result.Success -> {
                         viewModel.totalEps = it.data.eps.total
-                        binding.comicinfoBtnRead.show()
                         if (it.data.eps.page == 1) {//防止重复添加
                             mAdapterEpisode.clear()
                             mAdapterEpisode.addData(it.data.eps.docs)
@@ -721,13 +710,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
             }
         }
 
-        binding.comicInfoEpsRv.setOnItemClickListener { v, position ->
-            val intent = Intent(this@ComicInfoActivity, ReaderActivity::class.java)
-            intent.putExtra("bookId", viewModel.bookId)
-            intent.putExtra("order", mAdapterEpisode.data[position].order)//查看的第几个章节
-            intent.putExtra("totalEps", viewModel.totalEps)//总共多少章节
-            startActivity(intent)
-        }
         episodeFooterBinding.episodeFooterLayout.setOnClickListener {
             episodeFooterBinding.episodeFooterLayout.isEnabled = false
             episodeFooterBinding.episodeFooterText.setText(R.string.footer_loading)
