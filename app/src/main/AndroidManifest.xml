@@ -53,9 +53,6 @@
         <activity
             android:name=".ui.signup.SignUpActivity"
             android:exported="false" />
-        <activity
-            android:name=".ui.signin.SignInActivity"
-            android:exported="false" />
         <activity android:name=".ui.account.AccountActivity" />
         <activity android:name=".ui.main.MainActivity" />
         <activity

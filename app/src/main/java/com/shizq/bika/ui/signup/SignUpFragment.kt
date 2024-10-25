@@ -376,13 +376,7 @@ class SignUpFragment : BaseFragment<FragmentSignupBinding, SignUpViewModel>() {
                 // 提示是否继续登录
                 MaterialAlertDialogBuilder(activity as AppCompatActivity)
                     .setTitle("注册成功是否继续登录")
-                    .setPositiveButton("确定") { dialog, which ->
-                        // TODO 需要优化 添加 自动登录 或者 跳转到登录页（登录页要显示注册的账号密码）
-//                        Navigation.findNavController(activity as AppCompatActivity,R.id.login_fcv).navigateUp()
-                        Navigation.findNavController(activity as AppCompatActivity, R.id.login_fcv)
-                            .navigate(R.id.action_signUpFragment_to_signInFragment)
-
-                    }
+                    .setPositiveButton("确定") { dialog, which -> }
                     .setNegativeButton("取消",null)
                     .show()
 
