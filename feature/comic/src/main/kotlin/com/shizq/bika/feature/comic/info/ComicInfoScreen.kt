@@ -43,10 +43,16 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.core.network.model.NetworkComicInfo
+import kotlin.reflect.KFunction1
 
 @Composable
-fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) -> Unit) {
+fun ComicInfoScreen(
+    component: ComicInfoComponent,
+    navigationToReader: (String) -> Unit,
+    navigationToComicList: (Comics) -> Unit,
+) {
     val uiState by component.comicInfoUiState.collectAsStateWithLifecycle()
     ComicInfoContent(
         uiState = uiState,
@@ -54,6 +60,7 @@ fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) 
         onClickTrigger = component::onClickTrigger,
         onSwitchLike = component::onSwitchLike,
         onSwitchFavorite = component::onSwitchFavorite,
+        navigationToComicList = navigationToComicList,
     )
 }
 
@@ -65,12 +72,11 @@ internal fun ComicInfoContent(
     onClickTrigger: (ComicResource) -> Unit,
     onSwitchLike: () -> Unit,
     onSwitchFavorite: () -> Unit,
+    navigationToComicList: (Comics) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
-        ComicInfoUiState.Error,
-        ComicInfoUiState.Loading,
-        -> Unit
+        ComicInfoUiState.Error, ComicInfoUiState.Loading -> Unit
 
         is ComicInfoUiState.Success -> {
             Scaffold(
@@ -133,7 +139,8 @@ internal fun ComicInfoContent(
                         modifier = Modifier.padding(vertical = 8.dp),
                     )
                     Text(uiState.description, modifier = Modifier.padding(vertical = 8.dp))
-                    Tags(uiState.comicResource.categories + uiState.tags)
+                    Tags(uiState.tags) { navigationToComicList(Comics(tag = it)) }
+                    Tags(uiState.comicResource.categories) { navigationToComicList(Comics(category = it)) }
                 }
             }
         }
@@ -273,10 +280,10 @@ private fun Creator(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun Tags(categories: List<String>, modifier: Modifier = Modifier) {
+fun Tags(categories: List<String>, modifier: Modifier = Modifier, onClick: (String) -> Unit) {
     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
         categories.fastForEach {
-            SuggestionChip(onClick = {}, label = { Text(it) })
+            SuggestionChip(onClick = { onClick(it) }, label = { Text(it) })
         }
     }
 }

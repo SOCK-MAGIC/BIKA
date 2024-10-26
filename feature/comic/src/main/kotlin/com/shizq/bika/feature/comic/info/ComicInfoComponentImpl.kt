@@ -1,9 +1,12 @@
 package com.shizq.bika.feature.comic.info
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
-import com.shizq.bika.core.flow.restartableStateIn
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkComicInfo
@@ -14,8 +17,10 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ComicInfoComponentImpl @AssistedInject constructor(
@@ -25,9 +30,10 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
 ) : ComicInfoComponent,
     ComponentContext by componentContext {
+    private var hasClick by mutableStateOf(false)
 
-    override val comicInfoUiState = flowOf(comicId)
-        .map { network.getComicInfo(it) }
+    override val comicInfoUiState = snapshotFlow { hasClick }.combine(flowOf(comicId), ::Pair)
+        .map { network.getComicInfo(it.second) }
         .asResult()
         .map { result ->
             when (result) {
@@ -85,7 +91,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                     )
                 }
             }
-        }.restartableStateIn(
+        }.stateIn(
             componentScope,
             SharingStarted.WhileSubscribed(5_000),
             ComicInfoUiState.Loading,
@@ -100,14 +106,14 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     override fun onSwitchLike() {
         componentScope.launch {
             network.switchLike(comicId)
-            comicInfoUiState.restart()
+            hasClick = !hasClick
         }
     }
 
     override fun onSwitchFavorite() {
         componentScope.launch {
             network.switchFavourite(comicId)
-            comicInfoUiState.restart()
+            hasClick = !hasClick
         }
     }
 

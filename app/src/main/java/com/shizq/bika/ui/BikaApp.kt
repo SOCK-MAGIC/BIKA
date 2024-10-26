@@ -136,6 +136,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             is RootComponent.Child.ComicInfo -> ComicInfoScreen(
                 component = child.component,
                 navigationToReader = component::navigationToReader,
+                navigationToComicList = component::navigationToComicList,
             )
 
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)
@@ -151,6 +152,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 component = child.component,
                 onBackClick = component::onBack,
             )
+
             is RootComponent.Child.Comment -> CommentScreen(
                 component = child.component,
             )

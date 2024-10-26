@@ -3,6 +3,7 @@ package com.shizq.bika.feature.comic.info
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.AlertDialogDefaults
@@ -51,8 +52,8 @@ internal fun UserDialog(
                 DynamicAsyncImage(
                     avatarUrl,
                     modifier = Modifier
-                        .clip(CircleShape)
-                        .size(96.dp),
+                        .size(96.dp)
+                        .clip(CircleShape),
                 )
                 Text(
                     "${
