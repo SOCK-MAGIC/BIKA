@@ -1,7 +1,7 @@
 package com.shizq.bika.feature.comment.di
 
-import com.shizq.bika.feature.signup.CommentComponent
-import com.shizq.bika.feature.signup.CommentComponentImpl
+import com.shizq.bika.feature.comment.CommentComponent
+import com.shizq.bika.feature.comment.CommentComponentImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
