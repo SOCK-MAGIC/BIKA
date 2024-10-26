@@ -1,5 +1,6 @@
 package com.shizq.bika.feature.comic.info
 
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -105,7 +106,7 @@ internal fun ComicInfoContent(
                         total = uiState.totalViews,
                         modifier = Modifier,
                     )
-                    ToolBar(uiState.toolItem)
+                    ToolBar(uiState.toolItem, modifier = Modifier.padding(vertical = 8.dp))
                     Creator(
                         uiState.creator,
                         uiState.updatedAt,
@@ -120,23 +121,22 @@ internal fun ComicInfoContent(
 }
 
 @Composable
-fun ToolBar(item: ToolItem) {
+fun ToolBar(item: ToolItem, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier.height(IntrinsicSize.Min),
+        modifier = modifier.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        val interactionSource = remember { MutableInteractionSource() }
         ToolBarItem(Modifier.weight(1f)) {
-            IconButton({}) {
-                Icon(
-                    BikaIcons.Favorite,
-                    "喜欢",
-                    tint = if (item.isLiked) {
-                        MaterialTheme.colorScheme.primary
-                    } else {
-                        MaterialTheme.colorScheme.secondary
-                    },
-                )
-            }
+            Icon(
+                BikaIcons.Favorite,
+                "喜欢",
+                tint = if (item.isLiked) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.secondary
+                },
+            )
             Text("${item.totalLikes}人喜欢")
         }
         VerticalDivider(Modifier.padding(8.dp))
@@ -145,15 +145,12 @@ fun ToolBar(item: ToolItem) {
                 .weight(1f)
                 .fillMaxHeight(),
         ) {
-            Text("${item.pagesCount}页", Modifier.padding(top = 8.dp))
-            Spacer(Modifier.weight(1f))
-            Text("${item.epsCount}章", Modifier.padding(bottom = 4.dp))
+            Text("${item.pagesCount}页")
+            Text("${item.epsCount}章")
         }
         VerticalDivider(Modifier.padding(8.dp))
         ToolBarItem(Modifier.weight(1f)) {
-            IconButton({}) {
-                Icon(BikaIcons.Chat, "评论")
-            }
+            Icon(BikaIcons.Chat, "评论")
             Text("${item.commentsCount}条评论")
         }
     }
