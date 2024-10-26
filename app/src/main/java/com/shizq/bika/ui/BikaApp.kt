@@ -29,6 +29,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.feature.comic.info.ComicInfoScreen
 import com.shizq.bika.feature.comic.list.ComicScreen
+import com.shizq.bika.feature.comment.CommentScreen
 import com.shizq.bika.feature.interest.InterestScreen
 import com.shizq.bika.feature.ranking.RankingScreen
 import com.shizq.bika.feature.reader.ReaderScreen
@@ -149,6 +150,9 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             is RootComponent.Child.Search -> SearchScreen(
                 component = child.component,
                 onBackClick = component::onBack,
+            )
+            is RootComponent.Child.Comment -> CommentScreen(
+                component = child.component,
             )
         }
     }

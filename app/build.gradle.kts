@@ -60,6 +60,7 @@ android {
 
 dependencies {
     implementation(projects.feature.comic)
+    implementation(projects.feature.comment)
     implementation(projects.feature.interest)
     implementation(projects.feature.reader)
     implementation(projects.feature.ranking)
