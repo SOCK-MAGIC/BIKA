@@ -37,10 +37,17 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                     val comic = result.data.comic
                     val creator = comic.creator
                     ComicInfoUiState.Success(
-                        allowComment = comic.allowComment,
-                        allowDownload = comic.allowDownload,
+                        ToolItem(
+                            allowComment = comic.allowComment,
+                            allowDownload = comic.allowDownload,
+                            commentsCount = comic.commentsCount,
+                            isFavourite = comic.isFavourite,
+                            isLiked = comic.isLiked,
+                            totalLikes = comic.totalLikes,
+                            pagesCount = comic.pagesCount,
+                            epsCount = comic.epsCount,
+                        ),
                         chineseTeam = comic.chineseTeam,
-                        commentsCount = comic.commentsCount,
                         createdAt = comic.createdAt,
                         creator = NetworkComicInfo.Comic.Creator(
                             avatar = Thumb(
@@ -60,10 +67,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                             verified = creator.verified,
                         ),
                         description = comic.description,
-                        isFavourite = comic.isFavourite,
-                        isLiked = comic.isLiked,
                         tags = comic.tags,
-                        totalLikes = comic.totalLikes,
                         totalViews = comic.totalViews,
                         updatedAt = comic.updatedAt,
                         viewsCount = comic.viewsCount,

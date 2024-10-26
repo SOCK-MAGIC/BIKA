@@ -7,20 +7,26 @@ sealed interface ComicInfoUiState {
     data object Loading : ComicInfoUiState
     data object Error : ComicInfoUiState
     data class Success(
-        val allowComment: Boolean = false,
-        val allowDownload: Boolean = false,
+        val toolItem: ToolItem,
         val chineseTeam: String = "",
-        val commentsCount: Int = 0,
         val createdAt: String = "",
         val creator: Creator = Creator(),
         val description: String = "",
-        val isFavourite: Boolean = false,
-        val isLiked: Boolean = false,
         val tags: List<String> = listOf(),
-        val totalLikes: Int = 0,
         val totalViews: Int = 0,
         val updatedAt: String = "",
         val viewsCount: Int = 0,
         val comicResource: ComicResource,
     ) : ComicInfoUiState
 }
+
+data class ToolItem(
+    val allowComment: Boolean,
+    val allowDownload: Boolean,
+    val commentsCount: Int,
+    val isFavourite: Boolean,
+    val totalLikes: Int,
+    val isLiked: Boolean,
+    val pagesCount: Int,
+    val epsCount: Int,
+)

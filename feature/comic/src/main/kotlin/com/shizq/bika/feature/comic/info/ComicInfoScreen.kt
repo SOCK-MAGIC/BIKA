@@ -2,27 +2,38 @@ package com.shizq.bika.feature.comic.info
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -30,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
+import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.NetworkComicInfo
 
@@ -39,6 +51,7 @@ fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) 
     ComicInfoContent(uiState, navigationToReader, component::onClickTrigger)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
@@ -53,6 +66,17 @@ internal fun ComicInfoContent(
 
         is ComicInfoUiState.Success -> {
             Scaffold(
+                topBar = {
+                    TopAppBar(
+                        {},
+                        navigationIcon = {},
+                        actions = {
+                            IconButton({}) {
+                                Icon(BikaIcons.Bookmarks, "收藏")
+                            }
+                        },
+                    )
+                },
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
@@ -81,6 +105,7 @@ internal fun ComicInfoContent(
                         total = uiState.totalViews,
                         modifier = Modifier,
                     )
+                    ToolBar(uiState.toolItem)
                     Creator(
                         uiState.creator,
                         uiState.updatedAt,
@@ -92,6 +117,56 @@ internal fun ComicInfoContent(
             }
         }
     }
+}
+
+@Composable
+fun ToolBar(item: ToolItem) {
+    Row(
+        modifier = Modifier.height(IntrinsicSize.Min),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ToolBarItem(Modifier.weight(1f)) {
+            IconButton({}) {
+                Icon(
+                    BikaIcons.Favorite,
+                    "喜欢",
+                    tint = if (item.isLiked) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.secondary
+                    },
+                )
+            }
+            Text("${item.totalLikes}人喜欢")
+        }
+        VerticalDivider(Modifier.padding(8.dp))
+        ToolBarItem(
+            Modifier
+                .weight(1f)
+                .fillMaxHeight(),
+        ) {
+            Text("${item.pagesCount}页", Modifier.padding(top = 8.dp))
+            Spacer(Modifier.weight(1f))
+            Text("${item.epsCount}章", Modifier.padding(bottom = 4.dp))
+        }
+        VerticalDivider(Modifier.padding(8.dp))
+        ToolBarItem(Modifier.weight(1f)) {
+            IconButton({}) {
+                Icon(BikaIcons.Chat, "评论")
+            }
+            Text("${item.commentsCount}条评论")
+        }
+    }
+}
+
+@Composable
+fun ToolBarItem(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = content,
+    )
 }
 
 @Composable
