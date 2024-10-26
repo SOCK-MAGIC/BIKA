@@ -20,6 +20,9 @@ import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -28,6 +31,7 @@ import androidx.compose.ui.util.fastForEach
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.network.model.NetworkComicInfo
 
 @Composable
 fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) -> Unit) {
@@ -45,7 +49,7 @@ internal fun ComicInfoContent(
     when (uiState) {
         ComicInfoUiState.Error,
         ComicInfoUiState.Loading,
-        -> Unit
+            -> Unit
 
         is ComicInfoUiState.Success -> {
             Scaffold(
@@ -78,8 +82,7 @@ internal fun ComicInfoContent(
                         modifier = Modifier,
                     )
                     Creator(
-                        uiState.creator.avatar.fileServer,
-                        uiState.creator.name,
+                        uiState.creator,
                         uiState.updatedAt,
                         modifier = Modifier.padding(vertical = 8.dp),
                     )
@@ -125,16 +128,28 @@ internal fun Info(
 
 @Composable
 private fun Creator(
-    creatorAvatarUrl: String,
-    creatorName: String,
+    creator: NetworkComicInfo.Comic.Creator,
     updatedAt: String,
     modifier: Modifier = Modifier,
 ) {
-    ElevatedCard(modifier = modifier, onClick = {}) {
+    var show by remember { mutableStateOf(false) }
+    if (show) {
+        UserDialog(
+            creator.avatar.fileServer,
+            creator.gender,
+            creator.level.toString(),
+            creator.name,
+            creator.slogan,
+        ) { show = false }
+    }
+    ElevatedCard(
+        modifier = modifier,
+        onClick = { show = true },
+    ) {
         ListItem(
             leadingContent = {
                 DynamicAsyncImage(
-                    creatorAvatarUrl,
+                    creator.avatar.fileServer,
                     "avatar",
                     modifier = Modifier
                         .size(48.dp)
@@ -142,7 +157,7 @@ private fun Creator(
                 )
             },
             headlineContent = {
-                Text(creatorName)
+                Text(creator.name)
             },
             supportingContent = {
                 Text(updatedAt)
