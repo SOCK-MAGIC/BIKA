@@ -3,6 +3,7 @@ package com.shizq.bika.core.designsystem.icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.Chat
 import androidx.compose.material.icons.rounded.Bookmarks
+import androidx.compose.material.icons.rounded.Collections
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Mail
@@ -17,4 +18,5 @@ object BikaIcons {
     val Mail = Icons.Rounded.Mail
     val Chat = Icons.AutoMirrored.Rounded.Chat
     val Favorite = Icons.Rounded.Favorite
+    val Collections = Icons.Rounded.Collections
 }

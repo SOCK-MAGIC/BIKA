@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ComicInfoComponent {
     val comicInfoUiState: StateFlow<ComicInfoUiState>
+    fun onSwitchLike()
+    fun onSwitchFavorite()
     fun onClickTrigger(comicResource: ComicResource)
     interface Factory {
         operator fun invoke(

@@ -3,6 +3,7 @@ package com.shizq.bika.feature.comic.info
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
+import com.shizq.bika.core.flow.restartableStateIn
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkComicInfo
@@ -20,13 +21,13 @@ import kotlinx.coroutines.launch
 
 class ComicInfoComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
-    @Assisted id: String,
+    @Assisted private val comicId: String,
     private val network: BikaNetworkDataSource,
     private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
 ) : ComicInfoComponent,
     ComponentContext by componentContext {
 
-    override val comicInfoUiState = flowOf(id)
+    override val comicInfoUiState = flowOf(comicId)
         .map { network.getComicInfo(it) }
         .asResult()
         .map { result ->
@@ -85,7 +86,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                     )
                 }
             }
-        }.stateIn(
+        }.restartableStateIn(
             componentScope,
             SharingStarted.WhileSubscribed(5_000),
             ComicInfoUiState.Loading,
@@ -94,6 +95,20 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     override fun onClickTrigger(comicResource: ComicResource) {
         componentScope.launch {
             recentlyViewedComicRepository.insertOrReplaceRecentWatchedComic(comicResource)
+        }
+    }
+
+    override fun onSwitchLike() {
+        componentScope.launch {
+            network.switchLike(comicId)
+            comicInfoUiState.restart()
+        }
+    }
+
+    override fun onSwitchFavorite() {
+        componentScope.launch {
+            network.switchFavourite(comicId)
+            comicInfoUiState.restart()
         }
     }
 

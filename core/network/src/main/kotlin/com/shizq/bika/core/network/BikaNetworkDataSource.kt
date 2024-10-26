@@ -15,12 +15,14 @@ import com.shizq.bika.core.network.model.NetworkRankingDetail
 import com.shizq.bika.core.network.model.NetworkRecommend
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.Sort
+import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsText
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -101,4 +103,32 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
             parameter("s", sort.value)
             parameter("page", page)
         }.body()
+
+    /**
+     * 喜欢/取消喜欢漫画
+     */
+    suspend fun switchLike(comicId: String) {
+        val text = client.post("comics/$comicId/like").bodyAsText()
+        // "action": "like"
+        Napier.d(tag = "switchLike") { text }
+    }
+
+    /**
+     * 收藏/取消收藏漫画
+     */
+    suspend fun switchFavourite(comicId: String) {
+        val text = client.post("comics/$comicId/favourite").bodyAsText()
+        // "action": "favourite"
+        Napier.d(tag = "switchFavourite") { text }
+    }
+
+    /**
+     * 获取漫画的评论
+     */
+    suspend fun comicComments(comicId: String, page: Int) {
+        val text = client.get("comics/$comicId/comments") {
+            parameter("page", page)
+        }.bodyAsText()
+        Napier.d(tag = "comicComments") { text }
+    }
 }

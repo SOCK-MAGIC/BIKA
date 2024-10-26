@@ -1,6 +1,6 @@
 package com.shizq.bika.feature.comic.info
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -49,7 +48,13 @@ import com.shizq.bika.core.network.model.NetworkComicInfo
 @Composable
 fun ComicInfoScreen(component: ComicInfoComponent, navigationToReader: (String) -> Unit) {
     val uiState by component.comicInfoUiState.collectAsStateWithLifecycle()
-    ComicInfoContent(uiState, navigationToReader, component::onClickTrigger)
+    ComicInfoContent(
+        uiState = uiState,
+        navigationToReader = navigationToReader,
+        onClickTrigger = component::onClickTrigger,
+        onSwitchLike = component::onSwitchLike,
+        onSwitchFavorite = component::onSwitchFavorite,
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -58,12 +63,14 @@ internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
     navigationToReader: (String) -> Unit,
     onClickTrigger: (ComicResource) -> Unit,
+    onSwitchLike: () -> Unit,
+    onSwitchFavorite: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
         ComicInfoUiState.Error,
         ComicInfoUiState.Loading,
-            -> Unit
+        -> Unit
 
         is ComicInfoUiState.Success -> {
             Scaffold(
@@ -72,8 +79,16 @@ internal fun ComicInfoContent(
                         {},
                         navigationIcon = {},
                         actions = {
-                            IconButton({}) {
-                                Icon(BikaIcons.Bookmarks, "收藏")
+                            IconButton(onSwitchFavorite) {
+                                Icon(
+                                    BikaIcons.Collections,
+                                    "收藏",
+                                    tint = if (uiState.toolItem.isFavourite) {
+                                        MaterialTheme.colorScheme.primary
+                                    } else {
+                                        MaterialTheme.colorScheme.secondary
+                                    },
+                                )
                             }
                         },
                     )
@@ -106,7 +121,12 @@ internal fun ComicInfoContent(
                         total = uiState.totalViews,
                         modifier = Modifier,
                     )
-                    ToolBar(uiState.toolItem, modifier = Modifier.padding(vertical = 8.dp))
+                    ToolBar(
+                        uiState.toolItem,
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        onSwitchLike,
+                        {},
+                    )
                     Creator(
                         uiState.creator,
                         uiState.updatedAt,
@@ -121,13 +141,21 @@ internal fun ComicInfoContent(
 }
 
 @Composable
-fun ToolBar(item: ToolItem, modifier: Modifier = Modifier) {
+fun ToolBar(
+    item: ToolItem,
+    modifier: Modifier = Modifier,
+    onLikeClick: () -> Unit,
+    onCommentClick: () -> Unit,
+) {
     Row(
         modifier = modifier.height(IntrinsicSize.Min),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        val interactionSource = remember { MutableInteractionSource() }
-        ToolBarItem(Modifier.weight(1f)) {
+        ToolBarItem(
+            Modifier
+                .weight(1f)
+                .clickable { onLikeClick() },
+        ) {
             Icon(
                 BikaIcons.Favorite,
                 "喜欢",
@@ -149,7 +177,11 @@ fun ToolBar(item: ToolItem, modifier: Modifier = Modifier) {
             Text("${item.epsCount}章")
         }
         VerticalDivider(Modifier.padding(8.dp))
-        ToolBarItem(Modifier.weight(1f)) {
+        ToolBarItem(
+            Modifier
+                .weight(1f)
+                .clickable { onCommentClick() },
+        ) {
             Icon(BikaIcons.Chat, "评论")
             Text("${item.commentsCount}条评论")
         }
