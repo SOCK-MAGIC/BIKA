@@ -3,16 +3,18 @@ package com.shizq.bika.core.network
 import com.shizq.bika.core.network.model.ComicInSearch
 import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.core.network.model.NetworkCategories
+import com.shizq.bika.core.network.model.NetworkComicEp
 import com.shizq.bika.core.network.model.NetworkComicEpPicture
 import com.shizq.bika.core.network.model.NetworkComicInfo
 import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.NetworkComicRandom
+import com.shizq.bika.core.network.model.NetworkComicRecommend
 import com.shizq.bika.core.network.model.NetworkInit
 import com.shizq.bika.core.network.model.NetworkKnight
 import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
 import com.shizq.bika.core.network.model.NetworkRankingDetail
-import com.shizq.bika.core.network.model.NetworkRecommend
+import com.shizq.bika.core.network.model.NetworkFirstRecommend
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.Sort
 import io.github.aakira.napier.Napier
@@ -96,7 +98,7 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
      * 随机漫画
      */
     suspend fun comicsRandom(): NetworkComicRandom = client.get("comics/random").body()
-    suspend fun getRecommend(): NetworkRecommend = client.get("collections").body()
+    suspend fun getRecommend(): NetworkFirstRecommend = client.get("collections").body()
 
     suspend fun favouriteComics(page: Int, sort: Sort = Sort.SORT_DEFAULT): NetworkComicList =
         client.get("users/favourite") {
@@ -130,5 +132,34 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
             parameter("page", page)
         }.bodyAsText()
         Napier.d(tag = "comicComments") { text }
+    }
+
+    suspend fun getComicAllEp(comicId: String, page: Int): List<NetworkComicEp.Eps.Doc> {
+        val comicEp = getComicEp(comicId, page)
+        when (comicEp.eps.pages) {
+            0 -> return comicEp.eps.docs
+            1 -> return comicEp.eps.docs
+            2 -> return getComicEp(comicId, page + 1).eps.docs + comicEp.eps.docs
+            else -> {
+                val result = mutableListOf<NetworkComicEp.Eps.Doc>()
+                for (i in 3..comicEp.eps.pages) {
+                    result += getComicEp(comicId, i).eps.docs
+                }
+                return result
+            }
+        }
+    }
+
+    /**
+     * 获取漫画章节
+     */
+    suspend fun getComicEp(comicId: String, page: Int): NetworkComicEp {
+        return client.get("comics/$comicId/eps") {
+            parameter("page", page)
+        }.body<NetworkComicEp>()
+    }
+
+    suspend fun getRecommend(comicId: String): NetworkComicRecommend {
+        return client.get("comics/$comicId/recommendation").body()
     }
 }

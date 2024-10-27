@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NetworkRecommend(
+data class NetworkFirstRecommend(
     @SerialName("collections")
     val collections: List<Collection> = listOf(),
 ) {
@@ -14,3 +14,9 @@ data class NetworkRecommend(
         val comics: List<NetworkComicSimple> = listOf(),
     )
 }
+
+@Serializable
+data class NetworkComicRecommend(
+    @SerialName("comics")
+    val comics: List<NetworkComicSimple> = listOf(),
+)

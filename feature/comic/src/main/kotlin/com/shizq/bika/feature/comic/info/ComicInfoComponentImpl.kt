@@ -16,11 +16,14 @@ import com.shizq.bika.core.result.asResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.github.aakira.napier.Napier
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 
 class ComicInfoComponentImpl @AssistedInject constructor(
@@ -32,62 +35,59 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     ComponentContext by componentContext {
     private var hasClick by mutableStateOf(false)
 
-    override val comicInfoUiState = snapshotFlow { hasClick }.combine(flowOf(comicId), ::Pair)
-        .map { network.getComicInfo(it.second) }
+    init {
+        componentScope.launch {
+            network.getComicAllEp(comicId, 1)
+
+        }
+    }
+
+    val comicInfoUiState2 = snapshotFlow { hasClick to comicId }
+        .map { it.second }
+        .transform {
+            val args1 = flow { emit(network.getComicInfo(it)) }
+            val args2 = flow { emit(network.getComicAllEp(it, 1)) }
+            val args3 = flow { emit(network.getRecommend(it)) }
+            emit(Triple(args1, args2, args3))
+        }.asResult()
+        .flatMapConcat { result ->
+            when (result) {
+                is Result.Error -> TODO()
+                Result.Loading -> TODO()
+                is Result.Success -> {
+
+
+                }
+            }
+            flow { emit(Unit) }
+        }
+    override val comicInfoUiState = snapshotFlow { hasClick to comicId }
+        .map { it.second }
+        .transform {
+            val args1 = network.getComicInfo(it)
+            val args2 = network.getComicAllEp(it, 1)
+            val args3 = network.getRecommend(it)
+            emit(Triple(args1, args2, args3))
+        }
         .asResult()
         .map { result ->
             when (result) {
                 is Result.Error -> ComicInfoUiState.Error
                 Result.Loading -> ComicInfoUiState.Loading
                 is Result.Success -> {
-                    val comic = result.data.comic
-                    val creator = comic.creator
+                    val (info, eps, recommend) = result.data
+                    val comic = info.comic
                     ComicInfoUiState.Success(
-                        ToolItem(
-                            allowComment = comic.allowComment,
-                            allowDownload = comic.allowDownload,
-                            commentsCount = comic.commentsCount,
-                            isFavourite = comic.isFavourite,
-                            isLiked = comic.isLiked,
-                            totalLikes = comic.totalLikes,
-                            pagesCount = comic.pagesCount,
-                            epsCount = comic.epsCount,
-                        ),
+                        info.asToolItems(),
                         chineseTeam = comic.chineseTeam,
                         createdAt = comic.createdAt,
-                        creator = NetworkComicInfo.Comic.Creator(
-                            avatar = Thumb(
-                                fileServer = "${creator.avatar.fileServer}/static/${creator.avatar.path}",
-                                originalName = "",
-                                path = "",
-                            ),
-                            characters = creator.characters,
-                            exp = creator.exp,
-                            gender = creator.gender,
-                            id = creator.id,
-                            level = creator.level,
-                            name = creator.name,
-                            role = creator.role,
-                            slogan = creator.slogan,
-                            title = creator.title,
-                            verified = creator.verified,
-                        ),
+                        creator = info.asCreator(),
                         description = comic.description,
                         tags = comic.tags,
                         totalViews = comic.totalViews,
                         updatedAt = comic.updatedAt,
                         viewsCount = comic.viewsCount,
-                        comicResource = ComicResource(
-                            comic.id,
-                            comic.thumb.imageUrl,
-                            comic.title,
-                            comic.author,
-                            comic.categories,
-                            comic.finished,
-                            comic.epsCount,
-                            comic.pagesCount,
-                            comic.likesCount,
-                        ),
+                        comicResource = info.asComicResource(),
                     )
                 }
             }
@@ -124,4 +124,48 @@ class ComicInfoComponentImpl @AssistedInject constructor(
             id: String,
         ): ComicInfoComponentImpl
     }
+}
+
+fun NetworkComicInfo.asToolItems(): ToolItem {
+    return ToolItem(
+        allowComment = comic.allowComment,
+        allowDownload = comic.allowDownload,
+        commentsCount = comic.commentsCount,
+        isFavourite = comic.isFavourite,
+        isLiked = comic.isLiked,
+        totalLikes = comic.totalLikes,
+        pagesCount = comic.pagesCount,
+        epsCount = comic.epsCount,
+    )
+}
+
+fun NetworkComicInfo.asComicResource(): ComicResource {
+    return ComicResource(
+        comic.id,
+        comic.thumb.imageUrl,
+        comic.title,
+        comic.author,
+        comic.categories,
+        comic.finished,
+        comic.epsCount,
+        comic.pagesCount,
+        comic.likesCount,
+    )
+}
+
+fun NetworkComicInfo.asCreator(): Creator {
+    val creator = comic.creator
+    return Creator(
+        avatarUrl = "${creator.avatar.fileServer}/static/${creator.avatar.path}",
+        characters = creator.characters,
+        gender = when (creator.gender) {
+            "m" -> "(绅士)"
+            "f" -> "(淑女)"
+            else -> "(机器人)"
+        },
+        level = creator.level,
+        name = creator.name,
+        slogan = creator.slogan,
+        title = creator.title,
+    )
 }

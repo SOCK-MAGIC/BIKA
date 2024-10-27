@@ -172,7 +172,7 @@ fun ToolBar(
                     MaterialTheme.colorScheme.secondary
                 },
             )
-            Text("${item.totalLikes}人喜欢")
+            Text("${item.totalLikes}人喜欢", maxLines = 1)
         }
         VerticalDivider(Modifier.padding(8.dp))
         ToolBarItem(
@@ -239,14 +239,14 @@ internal fun Info(
 
 @Composable
 private fun Creator(
-    creator: NetworkComicInfo.Comic.Creator,
+    creator: Creator,
     updatedAt: String,
     modifier: Modifier = Modifier,
 ) {
     var show by remember { mutableStateOf(false) }
     if (show) {
         UserDialog(
-            creator.avatar.fileServer,
+            creator.avatarUrl,
             creator.gender,
             creator.level.toString(),
             creator.name,
@@ -260,7 +260,7 @@ private fun Creator(
         ListItem(
             leadingContent = {
                 DynamicAsyncImage(
-                    creator.avatar.fileServer,
+                    creator.avatarUrl,
                     "avatar",
                     modifier = Modifier
                         .size(48.dp)

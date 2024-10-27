@@ -56,13 +56,7 @@ internal fun UserDialog(
                         .clip(CircleShape),
                 )
                 Text(
-                    "${
-                        when (gender) {
-                            "m" -> "(绅士)"
-                            "f" -> "(淑女)"
-                            else -> "(机器人)"
-                        }
-                    } Lv.$level",
+                    "$gender Lv.$level",
                 )
                 Text(username, fontWeight = FontWeight.Bold)
                 Text(slogan)
