@@ -8,13 +8,14 @@ import com.shizq.bika.core.network.BikaNetworkDataSource
 class ReaderPagingSource(
     private val network: BikaNetworkDataSource,
     private val id: String,
+    private val order:Int
 ) : PagingSource<Int, Picture>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Picture> {
         val nextPageNumber = params.key ?: 1
         val comicEpPicture = network.getComicEpPictures(
             id = id,
-            epOrder = 1,
+            epOrder = order,
             page = nextPageNumber,
         )
         val (docs, limit, page, pages, total) = comicEpPicture.pages

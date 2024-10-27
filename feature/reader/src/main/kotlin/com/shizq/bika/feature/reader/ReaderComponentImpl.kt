@@ -13,12 +13,13 @@ import dagger.assisted.AssistedInject
 class ReaderComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted id: String,
+    @Assisted order: Int,
     private val network: BikaNetworkDataSource,
 ) : ReaderComponent,
     ComponentContext by componentContext {
     override val pictureFlow = Pager(
         PagingConfig(pageSize = 40),
-    ) { ReaderPagingSource(network, id) }
+    ) { ReaderPagingSource(network, id, order) }
         .flow
         .cachedIn(componentScope)
 
@@ -27,6 +28,7 @@ class ReaderComponentImpl @AssistedInject constructor(
         override fun invoke(
             componentContext: ComponentContext,
             id: String,
+            order: Int,
         ): ReaderComponentImpl
     }
 }

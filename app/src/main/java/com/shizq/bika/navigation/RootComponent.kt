@@ -22,7 +22,7 @@ interface RootComponent : ComponentContext {
     fun navigationToInterest()
     fun navigationToComicList(comics: Comics)
     fun navigationToComicInfo(id: String)
-    fun navigationToReader(id: String)
+    fun navigationToReader(id: String, order: Int)
     fun navigationToSearch(query: String?)
     fun navigationToRanking()
     fun navigationToComment()

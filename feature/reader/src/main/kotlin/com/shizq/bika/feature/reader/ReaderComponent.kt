@@ -12,6 +12,7 @@ interface ReaderComponent {
         operator fun invoke(
             componentContext: ComponentContext,
             id: String,
+            order: Int,
         ): ReaderComponent
     }
 }

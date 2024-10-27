@@ -1,6 +1,7 @@
 package com.shizq.bika.feature.comic.info
 
 import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.network.model.NetworkComicEp
 
 sealed interface ComicInfoUiState {
     data object Loading : ComicInfoUiState
@@ -16,6 +17,7 @@ sealed interface ComicInfoUiState {
         val updatedAt: String = "",
         val viewsCount: Int = 0,
         val comicResource: ComicResource,
+        val eps: List<List<NetworkComicEp.Eps.Doc>>,
     ) : ComicInfoUiState
 }
 
@@ -27,6 +29,7 @@ data class Creator(
     val name: String = "",
     val slogan: String = "",
     val title: String = "",
+    val id: String,
 )
 
 data class ToolItem(

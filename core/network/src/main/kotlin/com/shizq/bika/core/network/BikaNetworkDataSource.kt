@@ -9,12 +9,12 @@ import com.shizq.bika.core.network.model.NetworkComicInfo
 import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.NetworkComicRandom
 import com.shizq.bika.core.network.model.NetworkComicRecommend
+import com.shizq.bika.core.network.model.NetworkFirstRecommend
 import com.shizq.bika.core.network.model.NetworkInit
 import com.shizq.bika.core.network.model.NetworkKnight
 import com.shizq.bika.core.network.model.NetworkProfile
 import com.shizq.bika.core.network.model.NetworkPunchIn
 import com.shizq.bika.core.network.model.NetworkRankingDetail
-import com.shizq.bika.core.network.model.NetworkFirstRecommend
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.Sort
 import io.github.aakira.napier.Napier
@@ -25,6 +25,10 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.buildJsonObject
@@ -32,7 +36,10 @@ import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import javax.inject.Inject
 
-class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) {
+class BikaNetworkDataSource @Inject constructor(
+    private val client: HttpClient,
+    @Dispatcher(BikaDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+) {
     suspend fun networkInit(): NetworkInit = client.get("http://68.183.234.72/init").body()
 
     suspend fun signIn(username: String, password: String): NetworkToken =
@@ -135,21 +142,21 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
         Napier.d(tag = "comicComments") { text }
     }
 
-    suspend fun getComicAllEp(comicId: String, page: Int): List<NetworkComicEp.Eps.Doc> {
-        val comicEp = getComicEp(comicId, page)
-        when (comicEp.eps.pages) {
-            0 -> return comicEp.eps.docs
-            1 -> return comicEp.eps.docs
-            2 -> return getComicEp(comicId, page + 1).eps.docs + comicEp.eps.docs
-            else -> {
-                val result = mutableListOf<NetworkComicEp.Eps.Doc>()
-                for (i in 3..comicEp.eps.pages) {
-                    result += getComicEp(comicId, i).eps.docs
-                }
-                return result
+    suspend fun getComicAllEp(comicId: String): List<NetworkComicEp.Eps.Doc> =
+        withContext(ioDispatcher) {
+            val comicEp = getComicEp(comicId, 1)
+            val docs = comicEp.eps.docs
+            val pages = comicEp.eps.pages
+            val result = if (pages < 2) {
+                emptyList()
+            } else {
+                (2..pages).map { async { getComicEp(comicId, it) } }
+                    .awaitAll()
+                    .flatMap { it.eps.docs }
             }
+            Napier.d(tag = "getComicAllEp") { "page:${comicEp.eps.page} pages:${comicEp.eps.pages} eps:${docs.size}" }
+            comicEp.eps.docs + result
         }
-    }
 
     /**
      * 获取漫画章节

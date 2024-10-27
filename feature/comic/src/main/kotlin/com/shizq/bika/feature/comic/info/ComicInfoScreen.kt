@@ -8,22 +8,32 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
@@ -43,11 +53,12 @@ import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
+import com.webtoonscorp.android.readmore.material3.ReadMoreText
 
 @Composable
 fun ComicInfoScreen(
     component: ComicInfoComponent,
-    navigationToReader: (String) -> Unit,
+    navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
 ) {
     val uiState by component.comicInfoUiState.collectAsStateWithLifecycle()
@@ -65,7 +76,7 @@ fun ComicInfoScreen(
 @Composable
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
-    navigationToReader: (String) -> Unit,
+    navigationToReader: (String, Int) -> Unit,
     onClickTrigger: (ComicResource) -> Unit,
     onSwitchLike: () -> Unit,
     onSwitchFavorite: () -> Unit,
@@ -82,16 +93,8 @@ internal fun ComicInfoContent(
                         {},
                         navigationIcon = {},
                         actions = {
-                            IconButton(onSwitchFavorite) {
-                                Icon(
-                                    BikaIcons.Collections,
-                                    "收藏",
-                                    tint = if (uiState.toolItem.isFavourite) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.secondary
-                                    },
-                                )
+                            IconToggleButton(uiState.toolItem.isFavourite, { onSwitchFavorite() }) {
+                                Icon(BikaIcons.Collections, "收藏")
                             }
                         },
                     )
@@ -99,7 +102,7 @@ internal fun ComicInfoContent(
                 floatingActionButton = {
                     ExtendedFloatingActionButton(
                         onClick = {
-                            navigationToReader(uiState.comicResource.id)
+                            navigationToReader(uiState.comicResource.id, 1)
                             onClickTrigger(uiState.comicResource)
                         },
                         modifier = Modifier,
@@ -138,24 +141,32 @@ internal fun ComicInfoContent(
                         Creator(
                             uiState.creator,
                             uiState.updatedAt,
+                            navigationToComicList = navigationToComicList,
                             modifier = Modifier.padding(vertical = 8.dp),
                         )
                     }
                     item {
-                        Text(
+                        var expand by remember { mutableStateOf(false) }
+                        ReadMoreText(
                             uiState.description,
-                            modifier = Modifier.padding(vertical = 8.dp),
+                            expand,
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .clickable { expand = !expand },
                         )
                     }
                     item { Tags(uiState.tags) { navigationToComicList(Comics(tag = it)) } }
-                    item {
-                        // LazyVerticalGrid(GridCells.Fixed(4)) {
-                        //     items(300) {
-                        //         TextButton({}) {
-                        //             Text("第${it}话")
-                        //         }
-                        //     }
-                        // }
+                    items(uiState.eps) { docs ->
+                        Row {
+                            for (doc in docs) {
+                                TextButton(
+                                    { navigationToReader(uiState.comicResource.id, doc.order) },
+                                    Modifier.weight(1f),
+                                ) {
+                                    Text(doc.title)
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -244,13 +255,17 @@ internal fun Info(
                 author,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.clickable { navigationToComicList(Comics(author = author)) },
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .clickable { navigationToComicList(Comics(author = author)) },
             )
             Text(
                 translator,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.clickable { navigationToComicList(Comics(chineseTeam = translator)) },
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .clickable { navigationToComicList(Comics(chineseTeam = translator)) },
             )
             Text("绅士指名次数：$total")
             Text("分类：${categories.fastJoinToString(" ")}")
@@ -262,6 +277,7 @@ internal fun Info(
 private fun Creator(
     creator: Creator,
     updatedAt: String,
+    navigationToComicList: (Comics) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var show by remember { mutableStateOf(false) }
@@ -274,10 +290,7 @@ private fun Creator(
             creator.slogan,
         ) { show = false }
     }
-    ElevatedCard(
-        modifier = modifier,
-        onClick = { show = true },
-    ) {
+    ElevatedCard(modifier = modifier) {
         ListItem(
             leadingContent = {
                 DynamicAsyncImage(
@@ -285,11 +298,15 @@ private fun Creator(
                     "avatar",
                     modifier = Modifier
                         .size(48.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .clickable { show = true },
                 )
             },
             headlineContent = {
-                Text(creator.name)
+                Text(
+                    creator.name,
+                    modifier = Modifier.clickable { navigationToComicList(Comics(creatorId = creator.id)) },
+                )
             },
             supportingContent = {
                 Text(updatedAt)
@@ -302,7 +319,7 @@ private fun Creator(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun Tags(categories: List<String>, modifier: Modifier = Modifier, onClick: (String) -> Unit) {
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = modifier) {
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(4.dp), modifier = modifier) {
         categories.fastForEach {
             SuggestionChip(onClick = { onClick(it) }, label = { Text(it) })
         }

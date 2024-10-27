@@ -10,17 +10,14 @@ import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkComicInfo
-import com.shizq.bika.core.network.model.Thumb
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import io.github.aakira.napier.Napier
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flatMap
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
@@ -35,39 +32,15 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     ComponentContext by componentContext {
     private var hasClick by mutableStateOf(false)
 
-    init {
-        componentScope.launch {
-            network.getComicAllEp(comicId, 1)
-
-        }
-    }
-
-    val comicInfoUiState2 = snapshotFlow { hasClick to comicId }
-        .map { it.second }
-        .transform {
-            val args1 = flow { emit(network.getComicInfo(it)) }
-            val args2 = flow { emit(network.getComicAllEp(it, 1)) }
-            val args3 = flow { emit(network.getRecommend(it)) }
-            emit(Triple(args1, args2, args3))
-        }.asResult()
-        .flatMapConcat { result ->
-            when (result) {
-                is Result.Error -> TODO()
-                Result.Loading -> TODO()
-                is Result.Success -> {
-
-
-                }
-            }
-            flow { emit(Unit) }
-        }
     override val comicInfoUiState = snapshotFlow { hasClick to comicId }
         .map { it.second }
         .transform {
-            val args1 = network.getComicInfo(it)
-            val args2 = network.getComicAllEp(it, 1)
-            val args3 = network.getRecommend(it)
-            emit(Triple(args1, args2, args3))
+            coroutineScope {
+                val args1 = async { network.getComicInfo(it) }
+                val args2 = async { network.getComicAllEp(it) }
+                val args3 = async { network.getRecommend(it) }
+                emit(Triple(args1.await(), args2.await(), args3.await()))
+            }
         }
         .asResult()
         .map { result ->
@@ -77,6 +50,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                 is Result.Success -> {
                     val (info, eps, recommend) = result.data
                     val comic = info.comic
+
                     ComicInfoUiState.Success(
                         info.asToolItems(),
                         chineseTeam = comic.chineseTeam,
@@ -88,6 +62,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                         updatedAt = comic.updatedAt,
                         viewsCount = comic.viewsCount,
                         comicResource = info.asComicResource(),
+                        eps = eps.chunked(4)
                     )
                 }
             }
@@ -97,6 +72,11 @@ class ComicInfoComponentImpl @AssistedInject constructor(
             ComicInfoUiState.Loading,
         )
 
+    // "_id": "661135dce631de6a49b1c956",
+    // "title": "第9卷",
+    // "order": 9,
+    // "updated_at": "2024-04-05T12:15:34.920Z",
+    // "id": "661135dce631de6a49b1c956"
     override fun onClickTrigger(comicResource: ComicResource) {
         componentScope.launch {
             recentlyViewedComicRepository.insertOrReplaceRecentWatchedComic(comicResource)
@@ -167,5 +147,6 @@ fun NetworkComicInfo.asCreator(): Creator {
         name = creator.name,
         slogan = creator.slogan,
         title = creator.title,
+        creator.id,
     )
 }

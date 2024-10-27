@@ -73,7 +73,14 @@ class DefaultRootComponent @AssistedInject constructor(
                     comicInfoComponentFactory(componentContext, config.id),
                 )
 
-                is Config.Reader -> Reader(readerComponentFactory(componentContext, config.id))
+                is Config.Reader -> Reader(
+                    readerComponentFactory(
+                        componentContext,
+                        config.id,
+                        config.order,
+                    ),
+                )
+
                 is Config.Search -> Search(searchComponentFactory(componentContext, config.query))
                 is Config.Ranking -> Ranking(rankingComponentFactory(componentContext))
                 is Config.Comment -> Comment(commentComponentFactory(componentContext))
@@ -97,8 +104,8 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.ComicInfo(id))
     }
 
-    override fun navigationToReader(id: String) {
-        navigation.push(Config.Reader(id))
+    override fun navigationToReader(id: String, order: Int) {
+        navigation.push(Config.Reader(id, order))
     }
 
     override fun navigationToSearch(query: String?) {
@@ -139,13 +146,14 @@ class DefaultRootComponent @AssistedInject constructor(
         data class ComicInfo(val id: String) : Config
 
         @Serializable
-        data class Reader(val id: String) : Config
+        data class Reader(val id: String, val order: Int) : Config
 
         @Serializable
         data object Ranking : Config
 
         @Serializable
         data class Search(val query: String?) : Config
+
         @Serializable
         data object Comment : Config
     }
