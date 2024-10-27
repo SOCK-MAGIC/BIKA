@@ -1,6 +1,7 @@
 package com.shizq.bika.feature.comic.list
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -15,7 +16,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -28,10 +29,6 @@ class ComicListComponentImpl @AssistedInject constructor(
     compositeComicListRepository: CompositeComicListRepository,
 ) : ComicListComponent,
     ComponentContext by componentContext {
-    override var page = 0
-
-    override var pageMetadata by mutableStateOf<PagingMetadata?>(null)
-
     override val categoryVisibilityUiState = userInterests.userData.map { it.categoriesVisibility }
         .stateIn(
             componentScope,
@@ -39,14 +36,23 @@ class ComicListComponentImpl @AssistedInject constructor(
             emptyMap(),
         )
 
-    @OptIn(FlowPreview::class)
-    override val comicFlow = snapshotFlow { page }
-        .debounce(300)
-        .flatMapLatest {
-            compositeComicListRepository.getPagingFlowByCategories(comics) {
-                pageMetadata = it
+    override val comicFlow =
+        combine(
+            userInterests.userHideCategories,
+            SortState.flow,
+            PageMetaData.redirectedPageFlow,
+            ::Triple,
+        )
+            .flatMapLatest { (hide, sort, page) ->
+                compositeComicListRepository.getPagingFlowByCategories(
+                    comics,
+                    sort = sort,
+                    page = page,
+                    hide = hide,
+                ) {
+                    PageMetaData.pageMetadata = it
+                }
             }
-        }
 
     override fun updateCategoryState(name: String, state: Boolean) {
         componentScope.launch {

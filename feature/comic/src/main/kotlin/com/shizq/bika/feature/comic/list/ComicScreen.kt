@@ -36,7 +36,6 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.shizq.bika.core.data.model.PagingMetadata
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.ui.comicCardItems
 
@@ -59,8 +58,6 @@ fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -
         onActionSortDialogClick = { showSortDialog = true },
         categoryVisibilityUiState = categoryVisibilityUiState,
         onChangeCategoryState = component::updateCategoryState,
-        pageMetadata = component.pageMetadata,
-        setPage = { component.page = it },
     )
 }
 
@@ -68,17 +65,15 @@ fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -
 @Composable
 internal fun ComicContent(
     lazyPagingItems: LazyPagingItems<ComicResource>,
-    navigationToComicInfo: (String) -> Unit,
-    showSealCategoriesDialog: Boolean,
-    onDismissed: () -> Unit,
-    onTopAppBarActionClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    showSortDialog: Boolean,
-    onActionSortDialogClick: () -> Unit,
     categoryVisibilityUiState: Map<String, Boolean>,
+    showSealCategoriesDialog: Boolean,
+    showSortDialog: Boolean,
+    modifier: Modifier = Modifier,
+    onTopAppBarActionClick: () -> Unit,
+    onDismissed: () -> Unit,
+    onActionSortDialogClick: () -> Unit,
+    navigationToComicInfo: (String) -> Unit,
     onChangeCategoryState: (String, Boolean) -> Unit,
-    pageMetadata: PagingMetadata?,
-    setPage: (Int) -> Unit,
 ) {
     if (showSealCategoriesDialog) {
         SettingsDialog(categoryVisibilityUiState, onChangeCategoryState) { onDismissed() }
@@ -88,7 +83,9 @@ internal fun ComicContent(
     }
     var showTextFieldDialog by remember { mutableStateOf(false) }
     if (showTextFieldDialog) {
-        InputDialog({ showTextFieldDialog = false }) { setPage(it) }
+        InputDialog({ showTextFieldDialog = false }) {
+            PageMetaData.redirectedPage = it
+        }
     }
     Scaffold(
         topBar = {
@@ -101,6 +98,7 @@ internal fun ComicContent(
                     IconButton(onTopAppBarActionClick) {
                         Icon(Icons.Rounded.HideSource, "hide tag")
                     }
+                    val pageMetadata = PageMetaData.pageMetadata
                     if (pageMetadata != null) {
                         Text(
                             "${pageMetadata.currentPage} / ${pageMetadata.totalPages}",
@@ -120,8 +118,8 @@ internal fun ComicContent(
 }
 
 @Composable
-private fun InputDialog(onDismiss: () -> Unit, onPage: (Int) -> Unit) {
-    var index by remember { mutableIntStateOf(1) }
+private fun InputDialog(onDismiss: () -> Unit, onClick: (Int?) -> Unit) {
+    var index by remember { mutableStateOf<Int?>(null) }
     AlertDialog(
         onDismiss,
         properties = DialogProperties(usePlatformDefaultWidth = false),
@@ -134,7 +132,7 @@ private fun InputDialog(onDismiss: () -> Unit, onPage: (Int) -> Unit) {
                     .padding(horizontal = 8.dp)
                     .clickable {
                         onDismiss()
-                        onPage(index)
+                        onClick(index)
                     },
             )
         },
@@ -143,15 +141,17 @@ private fun InputDialog(onDismiss: () -> Unit, onPage: (Int) -> Unit) {
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 OutlinedTextField(
-                    index.toString(),
+                    index?.toString() ?: "",
                     {
-                        if (it.isDigitsOnly() && it.isNotBlank()) {
-                            index = it.toIntOrNull() ?: 1
+                        index = if (it.isDigitsOnly() && it.isNotBlank()) {
+                            it.toIntOrNull() ?: 1
+                        } else {
+                            null
                         }
                     },
                     modifier = Modifier.onKeyEvent {
                         if (it.key == Key.Enter) {
-                            onPage(index)
+                            onClick(index)
                             true
                         } else {
                             false
