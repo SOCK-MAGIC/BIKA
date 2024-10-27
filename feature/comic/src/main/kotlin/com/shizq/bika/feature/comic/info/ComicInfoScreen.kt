@@ -9,13 +9,11 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
@@ -39,13 +37,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
+import androidx.compose.ui.util.fastJoinToString
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
-import com.shizq.bika.core.network.model.NetworkComicInfo
-import kotlin.reflect.KFunction1
 
 @Composable
 fun ComicInfoScreen(
@@ -112,35 +109,54 @@ internal fun ComicInfoContent(
                 },
                 modifier = modifier,
             ) { innerPadding ->
-                Column(
+                LazyColumn(
                     modifier = Modifier
-                        .verticalScroll(state = rememberScrollState())
                         .padding(innerPadding)
-                        .padding(horizontal = 16.dp)
-                        .fillMaxSize(),
+                        .padding(horizontal = 16.dp),
                 ) {
-                    Info(
-                        uiState.comicResource.imageUrl,
-                        title = uiState.comicResource.title,
-                        author = uiState.comicResource.author,
-                        translator = uiState.chineseTeam,
-                        total = uiState.totalViews,
-                        modifier = Modifier,
-                    )
-                    ToolBar(
-                        uiState.toolItem,
-                        modifier = Modifier.padding(vertical = 8.dp),
-                        onSwitchLike,
-                        {},
-                    )
-                    Creator(
-                        uiState.creator,
-                        uiState.updatedAt,
-                        modifier = Modifier.padding(vertical = 8.dp),
-                    )
-                    Text(uiState.description, modifier = Modifier.padding(vertical = 8.dp))
-                    Tags(uiState.tags) { navigationToComicList(Comics(tag = it)) }
-                    Tags(uiState.comicResource.categories) { navigationToComicList(Comics(category = it)) }
+                    item {
+                        Info(
+                            uiState.comicResource.imageUrl,
+                            title = uiState.comicResource.title,
+                            author = uiState.comicResource.author,
+                            translator = uiState.chineseTeam,
+                            total = uiState.totalViews,
+                            uiState.comicResource.categories,
+                            navigationToComicList,
+                            modifier = Modifier,
+                        )
+                    }
+                    item {
+                        ToolBar(
+                            uiState.toolItem,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            onSwitchLike,
+                            {},
+                        )
+                    }
+                    item {
+                        Creator(
+                            uiState.creator,
+                            uiState.updatedAt,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        )
+                    }
+                    item {
+                        Text(
+                            uiState.description,
+                            modifier = Modifier.padding(vertical = 8.dp),
+                        )
+                    }
+                    item { Tags(uiState.tags) { navigationToComicList(Comics(tag = it)) } }
+                    item {
+                        // LazyVerticalGrid(GridCells.Fixed(4)) {
+                        //     items(300) {
+                        //         TextButton({}) {
+                        //             Text("第${it}话")
+                        //         }
+                        //     }
+                        // }
+                    }
                 }
             }
         }
@@ -212,6 +228,8 @@ internal fun Info(
     author: String,
     translator: String,
     total: Int,
+    categories: List<String>,
+    navigationToComicList: (Comics) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(modifier = modifier) {
@@ -226,13 +244,16 @@ internal fun Info(
                 author,
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.clickable { navigationToComicList(Comics(author = author)) },
             )
             Text(
                 translator,
                 color = MaterialTheme.colorScheme.secondary,
                 style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.clickable { navigationToComicList(Comics(chineseTeam = translator)) },
             )
-            Text(total.toString())
+            Text("绅士指名次数：$total")
+            Text("分类：${categories.fastJoinToString(" ")}")
         }
     }
 }

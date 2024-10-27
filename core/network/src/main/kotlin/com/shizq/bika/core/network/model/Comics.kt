@@ -8,4 +8,5 @@ data class Comics(
     val tag: String? = null,
     val creatorId: String? = null,
     val chineseTeam: String? = null,
+    val author: String? = null,
 )

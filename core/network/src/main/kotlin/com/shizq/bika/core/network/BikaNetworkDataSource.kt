@@ -53,6 +53,7 @@ class BikaNetworkDataSource @Inject constructor(private val client: HttpClient) 
         parameter("ca", comics?.creatorId)
         parameter("ct", comics?.chineseTeam)
         parameter("s", sort.value)
+        parameter("a", comics?.author)
         parameter("page", page)
     }.body()
 
