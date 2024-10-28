@@ -30,5 +30,5 @@ dependencies {
 
     implementation(libs.napier)
 
-    implementation("org.minidns:minidns-hla:1.0.5")
+    implementation("org.minidns:minidns-hla:1.1.1")
 }
