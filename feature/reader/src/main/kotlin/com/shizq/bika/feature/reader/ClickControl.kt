@@ -1,6 +1,8 @@
 package com.shizq.bika.feature.reader
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyListItemInfo
+import androidx.compose.foundation.lazy.LazyListPrefetchStrategy
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -28,13 +30,16 @@ internal fun rememberClickControl(scope: CoroutineScope = rememberCoroutineScope
     }
 }
 
+private const val NESTED_PREFETCH_ITEM_COUNT = 20
+
 @Stable
 internal class ClickControl(
     private val scope: CoroutineScope,
     private val width: Int,
     private val height: Int,
 ) {
-    val lazyListState = LazyListState()
+    @OptIn(ExperimentalFoundationApi::class)
+    val lazyListState = LazyListState(prefetchStrategy = LazyListPrefetchStrategy(NESTED_PREFETCH_ITEM_COUNT))
     private var scrollPosition = lazyListState.firstVisibleItemIndex
     private fun click(action: Action?) {
         scope.launch {
