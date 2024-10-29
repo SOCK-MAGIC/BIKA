@@ -10,6 +10,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -41,7 +44,20 @@ fun ReaderContent(
         Box(
             Modifier
                 .padding(innerPadding)
-                .fillMaxSize()
+                .onKeyEvent {
+                    when (it.key) {
+                        Key.VolumeUp -> {
+                            true
+                        }
+
+                        Key.VolumeDown -> {
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+                .fillMaxSize(),
         ) {
             LazyColumn(state = clickControl.lazyListState) {
                 items(lazyPagingItems.itemCount, key = { it }) { index ->
