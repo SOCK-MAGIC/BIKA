@@ -1,18 +1,28 @@
 package com.shizq.bika.core.designsystem.util
 
-import android.content.Context
-import android.util.Log
-import coil3.imageLoader
-import coil3.request.ImageRequest
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import coil3.compose.AsyncImage
 
-fun preLoading(context: Context, imageUrl: String) {
-    val request = ImageRequest.Builder(context)
-        .data(imageUrl)
-        .listener(
-            onStart = {
-                Log.d("preloading", imageUrl)
-            },
-        ) { _, _ -> }
-        .build()
-    context.imageLoader.enqueue(request)
+// rename
+@Composable
+fun PreLoading(
+    dataSize: Int,
+    dataGetter: (Int) -> String,
+    lazyListState: LazyListState,
+    modifier: Modifier = Modifier,
+) {
+    val preloadingData = rememberCoilPreloadingData(
+        dataSize,
+        dataGetter,
+    ) {
+        data(it).build()
+    }
+    LazyColumn(modifier, state = lazyListState) {
+        items(preloadingData.size, key = { it }) { index ->
+            AsyncImage(preloadingData[index].second, null, Modifier)
+        }
+    }
 }

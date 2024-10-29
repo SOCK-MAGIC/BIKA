@@ -3,18 +3,14 @@ package com.shizq.bika.feature.reader
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
-import com.shizq.bika.core.designsystem.util.preLoading
+import com.shizq.bika.core.designsystem.util.PreLoading
 import com.shizq.bika.core.model.Picture
 
 @Composable
@@ -39,23 +35,11 @@ fun ReaderContent(
             }
             .fillMaxSize(),
     ) { innerPadding ->
-        val context = LocalContext.current
-        LaunchedEffect(Unit) {
-            snapshotFlow { clickControl.lazyListState.lastItemIndex }
-                .collect { lastIndex ->
-                    if (lastIndex != null) {
-                        lazyPagingItems[lastIndex]?.let {
-                            preLoading(context, it.url)
-                        }
-                    }
-                }
-        }
-        LazyColumn(Modifier.padding(innerPadding), state = clickControl.lazyListState) {
-            items(lazyPagingItems.itemCount, key = { it }) { index ->
-                lazyPagingItems[index]?.let {
-                    DynamicAsyncImage(it.url, modifier = Modifier)
-                }
-            }
-        }
+        PreLoading(
+            lazyPagingItems.itemCount,
+            { lazyPagingItems[it]!!.url },
+            clickControl.lazyListState,
+            Modifier.padding(innerPadding),
+        )
     }
 }
