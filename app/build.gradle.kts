@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.bika.android.compose)
     alias(libs.plugins.bika.decompose)
     alias(libs.plugins.bika.hilt)
+    alias(libs.plugins.baselineprofile)
 }
 
 android {
@@ -31,12 +32,13 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("keyStore")
+            signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
-                "retrofit2.pro"
+                "retrofit2.pro",
             )
+            baselineProfile.automaticGenerationDuringBuild = true
         }
     }
     packaging {
@@ -127,9 +129,9 @@ dependencies {
     implementation(libs.androidx.compose.runtime.tracing)
     implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.lifecycle.viewModelCompose)
-//    implementation(libs.androidx.profileinstaller)
+    implementation(libs.androidx.profileinstaller)
     implementation(libs.androidx.tracing.ktx)
-//    implementation(libs.androidx.window.core)
+    implementation(libs.androidx.window.core)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.hilt.navigation.compose)
@@ -140,4 +142,19 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.okhttp)
     implementation(libs.coil.network)
+
+    baselineProfile(projects.benchmarks)
+}
+
+baselineProfile {
+    // Don't build on every iteration of a full assemble.
+    // Instead enable generation directly for the release build variant.
+    automaticGenerationDuringBuild = false
+
+    // Make use of Dex Layout Optimizations via Startup Profiles
+    dexLayoutOptimization = true
+}
+
+dependencyGuard {
+    configuration("releaseRuntimeClasspath")
 }
