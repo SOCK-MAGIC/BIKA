@@ -8,11 +8,8 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContent
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
@@ -155,6 +152,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
             is RootComponent.Child.Search -> SearchScreen(
                 component = child.component,
                 onBackClick = component::onBack,
+                navigationToComicInfo = component::navigationToComicInfo,
             )
 
             is RootComponent.Child.Comment -> CommentScreen(

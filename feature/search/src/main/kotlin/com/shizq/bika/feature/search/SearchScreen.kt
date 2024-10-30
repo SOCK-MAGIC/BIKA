@@ -41,7 +41,11 @@ import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
-fun SearchScreen(component: SearchComponent, onBackClick: () -> Unit) {
+fun SearchScreen(
+    component: SearchComponent,
+    onBackClick: () -> Unit,
+    navigationToComicInfo: (String) -> Unit,
+) {
     val recentSearchQueriesUiState by component.recentSearchQueriesUiState.collectAsStateWithLifecycle()
     val searchResultUiState = component.searchResultUiState.collectAsLazyPagingItems()
     val searchQuery by component.searchQuery.collectAsStateWithLifecycle()
@@ -53,6 +57,7 @@ fun SearchScreen(component: SearchComponent, onBackClick: () -> Unit) {
         onSearchQueryChanged = component::onSearchQueryChanged,
         onSearchTriggered = component::onSearchTriggered,
         onClearRecentSearches = {},
+        navigationToComicInfo = navigationToComicInfo,
         onBackClick = onBackClick,
     )
 }
@@ -66,6 +71,7 @@ fun SearchContent(
     onSearchTriggered: (String) -> Unit,
     onClearRecentSearches: () -> Unit,
     onBackClick: () -> Unit,
+    navigationToComicInfo: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier) {
@@ -77,8 +83,7 @@ fun SearchContent(
             searchQuery = searchQuery,
         )
         LazyColumn {
-            comicCardItems(searchResultUiState) {
-            }
+            comicCardItems(searchResultUiState, onComicClick = navigationToComicInfo)
         }
         Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.safeDrawing))
     }

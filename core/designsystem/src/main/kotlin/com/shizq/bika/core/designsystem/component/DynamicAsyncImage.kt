@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -26,7 +28,9 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Loading
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
+import coil3.imageLoader
 import coil3.request.ImageRequest
+import coil3.size.Precision
 import com.shizq.bika.core.designsystem.R
 import com.shizq.bika.core.designsystem.theme.LocalTintTheme
 
@@ -79,6 +83,36 @@ fun DynamicAsyncImage(
 }
 
 @Composable
+fun ComicReadingAsyncImage(
+    imageUrl: String,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+    val imageRequest = remember(context, imageUrl) {
+        ImageRequest.Builder(context)
+            .data(imageUrl)
+            .diskCacheKey(imageUrl.substringAfterLast("/"))
+            .precision(Precision.INEXACT)
+            .build()
+    }
+    LaunchedEffect(imageRequest) {
+        context.imageLoader.enqueue(imageRequest)
+    }
+    val imagePainter =
+        rememberAsyncImagePainter(
+            imageRequest,
+            context.imageLoader,
+            contentScale = ContentScale.Crop,
+        )
+    Image(
+        imagePainter,
+        contentDescription = null,
+        modifier = modifier,
+        contentScale = ContentScale.Crop,
+    )
+}
+
+@Composable
 fun DynamicAsyncImage(
     imageUrl: String,
     modifier: Modifier = Modifier,
@@ -87,6 +121,7 @@ fun DynamicAsyncImage(
         model = imageUrl,
         contentDescription = null,
         modifier = modifier,
+        contentScale = ContentScale.Crop,
     )
 }
 
