@@ -45,14 +45,12 @@ fun <T : Any> rememberCoilPreloadingData(
     data: List<T>,
     fixedVisibleItemCount: Int? = null,
     request: ImageRequest.Builder.(item: T) -> ImageRequest,
-): PreloadingData<T> {
-    return rememberCoilPreloadingData(
-        data.size,
-        data::get,
-        fixedVisibleItemCount,
-        request,
-    )
-}
+): PreloadingData<T> = rememberCoilPreloadingData(
+    data.size,
+    data::get,
+    fixedVisibleItemCount,
+    request,
+)
 
 public interface PreloadingData<DataT> {
     /** The total number of items in the data set. */
@@ -88,22 +86,16 @@ private data class PreloaderData<DataT>(
     val request: ImageRequest.Builder.(item: DataT) -> ImageRequest,
     val context: Context,
 ) {
-    fun preloadRequests(item: DataT): ImageRequest {
-        return ImageRequest.Builder(context).request(item)
-    }
+    fun preloadRequests(item: DataT): ImageRequest = ImageRequest.Builder(context).request(item)
 }
 
 private class PreloadModelProvider<DataT : Any>(
     private val data: PreloaderData<DataT>,
 ) : ListPreloader.PreloadModelProvider<DataT> {
 
-    override fun getPreloadItems(position: Int): MutableList<DataT> {
-        return mutableListOf(data.dataAccessor(position))
-    }
+    override fun getPreloadItems(position: Int): MutableList<DataT> = mutableListOf(data.dataAccessor(position))
 
-    override fun getPreloadRequest(item: DataT): ImageRequest {
-        return data.preloadRequests(item)
-    }
+    override fun getPreloadRequest(item: DataT): ImageRequest = data.preloadRequests(item)
 }
 
 /**

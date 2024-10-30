@@ -8,7 +8,7 @@ import com.shizq.bika.core.network.BikaNetworkDataSource
 class ReaderPagingSource(
     private val network: BikaNetworkDataSource,
     private val id: String,
-    private val order:Int
+    private val order: Int,
 ) : PagingSource<Int, Picture>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Picture> {

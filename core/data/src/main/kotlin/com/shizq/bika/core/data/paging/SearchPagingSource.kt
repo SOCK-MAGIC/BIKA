@@ -6,7 +6,6 @@ import com.shizq.bika.core.data.util.asComicResource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.Sort
-import dagger.assisted.Assisted
 
 class SearchPagingSource(
     private val network: BikaNetworkDataSource,
@@ -43,5 +42,4 @@ var LoadResult<Int, ComicResource>.v: String
         return ""
     }
     set(value) {
-
     }

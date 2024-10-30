@@ -8,7 +8,6 @@ import com.shizq.bika.core.network.model.Sort
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import javax.inject.Inject
 
 class FavouritePagingSource @AssistedInject constructor(
     private val network: BikaNetworkDataSource,

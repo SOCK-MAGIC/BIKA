@@ -29,12 +29,10 @@ class RecentlyViewedComicRepository @Inject constructor(
         )
     }
 
-    fun getRecentWatchedComicQueries(): PagingSource<Int, ComicResource> {
-        return MappingPagingSource(
-            originalSource = recentSearchQueryDao.getRecentViewedQueryEntities(),
-            mapper = { it.asExternalModel() },
-        )
-    }
+    fun getRecentWatchedComicQueries(): PagingSource<Int, ComicResource> = MappingPagingSource(
+        originalSource = recentSearchQueryDao.getRecentViewedQueryEntities(),
+        mapper = { it.asExternalModel() },
+    )
 
     suspend fun clearRecentWatchedComic() = recentSearchQueryDao.clearRecentSearchQueries()
 }

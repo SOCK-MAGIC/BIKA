@@ -51,13 +51,13 @@ internal class ClickControl(
                 Action.MENU -> Unit
                 Action.PREV -> {
                     if (lazyListState.canScrollBackward) {
-                        lazyListState.animateScrollToItem(scrollPosition-1)
+                        lazyListState.animateScrollToItem(scrollPosition - 1)
                     }
                 }
 
                 Action.NEXT -> {
                     if (lazyListState.canScrollForward) {
-                        lazyListState.animateScrollToItem(scrollPosition+1)
+                        lazyListState.animateScrollToItem(scrollPosition + 1)
                     }
                 }
 

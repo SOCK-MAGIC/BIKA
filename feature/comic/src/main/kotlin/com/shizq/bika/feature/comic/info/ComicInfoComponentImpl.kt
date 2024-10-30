@@ -62,7 +62,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                         updatedAt = comic.updatedAt,
                         viewsCount = comic.viewsCount,
                         comicResource = info.asComicResource(),
-                        eps = eps.chunked(4)
+                        eps = eps.chunked(4),
                     )
                 }
             }
@@ -106,32 +106,28 @@ class ComicInfoComponentImpl @AssistedInject constructor(
     }
 }
 
-fun NetworkComicInfo.asToolItems(): ToolItem {
-    return ToolItem(
-        allowComment = comic.allowComment,
-        allowDownload = comic.allowDownload,
-        commentsCount = comic.commentsCount,
-        isFavourite = comic.isFavourite,
-        isLiked = comic.isLiked,
-        totalLikes = comic.totalLikes,
-        pagesCount = comic.pagesCount,
-        epsCount = comic.epsCount,
-    )
-}
+fun NetworkComicInfo.asToolItems(): ToolItem = ToolItem(
+    allowComment = comic.allowComment,
+    allowDownload = comic.allowDownload,
+    commentsCount = comic.commentsCount,
+    isFavourite = comic.isFavourite,
+    isLiked = comic.isLiked,
+    totalLikes = comic.totalLikes,
+    pagesCount = comic.pagesCount,
+    epsCount = comic.epsCount,
+)
 
-fun NetworkComicInfo.asComicResource(): ComicResource {
-    return ComicResource(
-        comic.id,
-        comic.thumb.imageUrl,
-        comic.title,
-        comic.author,
-        comic.categories,
-        comic.finished,
-        comic.epsCount,
-        comic.pagesCount,
-        comic.likesCount,
-    )
-}
+fun NetworkComicInfo.asComicResource(): ComicResource = ComicResource(
+    comic.id,
+    comic.thumb.imageUrl,
+    comic.title,
+    comic.author,
+    comic.categories,
+    comic.finished,
+    comic.epsCount,
+    comic.pagesCount,
+    comic.likesCount,
+)
 
 fun NetworkComicInfo.asCreator(): Creator {
     val creator = comic.creator

@@ -44,7 +44,7 @@ class CompositeComicListRepository @Inject constructor(
                     sort = sort,
                     comics = comics,
                     pagingMetadata = pagingMetadata,
-                    page = page
+                    page = page,
                 )
             }
         }.flow

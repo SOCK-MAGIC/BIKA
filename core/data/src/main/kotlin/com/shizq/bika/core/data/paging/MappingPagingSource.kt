@@ -8,27 +8,23 @@ internal class MappingPagingSource<Key : Any, Value : Any, MappedValue : Any>(
     private val mapper: (Value) -> MappedValue,
 ) : PagingSource<Key, MappedValue>() {
 
-    override fun getRefreshKey(state: PagingState<Key, MappedValue>): Key? {
-        return originalSource.getRefreshKey(
-            PagingState(
-                pages = emptyList(),
-                leadingPlaceholderCount = 0,
-                anchorPosition = state.anchorPosition,
-                config = state.config,
-            )
-        )
-    }
+    override fun getRefreshKey(state: PagingState<Key, MappedValue>): Key? = originalSource.getRefreshKey(
+        PagingState(
+            pages = emptyList(),
+            leadingPlaceholderCount = 0,
+            anchorPosition = state.anchorPosition,
+            config = state.config,
+        ),
+    )
 
-    override suspend fun load(params: LoadParams<Key>): LoadResult<Key, MappedValue> {
-        return when (val originalResult = originalSource.load(params)) {
-            is LoadResult.Error -> LoadResult.Error(originalResult.throwable)
-            is LoadResult.Invalid -> LoadResult.Invalid()
-            is LoadResult.Page -> LoadResult.Page(
-                data = originalResult.data.map(mapper),
-                prevKey = originalResult.prevKey,
-                nextKey = originalResult.nextKey,
-            )
-        }
+    override suspend fun load(params: LoadParams<Key>): LoadResult<Key, MappedValue> = when (val originalResult = originalSource.load(params)) {
+        is LoadResult.Error -> LoadResult.Error(originalResult.throwable)
+        is LoadResult.Invalid -> LoadResult.Invalid()
+        is LoadResult.Page -> LoadResult.Page(
+            data = originalResult.data.map(mapper),
+            prevKey = originalResult.prevKey,
+            nextKey = originalResult.nextKey,
+        )
     }
 
     override val jumpingSupported: Boolean
