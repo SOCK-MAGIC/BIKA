@@ -6,6 +6,7 @@ interface CommentComponent {
     interface Factory {
         operator fun invoke(
             componentContext: ComponentContext,
+            comicId: String,
         ): CommentComponent
     }
 }

@@ -25,7 +25,7 @@ interface RootComponent : ComponentContext {
     fun navigationToReader(id: String, order: Int)
     fun navigationToSearch(query: String?)
     fun navigationToRanking()
-    fun navigationToComment()
+    fun navigationToComment(id: String)
     fun onBack()
     fun setDrawerState(isOpen: Boolean)
     sealed class Child {

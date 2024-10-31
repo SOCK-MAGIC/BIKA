@@ -62,19 +62,14 @@ private fun KKK() {
             ) {
                 Text("#120 / 昨天 00:39")
                 Spacer(Modifier.weight(1f))
-                Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-                    Text("1200")
-                    Icon(BikaIcons.Favorite, "点赞", modifier = Modifier)
-                }
-                Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-                    Text("1200")
-                    Icon(BikaIcons.Favorite, "点赞", modifier = Modifier)
-                }
+                Text("1200")
+                Icon(BikaIcons.Favorite, "点赞", modifier = Modifier)
+                Text("1200")
+                Icon(BikaIcons.Favorite, "点赞", modifier = Modifier)
             }
         }
     }
 }
-
 
 @Preview
 @Composable

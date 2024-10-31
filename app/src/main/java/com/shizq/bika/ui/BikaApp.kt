@@ -116,8 +116,10 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
             is RootComponent.Child.SignIn -> SignInScreen(
                 component = child.component,
-                component::navigationToInterest,
-            )
+            ) {
+                component.onBack()
+                component.navigationToInterest()
+            }
 
             is RootComponent.Child.Interest -> InterestScreen(
                 component = child.component,
@@ -138,6 +140,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 component = child.component,
                 navigationToReader = component::navigationToReader,
                 navigationToComicList = component::navigationToComicList,
+                navigationToComment = component::navigationToComment
             )
 
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)

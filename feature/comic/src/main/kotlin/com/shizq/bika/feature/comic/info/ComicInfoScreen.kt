@@ -52,6 +52,7 @@ fun ComicInfoScreen(
     component: ComicInfoComponent,
     navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
+    navigationToComment: (String) -> Unit,
 ) {
     val uiState by component.comicInfoUiState.collectAsStateWithLifecycle()
     ComicInfoContent(
@@ -61,6 +62,7 @@ fun ComicInfoScreen(
         onSwitchLike = component::onSwitchLike,
         onSwitchFavorite = component::onSwitchFavorite,
         navigationToComicList = navigationToComicList,
+        navigationToComment= navigationToComment
     )
 }
 
@@ -73,6 +75,7 @@ internal fun ComicInfoContent(
     onSwitchLike: () -> Unit,
     onSwitchFavorite: () -> Unit,
     navigationToComicList: (Comics) -> Unit,
+    navigationToComment:(String)->Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -126,7 +129,7 @@ internal fun ComicInfoContent(
                             uiState.toolItem,
                             modifier = Modifier.padding(vertical = 8.dp),
                             onSwitchLike,
-                            {},
+                            { navigationToComment(uiState.comicResource.id) },
                         )
                     }
                     item {

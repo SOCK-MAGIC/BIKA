@@ -7,7 +7,6 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.shizq.bika.core.network.model.Comics
@@ -83,7 +82,7 @@ class DefaultRootComponent @AssistedInject constructor(
 
                 is Config.Search -> Search(searchComponentFactory(componentContext, config.query))
                 is Config.Ranking -> Ranking(rankingComponentFactory(componentContext))
-                is Config.Comment -> Comment(commentComponentFactory(componentContext))
+                is Config.Comment -> Comment(commentComponentFactory(componentContext, config.id))
             }
         }
 
@@ -92,7 +91,7 @@ class DefaultRootComponent @AssistedInject constructor(
     }
 
     override fun navigationToInterest() {
-        navigation.popTo(0)
+        navigation.pop { }
         navigation.push(Config.Interest)
     }
 
@@ -116,8 +115,8 @@ class DefaultRootComponent @AssistedInject constructor(
         navigation.push(Config.Ranking)
     }
 
-    override fun navigationToComment() {
-        navigation.push(Config.Comment)
+    override fun navigationToComment(id: String) {
+        navigation.push(Config.Comment(id))
     }
 
     override fun onBack() {
@@ -155,7 +154,7 @@ class DefaultRootComponent @AssistedInject constructor(
         data class Search(val query: String?) : Config
 
         @Serializable
-        data object Comment : Config
+        data class Comment(val id: String) : Config
     }
 
     @AssistedFactory

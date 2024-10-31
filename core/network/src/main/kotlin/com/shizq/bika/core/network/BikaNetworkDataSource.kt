@@ -9,6 +9,7 @@ import com.shizq.bika.core.network.model.NetworkComicInfo
 import com.shizq.bika.core.network.model.NetworkComicList
 import com.shizq.bika.core.network.model.NetworkComicRandom
 import com.shizq.bika.core.network.model.NetworkComicRecommend
+import com.shizq.bika.core.network.model.NetworkComment
 import com.shizq.bika.core.network.model.NetworkFirstRecommend
 import com.shizq.bika.core.network.model.NetworkInit
 import com.shizq.bika.core.network.model.NetworkKnight
@@ -18,7 +19,6 @@ import com.shizq.bika.core.network.model.NetworkRankingDetail
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.NetworkUserProfile
 import com.shizq.bika.core.network.model.Sort
-import com.shizq.bika.core.network.model.Thumb
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -37,10 +37,6 @@ import kotlinx.serialization.json.buildJsonObject
 import kotlinx.serialization.json.put
 import kotlinx.serialization.json.putJsonArray
 import javax.inject.Inject
-import kotlinx.serialization.Serializable
-
-import kotlinx.serialization.SerialName
-
 
 class BikaNetworkDataSource @Inject constructor(
     private val client: HttpClient,
@@ -178,5 +174,15 @@ class BikaNetworkDataSource @Inject constructor(
     }
 
     suspend fun getUserProfile(): NetworkUserProfile = client.get("users/profile").body()
-}
 
+    suspend fun getComments(comicId: String, page: Int): NetworkComment =
+        client.get("comics/$comicId/comments") {
+            parameter("page", page)
+        }.body()
+
+    suspend fun getChildrenComments(commentId: String, page: Int) {
+        client.get("comments/$commentId/childrens") {
+            parameter("page", page)
+        }.bodyAsText()
+    }
+}

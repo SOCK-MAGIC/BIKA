@@ -35,11 +35,3 @@ class SearchPagingSource(
         }
     }
 }
-
-var LoadResult<Int, ComicResource>.v: String
-    get() {
-
-        return ""
-    }
-    set(value) {
-    }
