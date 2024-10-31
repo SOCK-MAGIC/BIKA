@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -65,20 +64,18 @@ private fun KKK() {
                 Spacer(Modifier.weight(1f))
                 Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
                     Text("1200")
-                    IconToggleButton(true, {}) {
-                        Icon(BikaIcons.Favorite, "点赞")
-                    }
+                    Icon(BikaIcons.Favorite, "点赞", modifier = Modifier)
                 }
                 Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
                     Text("1200")
-                    IconToggleButton(false, {}) {
-                        Icon(BikaIcons.Favorite, "点赞")
-                    }
+                    Icon(BikaIcons.Favorite, "点赞", modifier = Modifier)
                 }
             }
         }
     }
 }
+}
+
 
 @Preview
 @Composable
