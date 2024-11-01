@@ -6,6 +6,7 @@ import coil3.ImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
+import coil3.request.allowConversionToBitmap
 import coil3.serviceLoaderEnabled
 import coil3.util.DebugLogger
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
@@ -109,7 +110,6 @@ internal class NetworkModule {
         @ApplicationContext application: Context,
     ): ImageLoader = trace("BikaImageLoader") {
         ImageLoader.Builder(application)
-            .serviceLoaderEnabled(false)
             .components {
                 add(MergeRequestInterceptor())
                 add(
