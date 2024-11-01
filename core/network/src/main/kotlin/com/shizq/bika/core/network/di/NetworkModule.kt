@@ -6,8 +6,7 @@ import coil3.ImageLoader
 import coil3.disk.DiskCache
 import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
-import coil3.request.allowConversionToBitmap
-import coil3.serviceLoaderEnabled
+import coil3.size.Precision
 import coil3.util.DebugLogger
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.network.BikaDispatchers
@@ -120,6 +119,7 @@ internal class NetworkModule {
                     ),
                 )
             }
+            .precision(Precision.INEXACT)
             .diskCache {
                 DiskCache.Builder()
                     .directory(application.cacheDir.resolve("coil-cache"))
