@@ -1,7 +1,7 @@
 package com.shizq.bika.feature.comment
 
 import com.arkivanov.decompose.ComponentContext
-import com.shizq.bika.core.data.model.Comments
+import com.shizq.bika.core.data.model.Comment
 import kotlinx.coroutines.flow.Flow
 
 interface CommentComponent {
@@ -12,5 +12,5 @@ interface CommentComponent {
         ): CommentComponent
     }
 
-    val pagingDataFlow: Flow<androidx.paging.PagingData<Comments>>
+    val pagingDataFlow: Flow<androidx.paging.PagingData<Comment>>
 }

@@ -2,7 +2,7 @@ package com.shizq.bika.core.data.model
 
 import com.shizq.bika.core.network.model.NetworkComment
 
-data class Comments(
+data class Comment(
     val id: String,
     val comicId: String,
     val content: String,
@@ -12,7 +12,7 @@ data class Comments(
     val isLike: Boolean,
 )
 
-internal fun NetworkComment.Comments.Doc.asComment() = Comments(
+internal fun NetworkComment.Comments.Doc.asComment() = Comment(
     id = id,
     comicId = comic,
     content = content,
@@ -22,4 +22,4 @@ internal fun NetworkComment.Comments.Doc.asComment() = Comments(
     isLike = isLiked,
 )
 
-internal fun NetworkComment.asCommentList(): List<Comments> = comments.docs.map { it.asComment() } + topComments.map { it.asComment() }
+internal fun NetworkComment.asCommentList(): List<Comment> = comments.docs.map { it.asComment() } + topComments.map { it.asComment() }
