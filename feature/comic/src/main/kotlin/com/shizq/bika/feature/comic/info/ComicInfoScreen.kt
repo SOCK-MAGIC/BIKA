@@ -1,6 +1,7 @@
 package com.shizq.bika.feature.comic.info
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -146,8 +148,12 @@ internal fun ComicInfoContent(
                             uiState.description,
                             expand,
                             modifier = Modifier
+                                .fillMaxWidth()
                                 .padding(vertical = 8.dp)
-                                .clickable { expand = !expand },
+                                .clickable(
+                                    indication = null,
+                                    interactionSource = MutableInteractionSource(),
+                                ) { expand = !expand },
                         )
                     }
                     item { Tags(uiState.tags) { navigationToComicList(Comics(tag = it)) } }

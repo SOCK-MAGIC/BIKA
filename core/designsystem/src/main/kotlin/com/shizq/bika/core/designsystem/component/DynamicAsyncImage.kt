@@ -131,13 +131,14 @@ fun AvatarAsyncImage(
     avatarBorderUrl: String,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier.size(64.dp), contentAlignment = Alignment.Center) {
+    Box(modifier.size(80.dp), contentAlignment = Alignment.Center) {
         AsyncImage(
             avatarUrl,
             "Avatar",
             modifier = Modifier
-                .size(48.dp)
+                .fillMaxSize()
                 .clip(CircleShape),
+            contentScale = ContentScale.Crop
         )
         AsyncImage(
             avatarBorderUrl,
