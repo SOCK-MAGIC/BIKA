@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class CommentListRepository @Inject constructor(
     @ApplicationScope private val scope: CoroutineScope,
-    private val commentListPagingSourceFactory: CommentListPagingSource.Factory
+    private val commentListPagingSourceFactory: CommentListPagingSource.Factory,
 ) {
     operator fun invoke(comicId: String): Flow<PagingData<Comments>> =
         Pager(PagingConfig(20), 1) {

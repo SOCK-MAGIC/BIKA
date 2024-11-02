@@ -62,7 +62,7 @@ fun ComicInfoScreen(
         onSwitchLike = component::onSwitchLike,
         onSwitchFavorite = component::onSwitchFavorite,
         navigationToComicList = navigationToComicList,
-        navigationToComment= navigationToComment
+        navigationToComment = navigationToComment,
     )
 }
 
@@ -75,7 +75,7 @@ internal fun ComicInfoContent(
     onSwitchLike: () -> Unit,
     onSwitchFavorite: () -> Unit,
     navigationToComicList: (Comics) -> Unit,
-    navigationToComment:(String)->Unit,
+    navigationToComment: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {

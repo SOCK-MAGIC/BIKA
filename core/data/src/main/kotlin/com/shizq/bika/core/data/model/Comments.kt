@@ -22,6 +22,4 @@ internal fun NetworkComment.Comments.Doc.asComment() = Comments(
     isLike = isLiked,
 )
 
-internal fun NetworkComment.asCommentList(): List<Comments> {
-    return comments.docs.map { it.asComment() } + topComments.map { it.asComment() }
-}
+internal fun NetworkComment.asCommentList(): List<Comments> = comments.docs.map { it.asComment() } + topComments.map { it.asComment() }

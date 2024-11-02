@@ -17,7 +17,6 @@ class CommentComponentImpl @AssistedInject constructor(
 ) : CommentComponent,
     ComponentContext by componentContext {
 
-
     // "_id": "62b5d7b39612083487422cb6",
     // content": "550w贺电",
     // user": {
@@ -52,7 +51,8 @@ class CommentComponentImpl @AssistedInject constructor(
             network.getComments(comicId, 1)
         }
     }
- override  val pagingDataFlow = commentListRepository(comicId)
+    override val pagingDataFlow = commentListRepository(comicId)
+
     @AssistedFactory
     interface Factory : CommentComponent.Factory {
         override fun invoke(
