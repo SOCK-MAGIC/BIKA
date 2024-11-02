@@ -2,6 +2,7 @@ package com.shizq.bika.feature.comment
 
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
+import com.shizq.bika.core.data.repository.CommentListRepository
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -12,10 +13,13 @@ class CommentComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted comicId: String,
     private val network: BikaNetworkDataSource,
+    private val commentListRepository: CommentListRepository,
 ) : CommentComponent,
     ComponentContext by componentContext {
+
+
     // "_id": "62b5d7b39612083487422cb6",
-    // ontent": "550w贺电",
+    // content": "550w贺电",
     // user": {
     // "_id": "5b695cd52c04e24caad1a74e",
     // "gender": "m",
@@ -48,7 +52,7 @@ class CommentComponentImpl @AssistedInject constructor(
             network.getComments(comicId, 1)
         }
     }
-
+ override  val pagingDataFlow = commentListRepository(comicId)
     @AssistedFactory
     interface Factory : CommentComponent.Factory {
         override fun invoke(

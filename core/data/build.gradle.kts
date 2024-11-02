@@ -14,5 +14,5 @@ dependencies {
     api(projects.core.datastore)
     api(projects.core.network)
 
-    implementation(libs.androidx.paging.runtime)
+    api(libs.androidx.paging.runtime)
 }
