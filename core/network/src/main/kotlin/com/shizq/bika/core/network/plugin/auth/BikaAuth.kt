@@ -1,4 +1,4 @@
-package com.shizq.bika.core.network.plugin
+package com.shizq.bika.core.network.plugin.auth
 
 import com.shizq.bika.core.network.util.API_KEY
 import com.shizq.bika.core.network.util.DIGEST_KEY
@@ -38,7 +38,6 @@ public class BikaAuthConfig {
 val BikaAuth = createClientPlugin("BikaRequestSignature", ::BikaAuthConfig) {
     val credentials = pluginConfig._credentials
     onRequest { request, _ ->
-        if (request.url.encodedPathSegments.contains("init")) return@onRequest
         val parameter = request.url.toString().replace(PICA_API, "")
         val time = (System.currentTimeMillis() / 1000).toString()
         val nonce = UUID.randomUUID().toString().replace("-", "")

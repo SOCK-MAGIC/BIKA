@@ -20,6 +20,7 @@ import com.shizq.bika.core.network.model.NetworkRankingDetail
 import com.shizq.bika.core.network.model.NetworkToken
 import com.shizq.bika.core.network.model.NetworkUserProfile
 import com.shizq.bika.core.network.model.Sort
+import com.shizq.bika.core.network.plugin.contentunboxing.SkipContentUnboxing
 import io.github.aakira.napier.Napier
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -43,7 +44,9 @@ class BikaNetworkDataSource @Inject constructor(
     private val client: HttpClient,
     @Dispatcher(BikaDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) {
-    suspend fun networkInit(): NetworkInit = client.get("http://68.183.234.72/init").body()
+    suspend fun networkInit(): NetworkInit = client.get("http://68.183.234.72/init") {
+        attributes.put(SkipContentUnboxing, true)
+    }.body()
 
     suspend fun signIn(username: String, password: String): NetworkToken =
         client.post("auth/sign-in") {

@@ -1,4 +1,4 @@
-package com.shizq.bika.core.network.config
+package com.shizq.bika.core.network.coil
 
 import android.net.Uri
 import android.webkit.URLUtil
@@ -67,7 +67,6 @@ class MergeRequestInterceptor(
         }
     }
 }
-
 private fun ImageRequest.isNetUrlRequest(): Boolean {
     val data = data
     if (data is Uri) {

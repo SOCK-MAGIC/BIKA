@@ -13,10 +13,11 @@ import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
-import com.shizq.bika.core.network.config.BikaClientPlugin
-import com.shizq.bika.core.network.config.MergeRequestInterceptor
-import com.shizq.bika.core.network.plugin.BikaAuth
-import com.shizq.bika.core.network.plugin.BikaAuthCredentials
+import com.shizq.bika.core.network.plugin.contentunboxing.ContentUnboxing
+import com.shizq.bika.core.network.coil.MergeRequestInterceptor
+import com.shizq.bika.core.network.data.HttpResponseMonitor
+import com.shizq.bika.core.network.plugin.auth.BikaAuth
+import com.shizq.bika.core.network.plugin.auth.BikaAuthCredentials
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy
@@ -41,6 +42,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.Dns
@@ -67,12 +69,14 @@ internal class NetworkModule {
             .build()
     }
 
+    @OptIn(ExperimentalSerializationApi::class)
     @Singleton
     @Provides
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
         bikaUserCredentialDataSource: BikaUserCredentialDataSource,
+        httpResponseMonitor: HttpResponseMonitor,
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -83,8 +87,10 @@ internal class NetworkModule {
                 userAgent("okhttp/3.8.1")
                 contentType(ContentType.parse("application/json; charset=UTF-8"))
             }
-            install(BikaClientPlugin) {
-                transform = json
+            install(ContentUnboxing) {
+                transform { response, content, requestedType ->
+                    httpResponseMonitor.transform(response, content, requestedType)
+                }
             }
             install(ContentNegotiation) {
                 json(json)
