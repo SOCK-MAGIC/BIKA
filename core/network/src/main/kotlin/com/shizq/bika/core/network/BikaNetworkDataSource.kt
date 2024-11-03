@@ -1,5 +1,6 @@
 package com.shizq.bika.core.network
 
+import com.shizq.bika.core.network.model.ChildComment
 import com.shizq.bika.core.network.model.ComicInSearch
 import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.core.network.model.NetworkCategories
@@ -180,9 +181,8 @@ class BikaNetworkDataSource @Inject constructor(
             parameter("page", page)
         }.body()
 
-    suspend fun getChildrenComments(commentId: String, page: Int) {
+    suspend fun getChildrenComments(commentId: String, page: Int): ChildComment =
         client.get("comments/$commentId/childrens") {
             parameter("page", page)
-        }.bodyAsText()
-    }
+        }.body()
 }

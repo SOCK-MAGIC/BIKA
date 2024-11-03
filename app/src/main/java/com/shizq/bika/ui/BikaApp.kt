@@ -160,6 +160,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
             is RootComponent.Child.Comment -> CommentScreen(
                 component = child.component,
+                onBackClick = component::onBack,
             )
         }
     }

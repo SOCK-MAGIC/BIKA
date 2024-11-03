@@ -1,10 +1,11 @@
 package com.shizq.bika.core.data.model
 
+import com.shizq.bika.core.network.model.ChildComment
+import com.shizq.bika.core.network.model.CommentDoc
 import com.shizq.bika.core.network.model.NetworkComment
 import kotlinx.datetime.Instant
 import kotlinx.datetime.format
 import kotlinx.datetime.format.DateTimeComponents
-import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 
 data class Comment(
@@ -32,7 +33,7 @@ data class User(
     val title: String,
 )
 
-internal fun NetworkComment.Comments.Doc.asComment() = Comment(
+internal fun CommentDoc.asComment() = Comment(
     id = id,
     comicId = comic,
     content = content,
@@ -55,8 +56,16 @@ internal fun NetworkComment.Comments.Doc.asComment() = Comment(
     ),
 )
 
-internal fun NetworkComment.asCommentList(): List<Comment> =
-    topComments.map { it.asComment() } + comments.docs.map { it.asComment() }
+internal fun NetworkComment.asCommentList(): List<Comment> {
+    val top = if (comments.page == "1") {
+        topComments.map { top -> top.asComment() }
+    } else {
+        emptyList()
+    }
+    return top + comments.docs.map { it.asComment() }
+}
+
+internal fun ChildComment.asCommentList(): List<Comment> = comments.docs.map { it.asComment() }
 
 private val dateFormat = DateTimeComponents.Format {
     year()
@@ -66,7 +75,7 @@ private val dateFormat = DateTimeComponents.Format {
     dayOfMonth()
     chars("日")
     char(' ')
-    hour(Padding.SPACE)
+    hour()
     char(':')
     minute()
 }
