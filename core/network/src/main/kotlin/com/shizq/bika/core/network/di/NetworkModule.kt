@@ -9,11 +9,13 @@ import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.size.Precision
 import coil3.util.DebugLogger
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.MergeRequestInterceptor
+import com.shizq.bika.core.network.plugin.BikaSignature
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy
@@ -72,7 +74,7 @@ internal class NetworkModule {
     fun provideHttpClient(
         json: Json,
         okHttpClient: OkHttpClient,
-        bikaPlugin1: ClientPlugin<RequestSignatureConfig>,
+        bikaUserCredentialDataSource: BikaUserCredentialDataSource,
     ): HttpClient = trace("BikaHttpClient") {
         HttpClient(OkHttp) {
             engine {
@@ -97,7 +99,9 @@ internal class NetworkModule {
                 level = LogLevel.ALL
                 logger = Logger.ANDROID
             }
-            install(bikaPlugin1)
+            install(BikaSignature){
+                // token = bikaUserCredentialDataSource.userData.first().toString()
+            }
         }
     }
 
