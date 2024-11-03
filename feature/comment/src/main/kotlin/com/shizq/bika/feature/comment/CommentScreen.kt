@@ -110,7 +110,7 @@ internal fun CommentContent(
         Box(
             Modifier
                 .fillMaxSize()
-                .systemBarsPadding()
+                .systemBarsPadding(),
         ) {
             LazyColumn(contentPadding = PaddingValues(bottom = TextFieldDefaults.MinHeight)) {
                 items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id }) { index ->

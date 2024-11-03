@@ -1,7 +1,6 @@
 package com.shizq.bika.core.network.di
 
 import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
-import com.shizq.bika.core.network.model.RequestSignatureConfig
 import com.shizq.bika.core.network.util.API_KEY
 import com.shizq.bika.core.network.util.DIGEST_KEY
 import com.shizq.bika.core.network.util.PICA_API

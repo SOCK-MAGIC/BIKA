@@ -25,7 +25,7 @@ data class NetworkComicInfo(
         @SerialName("created_at")
         val createdAt: String = "",
         @SerialName("_creator")
-        val creator: Creator = Creator(),
+        val creator: User = User(),
         @SerialName("description")
         val description: String = "",
         @SerialName("epsCount")
@@ -56,31 +56,5 @@ data class NetworkComicInfo(
         val updatedAt: String = "",
         @SerialName("viewsCount")
         val viewsCount: Int = 0
-    ) {
-        @Serializable
-        data class Creator(
-            @SerialName("avatar")
-            val avatar: Thumb = Thumb(),
-            @SerialName("characters")
-            val characters: List<String> = listOf(),
-            @SerialName("exp")
-            val exp: Int = 0,
-            @SerialName("gender")
-            val gender: String = "",
-            @SerialName("_id")
-            val id: String = "",
-            @SerialName("level")
-            val level: Int = 0,
-            @SerialName("name")
-            val name: String = "",
-            @SerialName("role")
-            val role: String = "",
-            @SerialName("slogan")
-            val slogan: String = "",
-            @SerialName("title")
-            val title: String = "",
-            @SerialName("verified")
-            val verified: Boolean = false
-        )
-    }
+    )
 }

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.AvatarAsyncImage
 import com.shizq.bika.core.model.ComicResource
-import com.shizq.bika.core.network.model.NetworkKnight
+import com.shizq.bika.core.network.model.User
 import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
@@ -81,7 +81,7 @@ internal fun RankingContent(
 }
 
 @Composable
-private fun KnightTabContent(second: List<NetworkKnight.User>, onClick: (String) -> Unit) {
+private fun KnightTabContent(second: List<User>, onClick: (String) -> Unit) {
     LazyColumn {
         items(second) { item ->
             ListItem(

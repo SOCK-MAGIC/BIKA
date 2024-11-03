@@ -14,21 +14,19 @@ class ChildCommentListPagingSource @AssistedInject constructor(
     @Assisted private val commentId: String,
 ) : PagingSource<Int, Comment>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
-        return try {
-            val nextPageNumber = params.key ?: 1
-            val commentList = network.getChildrenComments(commentId, nextPageNumber)
-            val page = commentList.comments.page.toIntOrNull() ?: 0
-            val pages = commentList.comments.pages
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> = try {
+        val nextPageNumber = params.key ?: 1
+        val commentList = network.getChildrenComments(commentId, nextPageNumber)
+        val page = commentList.comments.page.toIntOrNull() ?: 0
+        val pages = commentList.comments.pages
 
-            LoadResult.Page(
-                data = commentList.asCommentList(),
-                prevKey = if (page > 2) page - 1 else null,
-                nextKey = if (nextPageNumber < pages) page + 1 else null,
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
+        LoadResult.Page(
+            data = commentList.asCommentList(),
+            prevKey = if (page > 2) page - 1 else null,
+            nextKey = if (nextPageNumber < pages) page + 1 else null,
+        )
+    } catch (e: Exception) {
+        LoadResult.Error(e)
     }
 
     override fun getRefreshKey(state: PagingState<Int, Comment>): Int? =

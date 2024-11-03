@@ -1,8 +1,11 @@
 package com.shizq.bika.core.network.model
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonNames
 
+@OptIn(ExperimentalSerializationApi::class)
 @Serializable
 data class NetworkComicSimple(
     @SerialName("author")
@@ -13,7 +16,7 @@ data class NetworkComicSimple(
     val epsCount: Int = 0,
     @SerialName("finished")
     val finished: Boolean = false,
-    @SerialName("_id")
+    @JsonNames("id", "_id")
     val id: String = "",
     @SerialName("likesCount")
     val likesCount: Int = 0,
@@ -26,5 +29,5 @@ data class NetworkComicSimple(
     @SerialName("totalLikes")
     val totalLikes: Int = 0,
     @SerialName("totalViews")
-    val totalViews: Int = 0
+    val totalViews: Int = 0,
 )

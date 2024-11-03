@@ -14,7 +14,6 @@ import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.MergeRequestInterceptor
-import com.shizq.bika.core.network.model.RequestSignatureConfig
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy

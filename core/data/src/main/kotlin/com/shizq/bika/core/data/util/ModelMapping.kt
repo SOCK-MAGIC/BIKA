@@ -22,18 +22,6 @@ fun ComicInSearch.Comics.Doc.asComicResource() =
 
 fun NetworkComicList.Comics.asComicResource(): List<ComicResource> = docs.map { it.asComicResource() }
 
-fun NetworkComicList.Comics.Doc.asComicResource(): ComicResource = ComicResource(
-    id,
-    thumb.imageUrl,
-    title,
-    author,
-    categories,
-    finished,
-    epsCount,
-    pagesCount,
-    likesCount,
-)
-
 fun NetworkComicSimple.asComicResource(): ComicResource = ComicResource(
     id,
     thumb.imageUrl,

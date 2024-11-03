@@ -4,8 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.core.network.model.NetworkKnight
 import com.shizq.bika.core.network.model.NetworkRankingDetail
+import com.shizq.bika.core.network.model.User
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
 import dagger.assisted.Assisted
@@ -72,7 +72,7 @@ sealed interface RankUiState {
         val h24: List<ComicResource>,
         val d7: List<ComicResource>,
         val d30: List<ComicResource>,
-        val second: List<NetworkKnight.User>,
+        val second: List<User>,
     ) : RankUiState
 }
 
