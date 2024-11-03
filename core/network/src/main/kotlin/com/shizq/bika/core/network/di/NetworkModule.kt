@@ -15,7 +15,8 @@ import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.config.BikaClientPlugin
 import com.shizq.bika.core.network.config.MergeRequestInterceptor
-import com.shizq.bika.core.network.plugin.BikaSignature
+import com.shizq.bika.core.network.plugin.BikaAuth
+import com.shizq.bika.core.network.plugin.BikaAuthCredentials
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy
@@ -27,7 +28,6 @@ import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.plugins.HttpRequestRetry
-import io.ktor.client.plugins.api.ClientPlugin
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.plugins.logging.ANDROID
@@ -56,7 +56,6 @@ internal class NetworkModule {
         preferencesDataSource: BikaPreferencesDataSource,
         @ApplicationContext application: Context,
         @Dispatcher(BikaDispatchers.IO) ioDispatcher: CoroutineDispatcher,
-        // bikaInterceptor: BikaInterceptor,
     ): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
             .dispatcher(okhttp3.Dispatcher(ioDispatcher.asExecutorService()))
@@ -64,7 +63,6 @@ internal class NetworkModule {
                 val dns = runBlocking { preferencesDataSource.userData.first().dns }
                 dns.flatMap { Dns.SYSTEM.lookup(it) }
             }
-            // .addInterceptor(bikaInterceptor)
             .cache(Cache(application.cacheDir.resolve("okhttp-cache"), 1024 * 1024 * 500))
             .build()
     }
@@ -99,8 +97,10 @@ internal class NetworkModule {
                 level = LogLevel.ALL
                 logger = Logger.ANDROID
             }
-            install(BikaSignature){
-                // token = bikaUserCredentialDataSource.userData.first().toString()
+            BikaAuth {
+                credentials {
+                    BikaAuthCredentials(bikaUserCredentialDataSource.userData.first().token)
+                }
             }
         }
     }
