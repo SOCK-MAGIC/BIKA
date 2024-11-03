@@ -1,32 +1,41 @@
 package com.shizq.bika.feature.comment
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.consumeWindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -35,8 +44,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.backhandler.BackHandler
 import com.shizq.bika.core.data.model.Comment
@@ -82,10 +93,10 @@ internal fun CommentContent(
 
     BottomSheetScaffold(
         sheetContent = {
-            LazyColumn(Modifier) {
+            LazyColumn(Modifier.fillMaxSize()) {
                 items(childLazyPagingItems.itemCount) { index ->
                     childLazyPagingItems[index]?.let { comment ->
-                        CommentRow(comment) {
+                        CommentRow(comment, notSubComment = false) {
                         }
                         HorizontalDivider(Modifier.padding(horizontal = 8.dp))
                     }
@@ -95,10 +106,14 @@ internal fun CommentContent(
         scaffoldState = sheetScaffoldState,
         sheetPeekHeight = 0.dp,
         sheetSwipeEnabled = bottomSheetState.currentValue == SheetValue.Expanded,
-    ) { paddingValues ->
-        Scaffold(Modifier.consumeWindowInsets(paddingValues)) { innerPadding ->
-            LazyColumn(Modifier.padding(innerPadding)) {
-                items(lazyPagingItems.itemCount) { index ->
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .systemBarsPadding()
+        ) {
+            LazyColumn(contentPadding = PaddingValues(bottom = TextFieldDefaults.MinHeight)) {
+                items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id }) { index ->
                     lazyPagingItems[index]?.let { comment ->
                         CommentRow(comment) {
                             updateCommentId(it)
@@ -107,7 +122,35 @@ internal fun CommentContent(
                         HorizontalDivider(Modifier.padding(horizontal = 8.dp))
                     }
                 }
+                if (lazyPagingItems.loadState.append is LoadState.NotLoading) {
+                    item {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(50.dp),
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Text("再怎么找也没有了")
+                        }
+                        HorizontalDivider(Modifier.padding(horizontal = 8.dp))
+                    }
+                }
             }
+            var text by remember { mutableStateOf("") }
+            TextField(
+                text,
+                { text = it },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter),
+                trailingIcon = {
+                    TextButton({}) {
+                        Text("回复")
+                    }
+                },
+                maxLines = 3,
+            )
         }
     }
 }
@@ -127,7 +170,12 @@ fun BackHandler(backHandler: BackHandler, isEnabled: Boolean = true, onBack: () 
 }
 
 @Composable
-private fun CommentRow(comment: Comment, modifier: Modifier = Modifier, onClick: (String) -> Unit) {
+private fun CommentRow(
+    comment: Comment,
+    modifier: Modifier = Modifier,
+    notSubComment: Boolean = true,
+    onClick: (String) -> Unit,
+) {
     Surface(modifier = modifier.clickable { onClick(comment.id) }) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -168,8 +216,10 @@ private fun CommentRow(comment: Comment, modifier: Modifier = Modifier, onClick:
                 Spacer(Modifier.weight(1f))
                 Text(comment.likesCount.toString())
                 Icon(BikaIcons.Favorite, "点赞", modifier = Modifier.padding(horizontal = 8.dp))
-                Text(comment.subComment.toString())
-                Icon(BikaIcons.Comment, "评论", modifier = Modifier.padding(horizontal = 8.dp))
+                if (notSubComment) {
+                    Text(comment.subComment.toString())
+                    Icon(BikaIcons.Comment, "评论", modifier = Modifier.padding(horizontal = 8.dp))
+                }
             }
         }
     }

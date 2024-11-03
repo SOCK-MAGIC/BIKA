@@ -4,11 +4,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertFooterItem
 import com.shizq.bika.core.data.model.Comment
 import com.shizq.bika.core.data.paging.CommentListPagingSource
 import com.shizq.bika.core.network.di.ApplicationScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CommentListRepository @Inject constructor(
@@ -19,5 +21,6 @@ class CommentListRepository @Inject constructor(
         Pager(PagingConfig(20), 1) {
             commentListPagingSourceFactory(comicId)
         }.flow
+            // .map { it.insertFooterItem() }
             .cachedIn(scope)
 }
