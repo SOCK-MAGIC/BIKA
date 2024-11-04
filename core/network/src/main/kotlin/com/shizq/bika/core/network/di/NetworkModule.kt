@@ -13,11 +13,11 @@ import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
-import com.shizq.bika.core.network.plugin.contentunboxing.ContentUnboxing
 import com.shizq.bika.core.network.coil.MergeRequestInterceptor
 import com.shizq.bika.core.network.data.HttpResponseMonitor
 import com.shizq.bika.core.network.plugin.auth.BikaAuth
 import com.shizq.bika.core.network.plugin.auth.BikaAuthCredentials
+import com.shizq.bika.core.network.plugin.contentunboxing.ContentUnboxing
 import com.shizq.bika.core.network.util.PICA_API
 import com.shizq.bika.core.network.util.asExecutorService
 import dagger.Lazy
@@ -47,7 +47,22 @@ import kotlinx.serialization.json.Json
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
+import javax.inject.Named
 import javax.inject.Singleton
+
+@OptIn(ExperimentalSerializationApi::class)
+internal val NetworkJson: Json =
+    Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+        coerceInputValues = true
+        prettyPrintIndent = "  "
+        encodeDefaults = true
+        isLenient = true
+        allowSpecialFloatingPointValues = true
+        allowStructuredMapKeys = true
+        useArrayPolymorphism = false
+    }
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -69,11 +84,9 @@ internal class NetworkModule {
             .build()
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     @Singleton
     @Provides
     fun provideHttpClient(
-        json: Json,
         okHttpClient: OkHttpClient,
         bikaUserCredentialDataSource: BikaUserCredentialDataSource,
         httpResponseMonitor: HttpResponseMonitor,
@@ -93,7 +106,7 @@ internal class NetworkModule {
                 }
             }
             install(ContentNegotiation) {
-                json(json)
+                json(NetworkJson)
             }
             install(HttpRequestRetry) {
                 retryOnServerErrors(maxRetries = 5)

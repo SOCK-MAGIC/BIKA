@@ -20,7 +20,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import javax.inject.Named
 import javax.inject.Singleton
+
+internal val DatastoreJson: Json =
+    Json {
+        encodeDefaults = true
+    }
 
 @Module
 @InstallIn(SingletonComponent::class)
