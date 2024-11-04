@@ -8,6 +8,7 @@ import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.push
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.shizq.bika.core.network.model.Comics
 import com.shizq.bika.feature.comic.info.ComicInfoComponent
@@ -87,36 +88,35 @@ class DefaultRootComponent @AssistedInject constructor(
         }
 
     override fun navigationToSignIn() {
-        navigation.push(Config.SignIn)
+        navigation.pushNew(Config.SignIn)
     }
 
     override fun navigationToInterest() {
-        navigation.pop { }
-        navigation.push(Config.Interest)
+        navigation.pushNew(Config.Interest)
     }
 
     override fun navigationToComicList(comics: Comics) {
-        navigation.push(Config.ComicList(comics))
+        navigation.pushNew(Config.ComicList(comics))
     }
 
     override fun navigationToComicInfo(id: String) {
-        navigation.push(Config.ComicInfo(id))
+        navigation.pushNew(Config.ComicInfo(id))
     }
 
     override fun navigationToReader(id: String, order: Int) {
-        navigation.push(Config.Reader(id, order))
+        navigation.pushNew(Config.Reader(id, order))
     }
 
     override fun navigationToSearch(query: String?) {
-        navigation.push(Config.Search(query))
+        navigation.pushNew(Config.Search(query))
     }
 
     override fun navigationToRanking() {
-        navigation.push(Config.Ranking)
+        navigation.pushNew(Config.Ranking)
     }
 
     override fun navigationToComment(id: String) {
-        navigation.push(Config.Comment(id))
+        navigation.pushNew(Config.Comment(id))
     }
 
     override fun onBack() {
