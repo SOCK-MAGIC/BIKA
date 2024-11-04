@@ -44,7 +44,7 @@ internal class ClickControl(
     val lazyListState =
         LazyListState(prefetchStrategy = LazyListPrefetchStrategy(NESTED_PREFETCH_ITEM_COUNT))
     val scrollPosition by derivedStateOf { lazyListState.firstVisibleItemIndex }
-    private fun click(action: Action?) {
+    fun click(action: Action) {
         scope.launch {
             when (action) {
                 Action.NON -> Unit
@@ -60,8 +60,6 @@ internal class ClickControl(
                         lazyListState.animateScrollToItem(scrollPosition + 1)
                     }
                 }
-
-                null -> Unit
             }
         }
     }
