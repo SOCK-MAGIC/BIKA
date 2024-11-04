@@ -43,6 +43,7 @@ import androidx.core.net.toUri
 import com.shizq.bika.core.designsystem.component.BikaLoadingWheel
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
+import io.github.aakira.napier.Napier
 
 @Composable
 fun InterestScreen(
@@ -112,6 +113,7 @@ internal fun InterestContent(
             )
         },
     ) { innerPadding ->
+        Napier.d(tag = "InterestContent") { uiState.toString() }
         when (uiState) {
             InterestsUiState.Empty -> Box(
                 Modifier.fillMaxSize(),

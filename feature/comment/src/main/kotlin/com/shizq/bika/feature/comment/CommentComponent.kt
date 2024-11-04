@@ -9,8 +9,10 @@ import kotlinx.coroutines.flow.Flow
 interface CommentComponent : BackHandlerOwner {
     val pagingDataFlow: Flow<PagingData<Comment>>
     val childCommentPagingDataFlow: Flow<PagingData<Comment>>
-
-    fun updateCommentId(id: String)
+    val commentContent: String
+    fun clickedCommentId(id: String)
+    fun sendComment(commentId: String)
+    fun changeCommentContent(text: String)
 
     interface Factory {
         operator fun invoke(

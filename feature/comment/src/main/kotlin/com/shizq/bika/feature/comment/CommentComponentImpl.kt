@@ -21,14 +21,24 @@ class CommentComponentImpl @AssistedInject constructor(
     childCommentListRepository: ChildCommentListRepository,
 ) : CommentComponent,
     ComponentContext by componentContext {
-    override val pagingDataFlow = commentListRepository(comicId)
     private var commentId by mutableStateOf<String?>(null)
+    override var commentContent by mutableStateOf("")
+
+    override val pagingDataFlow = commentListRepository(comicId)
+
     override val childCommentPagingDataFlow =
         snapshotFlow { commentId }.filterNotNull().flatMapLatest {
             childCommentListRepository(it)
         }
 
-    override fun updateCommentId(id: String) {
+  override  fun changeCommentContent(text: String) {
+        commentContent = text
+    }
+
+    override fun sendComment(commentId: String) {
+    }
+
+    override fun clickedCommentId(id: String) {
         Napier.i(tag = "CommentComponent") { id }
         commentId = id
     }

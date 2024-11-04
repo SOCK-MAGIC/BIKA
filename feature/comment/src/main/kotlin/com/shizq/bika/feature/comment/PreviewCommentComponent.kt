@@ -40,8 +40,12 @@ class PreviewCommentComponent :
     override val pagingDataFlow: Flow<PagingData<Comment>> = flowOf(PagingData.from(list))
     override val childCommentPagingDataFlow: Flow<PagingData<Comment>> =
         flowOf(PagingData.from(list))
+    override val commentContent = "            "
 
-    override fun updateCommentId(id: String) {}
+    override fun sendComment(commentId: String) {}
+    override fun changeCommentContent(text: String) {}
+
+    override fun clickedCommentId(id: String) {}
 }
 
 class LoremIpsum5Word : LoremIpsum(5)

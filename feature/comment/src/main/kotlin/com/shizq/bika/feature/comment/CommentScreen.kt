@@ -31,11 +31,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -51,6 +49,7 @@ import androidx.paging.compose.itemKey
 import com.arkivanov.essenty.backhandler.BackCallback
 import com.arkivanov.essenty.backhandler.BackHandler
 import com.shizq.bika.core.data.model.Comment
+import com.shizq.bika.core.data.model.User
 import com.shizq.bika.core.designsystem.component.AvatarAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import kotlinx.coroutines.launch
@@ -76,7 +75,10 @@ fun CommentScreen(component: CommentComponent, onBackClick: () -> Unit) {
         lazyPagingItems = lazyPagingItems,
         childLazyPagingItems = childLazyPagingItems,
         bottomSheetState = bottomSheetState,
-        updateCommentId = component::updateCommentId,
+        clickedCommentId = component::clickedCommentId,
+        commentContent = component.commentContent,
+        changeCommentContent = component::changeCommentContent,
+        sendComment = component::sendComment,
     )
 }
 
@@ -86,7 +88,10 @@ internal fun CommentContent(
     lazyPagingItems: LazyPagingItems<Comment>,
     childLazyPagingItems: LazyPagingItems<Comment>,
     bottomSheetState: SheetState,
-    updateCommentId: (String) -> Unit,
+    clickedCommentId: (String) -> Unit,
+    sendComment: (String) -> Unit,
+    changeCommentContent: (String) -> Unit,
+    commentContent: String,
 ) {
     val scope = rememberCoroutineScope()
     val sheetScaffoldState = rememberBottomSheetScaffoldState(bottomSheetState)
@@ -96,8 +101,7 @@ internal fun CommentContent(
             LazyColumn(Modifier.fillMaxSize()) {
                 items(childLazyPagingItems.itemCount) { index ->
                     childLazyPagingItems[index]?.let { comment ->
-                        CommentRow(comment, notSubComment = false) {
-                        }
+                        SubCommentRow(comment)
                         HorizontalDivider(Modifier.padding(horizontal = 8.dp))
                     }
                 }
@@ -115,8 +119,8 @@ internal fun CommentContent(
             LazyColumn(contentPadding = PaddingValues(bottom = TextFieldDefaults.MinHeight)) {
                 items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id }) { index ->
                     lazyPagingItems[index]?.let { comment ->
-                        CommentRow(comment) {
-                            updateCommentId(it)
+                        MainCommentRow(comment) {
+                            clickedCommentId(it)
                             scope.launch { bottomSheetState.expand() }
                         }
                         HorizontalDivider(Modifier.padding(horizontal = 8.dp))
@@ -137,15 +141,14 @@ internal fun CommentContent(
                     }
                 }
             }
-            var text by remember { mutableStateOf("") }
             TextField(
-                text,
-                { text = it },
+                commentContent,
+                changeCommentContent,
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
                 trailingIcon = {
-                    TextButton({}) {
+                    TextButton({ sendComment("") }) {
                         Text("回复")
                     }
                 },
@@ -170,44 +173,17 @@ fun BackHandler(backHandler: BackHandler, isEnabled: Boolean = true, onBack: () 
 }
 
 @Composable
-private fun CommentRow(
+private fun SubCommentRow(
     comment: Comment,
     modifier: Modifier = Modifier,
-    notSubComment: Boolean = true,
-    onClick: (String) -> Unit,
 ) {
-    Surface(modifier = modifier.clickable { onClick(comment.id) }) {
+    Surface(
+        modifier = modifier,
+    ) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
         ) {
-            Row(Modifier.padding(bottom = 8.dp)) {
-                AvatarAsyncImage(
-                    comment.user.avatarUrl,
-                    comment.user.character,
-                    modifier = Modifier.align(Alignment.CenterVertically),
-                )
-                Column(
-                    modifier = Modifier
-                        .align(Alignment.CenterVertically)
-                        .padding(horizontal = 8.dp)
-                        .fillMaxWidth(),
-                ) {
-                    Text(comment.user.name, fontWeight = FontWeight.Bold)
-                    Text(
-                        buildAnnotatedString {
-                            withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                                append("Lv.${comment.user.level}")
-                            }
-                            append("\t")
-                            withStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer)) {
-                                append(comment.user.title)
-                            }
-                        },
-                        color = MaterialTheme.colorScheme.primary,
-                    )
-                    Text(comment.content)
-                }
-            }
+            UserCommentRow(comment.user, comment.content)
             Row(
                 modifier = Modifier,
                 verticalAlignment = Alignment.CenterVertically,
@@ -216,11 +192,69 @@ private fun CommentRow(
                 Spacer(Modifier.weight(1f))
                 Text(comment.likesCount.toString())
                 Icon(BikaIcons.Favorite, "点赞", modifier = Modifier.padding(horizontal = 8.dp))
-                if (notSubComment) {
-                    Text(comment.subComment.toString())
-                    Icon(BikaIcons.Comment, "评论", modifier = Modifier.padding(horizontal = 8.dp))
-                }
             }
+        }
+    }
+}
+
+@Composable
+private fun MainCommentRow(
+    comment: Comment,
+    modifier: Modifier = Modifier,
+    onClick: (String) -> Unit,
+) {
+    Surface(
+        modifier = modifier.clickable {
+            onClick(comment.id)
+        },
+    ) {
+        Column(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        ) {
+            UserCommentRow(comment.user, comment.content)
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(comment.createdAt)
+                Spacer(Modifier.weight(1f))
+                Text(comment.likesCount.toString())
+                Icon(BikaIcons.Favorite, "点赞", modifier = Modifier.padding(horizontal = 8.dp))
+                Text(comment.subComment.toString())
+                Icon(BikaIcons.Comment, "评论", modifier = Modifier.padding(horizontal = 8.dp))
+            }
+        }
+    }
+}
+
+@Composable
+fun UserCommentRow(user: User, content: String, modifier: Modifier = Modifier) {
+    Row(modifier.padding(bottom = 8.dp)) {
+        AvatarAsyncImage(
+            user.avatarUrl,
+            user.character,
+            modifier = Modifier.align(Alignment.CenterVertically),
+        )
+        Column(
+            modifier = Modifier
+                .align(Alignment.CenterVertically)
+                .padding(horizontal = 8.dp)
+                .fillMaxWidth(),
+        ) {
+            Text(user.name, fontWeight = FontWeight.Bold)
+            Text(
+                buildAnnotatedString {
+                    withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        append("Lv.${user.level}")
+                    }
+                    append("\t")
+                    withStyle(SpanStyle(background = MaterialTheme.colorScheme.primaryContainer)) {
+                        append(user.title)
+                    }
+                },
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Text(content)
         }
     }
 }

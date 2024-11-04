@@ -15,6 +15,7 @@ import com.shizq.bika.core.network.BuildConfig
 import com.shizq.bika.core.network.Dispatcher
 import com.shizq.bika.core.network.coil.MergeRequestInterceptor
 import com.shizq.bika.core.network.data.HttpResponseMonitor
+import com.shizq.bika.core.network.model.Box
 import com.shizq.bika.core.network.plugin.auth.BikaAuth
 import com.shizq.bika.core.network.plugin.auth.BikaAuthCredentials
 import com.shizq.bika.core.network.plugin.contentunboxing.ContentUnboxing
@@ -39,11 +40,14 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.http.userAgent
 import io.ktor.serialization.kotlinx.json.json
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.decodeFromStream
+import kotlinx.serialization.serializer
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
@@ -102,7 +106,11 @@ internal class NetworkModule {
             }
             install(ContentUnboxing) {
                 transform { response, content, requestedType ->
-                    httpResponseMonitor.transform(response, content, requestedType)
+                    val box = NetworkJson.decodeFromStream(
+                        Box.serializer(serializer(requestedType.kotlinType!!)),
+                        content.toInputStream(),
+                    )
+                    box.data
                 }
             }
             install(ContentNegotiation) {
