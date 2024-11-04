@@ -8,8 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.platform.LocalConfiguration
@@ -40,15 +43,19 @@ internal class ClickControl(
     private val width: Int,
     private val height: Int,
 ) {
+    var showControllerOptions by mutableStateOf(false)
+
     @OptIn(ExperimentalFoundationApi::class)
     val lazyListState =
         LazyListState(prefetchStrategy = LazyListPrefetchStrategy(NESTED_PREFETCH_ITEM_COUNT))
+
     val scrollPosition by derivedStateOf { lazyListState.firstVisibleItemIndex }
+
     fun click(action: Action) {
         scope.launch {
             when (action) {
                 Action.NON -> Unit
-                Action.MENU -> Unit
+                Action.MENU -> showControllerOptions = !showControllerOptions
                 Action.PREV -> {
                     if (lazyListState.canScrollBackward) {
                         lazyListState.animateScrollToItem(scrollPosition - 1)
@@ -67,6 +74,12 @@ internal class ClickControl(
     fun click(offset: Offset) {
         val scale = Offset(offset.x / width, offset.y / height)
         click(action(scale))
+    }
+
+    fun scrollToItem(index: Int) {
+        scope.launch {
+            lazyListState.scrollToItem(index)
+        }
     }
 
     internal fun action(scale: Offset) = when (scale) {

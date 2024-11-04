@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface ReaderComponent {
     val pictureFlow: Flow<PagingData<Picture>>
+    val pageCount: Float
 
     interface Factory {
         operator fun invoke(
