@@ -61,7 +61,7 @@ androidxPreference = "1.2.1"
 truth = "1.4.4"
 androidxHiltNavigationCompose = "1.2.0"
 constraintlayout = "2.1.4"
-runtimeAndroid = "1.6.7"
+runtimeAndroid = "1.7.5"
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidxAppcompat" }
