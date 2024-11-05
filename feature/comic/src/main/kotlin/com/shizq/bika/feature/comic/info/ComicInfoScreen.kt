@@ -1,5 +1,6 @@
 package com.shizq.bika.feature.comic.info
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ElevatedCard
@@ -26,6 +29,7 @@ import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SuggestionChip
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -47,6 +51,7 @@ import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
+import com.shizq.bika.core.ui.comicCardItems
 import com.webtoonscorp.android.readmore.material3.ReadMoreText
 
 @Composable
@@ -55,16 +60,20 @@ fun ComicInfoScreen(
     navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
     navigationToComment: (String) -> Unit,
+    navigationToComicInfo: (String) -> Unit,
 ) {
-    val uiState by component.comicInfoUiState.collectAsStateWithLifecycle()
+    val comicInfoUiState by component.comicInfoUiState.collectAsStateWithLifecycle()
+    val epUiState by component.epUiState.collectAsStateWithLifecycle()
     ComicInfoContent(
-        uiState = uiState,
+        uiState = comicInfoUiState,
+        epUiState = epUiState,
         navigationToReader = navigationToReader,
         onClickTrigger = component::onClickTrigger,
         onSwitchLike = component::onSwitchLike,
         onSwitchFavorite = component::onSwitchFavorite,
         navigationToComicList = navigationToComicList,
         navigationToComment = navigationToComment,
+        navigationToComicInfo = navigationToComicInfo,
     )
 }
 
@@ -72,12 +81,14 @@ fun ComicInfoScreen(
 @Composable
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
-    navigationToReader: (String, Int) -> Unit,
-    onClickTrigger: (ComicResource) -> Unit,
+    epUiState: EpUiState,
     onSwitchLike: () -> Unit,
     onSwitchFavorite: () -> Unit,
+    onClickTrigger: (ComicResource) -> Unit,
+    navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
     navigationToComment: (String) -> Unit,
+    navigationToComicInfo: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     when (uiState) {
@@ -152,23 +163,49 @@ internal fun ComicInfoContent(
                                 .padding(vertical = 8.dp)
                                 .clickable(
                                     indication = null,
-                                    interactionSource = MutableInteractionSource(),
+                                    interactionSource = remember { MutableInteractionSource() },
                                 ) { expand = !expand },
                         )
                     }
                     item { Tags(uiState.tags) { navigationToComicList(Comics(tag = it)) } }
-                    items(uiState.eps) { docs ->
-                        Row {
-                            for (doc in docs) {
-                                TextButton(
-                                    { navigationToReader(uiState.comicResource.id, doc.order) },
-                                    Modifier.weight(1f),
-                                ) {
-                                    Text(doc.title)
+                    when (epUiState) {
+                        EpUiState.Error -> Unit
+                        EpUiState.Loading -> Unit
+                        is EpUiState.Success -> epBody(epUiState.eps) {
+                            navigationToReader(uiState.comicResource.id, it)
+                        }
+                    }
+                    item {
+                        LazyRow(modifier = Modifier.padding(vertical = 8.dp)) {
+                            items(uiState.bottomRecommend, key = { it.imageUrl }) {
+                                Surface(modifier = Modifier.padding(8.dp)) {
+                                    DynamicAsyncImage(
+                                        it.imageUrl,
+                                        null,
+                                        Modifier
+                                            .size(120.dp, 180.dp)
+                                            .clickable { navigationToComicInfo(it.id) },
+                                    )
                                 }
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+private fun LazyListScope.epBody(eps: List<List<EpDoc>>, onClick: (Int) -> Unit) {
+    items(eps) { docs ->
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            for (doc in docs) {
+                TextButton(
+                    onClick = { onClick(doc.order) },
+                    modifier = Modifier.weight(1f),
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                ) {
+                    Text(doc.title)
                 }
             }
         }

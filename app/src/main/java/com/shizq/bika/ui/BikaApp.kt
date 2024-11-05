@@ -140,7 +140,8 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 component = child.component,
                 navigationToReader = component::navigationToReader,
                 navigationToComicList = component::navigationToComicList,
-                navigationToComment = component::navigationToComment
+                navigationToComment = component::navigationToComment,
+                navigationToComicInfo = component::navigationToComicInfo
             )
 
             is RootComponent.Child.Reader -> ReaderScreen(component = child.component)

@@ -1,7 +1,6 @@
 package com.shizq.bika.feature.comic.info
 
 import com.shizq.bika.core.model.ComicResource
-import com.shizq.bika.core.network.model.NetworkComicEp
 
 sealed interface ComicInfoUiState {
     data object Loading : ComicInfoUiState
@@ -17,8 +16,16 @@ sealed interface ComicInfoUiState {
         val updatedAt: String = "",
         val viewsCount: Int = 0,
         val comicResource: ComicResource,
-        val eps: List<List<NetworkComicEp.Eps.Doc>>,
+        val bottomRecommend: List<ComicResource>,
     ) : ComicInfoUiState
+}
+
+sealed interface EpUiState {
+    data object Loading : EpUiState
+    data object Error : EpUiState
+    data class Success(
+        val eps: List<List<EpDoc>>,
+    ) : EpUiState
 }
 
 data class Creator(
