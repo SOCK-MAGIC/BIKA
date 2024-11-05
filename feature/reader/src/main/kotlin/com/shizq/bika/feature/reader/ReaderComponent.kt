@@ -1,13 +1,19 @@
 package com.shizq.bika.feature.reader
 
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.ui.geometry.Offset
 import androidx.paging.PagingData
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.model.Picture
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 interface ReaderComponent {
-    val pictureFlow: Flow<PagingData<Picture>>
+    val picturePagingFlow: Flow<PagingData<Picture>>
     val pageCount: Float
+
+    fun onClick(offset: Offset)
+    fun onClick(direction: PageScrollingDirection)
 
     interface Factory {
         operator fun invoke(
@@ -16,4 +22,7 @@ interface ReaderComponent {
             order: Int,
         ): ReaderComponent
     }
+
+    val bottomText: StateFlow<String>
+    val lazyListState: LazyListState
 }

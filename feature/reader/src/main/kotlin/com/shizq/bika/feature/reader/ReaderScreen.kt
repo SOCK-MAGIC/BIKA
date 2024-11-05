@@ -3,16 +3,22 @@ package com.shizq.bika.feature.reader
 import android.view.KeyEvent
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ScreenRotationAlt
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.SliderState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
@@ -32,42 +39,34 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.compose.itemKey
 import com.shizq.bika.core.designsystem.component.ComicReadingAsyncImage
 import com.shizq.bika.core.model.Picture
-import com.shizq.bika.feature.reader.ClickControl.Action
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReaderScreen(component: ReaderComponent) {
-    val items = component.pictureFlow.collectAsLazyPagingItems()
-    val clickControl = rememberClickControl()
-    // todo rememberSaveable save impl
-    val sliderState = remember(clickControl.scrollPosition, component.pageCount) {
-        SliderState(
-            value = clickControl.scrollPosition.toFloat(),
-            valueRange = 1.toFloat()..component.pageCount,
-        )
-    }
+    val items = component.picturePagingFlow.collectAsLazyPagingItems()
+    val bottomText by component.bottomText.collectAsStateWithLifecycle()
 
     ReaderContent(
         lazyPagingItems = items,
-        clickControl = clickControl,
-        showControllerOptions = clickControl.showControllerOptions,
-        onDismissRequest = { clickControl.showControllerOptions = false },
-        sliderState = sliderState,
+        bottomText = bottomText,
+        lazyListState = component.lazyListState,
+        onClick = { component.onClick(it) },
+        physicalClick = { component.onClick(it) },
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ReaderContent(
     lazyPagingItems: LazyPagingItems<Picture>,
-    clickControl: ClickControl,
-    showControllerOptions: Boolean,
-    onDismissRequest: () -> Unit,
-    sliderState: SliderState,
+    lazyListState: LazyListState,
+    bottomText: String,
+    onClick: (Offset) -> Unit,
+    physicalClick: (PageScrollingDirection) -> Unit,
 ) {
     Scaffold(
         topBar = {},
@@ -75,7 +74,7 @@ internal fun ReaderContent(
         modifier = Modifier
             .pointerInput(Unit) {
                 detectTapGestures {
-                    clickControl.click(it)
+                    onClick(it)
                 }
             }
             .fillMaxSize(),
@@ -84,14 +83,15 @@ internal fun ReaderContent(
             Modifier
                 .padding(innerPadding)
                 .onKeyEvent {
+                    it.nativeKeyEvent.startTracking()
                     when (it.key) {
                         Key.VolumeUp -> {
-                            clickControl.click(Action.NEXT)
+                            physicalClick(PageScrollingDirection.NEXT)
                             true
                         }
 
                         Key.VolumeDown -> {
-                            clickControl.click(Action.NEXT)
+                            physicalClick(PageScrollingDirection.PREV)
                             true
                         }
 
@@ -100,19 +100,15 @@ internal fun ReaderContent(
                 }
                 .fillMaxSize(),
         ) {
-            LazyColumn(state = clickControl.lazyListState, modifier = Modifier.fillMaxSize()) {
-                items(lazyPagingItems.itemCount, key = { it }) { index ->
+            LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
+                items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id }) { index ->
                     lazyPagingItems[index]?.let {
                         ComicReadingAsyncImage(it.url, modifier = Modifier.fillMaxSize())
                     }
                 }
             }
             Text(
-                "第一章",
-                modifier = Modifier.align(Alignment.BottomStart),
-            )
-            Text(
-                clickControl.scrollPosition.toString() + "/100",
+                bottomText,
                 modifier = Modifier.align(Alignment.BottomEnd),
             )
         }
@@ -143,6 +139,24 @@ private fun BottomOptions() {
             )
         }
     }
+}
+
+@Composable
+internal fun BikaBottomBar(modifier: Modifier = Modifier) {
+    BottomAppBar {
+        BikaBottomBarItem {
+            Icon(Icons.Default.ScreenRotationAlt, "屏幕方向")
+            Text("屏幕方向")
+        }
+    }
+}
+
+@Composable
+internal fun BikaBottomBarItem(
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    Column(modifier, content = content)
 }
 
 @Composable
