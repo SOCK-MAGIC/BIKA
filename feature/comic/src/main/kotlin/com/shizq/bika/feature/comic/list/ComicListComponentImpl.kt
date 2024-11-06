@@ -42,7 +42,7 @@ class ComicListComponentImpl @AssistedInject constructor(
                     comics,
                     sort = sort,
                     page = page,
-                    hide = hide.badHobbies,
+                    badHobbies = hide.badHobbies,
                 ) {
                     PageMetaData.metadata = it
                 }

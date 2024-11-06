@@ -32,7 +32,7 @@ class CompositeComicListRepository @Inject constructor(
         comics: Comics,
         page: Int? = null,
         sort: Sort,
-        hide: Set<String>,
+        badHobbies: Set<String>,
         pagingMetadata: (PagingMetadata) -> Unit,
     ): Flow<PagingData<ComicResource>> =
         Pager(PagingConfig(20), 1) {
@@ -53,9 +53,9 @@ class CompositeComicListRepository @Inject constructor(
                 if (comics.category == "recently" || comics.category == "favourite") {
                     return@map pagingData
                 } else {
-                    if (hide.isEmpty()) return@map pagingData
+                    if (badHobbies.isEmpty()) return@map pagingData
                     pagingData.filter { resource ->
-                        resource.categories.any { !hide.contains(it) }
+                        resource.categories.any { !badHobbies.contains(it) }
                     }
                 }
             }
