@@ -27,6 +27,7 @@ class InterestComponentImpl @AssistedInject constructor(
     private val preferencesDataSource: BikaPreferencesDataSource,
 ) : InterestComponent,
     ComponentContext by componentContext {
+
     override val topicsUiState =
         preferencesDataSource.userData.map {
             TopicsUiState.Success(it.topics)
@@ -35,6 +36,7 @@ class InterestComponentImpl @AssistedInject constructor(
             SharingStarted.WhileSubscribed(5000),
             TopicsUiState.Loading,
         )
+
     override val interestUiState = combine(
         flow { emit(network.getCategories()) }.asResult(),
         userCredential.userData,
@@ -53,12 +55,11 @@ class InterestComponentImpl @AssistedInject constructor(
                 )
             }
         }
-    }
-        .stateIn(
-            scope = componentScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = InterestsUiState.Loading,
-        )
+    }.stateIn(
+        scope = componentScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = InterestsUiState.Loading,
+    )
 
     override fun updateTopicSelection(title: String, state: Boolean) {
         componentScope.launch {
