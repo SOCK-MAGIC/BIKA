@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.metrics.performance.JankStats
 import com.arkivanov.decompose.defaultComponentContext
+import com.shizq.bika.core.data.util.ErrorMonitor
 import com.shizq.bika.core.data.util.NetworkMonitor
 import com.shizq.bika.navigation.RootComponent
 import com.shizq.bika.ui.BikaApp
@@ -27,6 +28,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var rootComponentFactory: RootComponent.Factory
+
+    @Inject
+    lateinit var errorMonitor: ErrorMonitor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,12 +38,16 @@ class MainActivity : AppCompatActivity() {
         setContent {
             val componentContext = defaultComponentContext()
             val component = rootComponentFactory(componentContext)
-            val appState = rememberBikaAppState(networkMonitor = networkMonitor)
+            val appState = rememberBikaAppState(
+                networkMonitor = networkMonitor,
+                errorMonitor = errorMonitor,
+            )
             MaterialTheme {
                 BikaApp(component, appState)
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         lazyStats.get().isTrackingEnabled = true
