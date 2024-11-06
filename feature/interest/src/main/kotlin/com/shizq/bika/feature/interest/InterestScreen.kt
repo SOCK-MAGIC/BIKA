@@ -16,7 +16,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -54,20 +53,18 @@ fun InterestScreen(
     openDrawer: () -> Unit,
 ) {
     val uiState by component.interestUiState.collectAsState()
-    val interestVisibilityState by component.interestVisibilityUiState.collectAsState()
-    var showHideInterestsDialog by rememberSaveable { mutableStateOf(false) }
+    val topicsUiState by component.topicsUiState.collectAsState()
+    var showSubscriptionDialog by rememberSaveable { mutableStateOf(false) }
     InterestContent(
         uiState = uiState,
         navigationToSearch = navigationToSearch,
         navigationToComicList = navigationToComicList,
         navigationToRanking = navigationToRanking,
-        onDismissed = {
-            showHideInterestsDialog = false
-        },
-        onTopAppBarActionClick = { showHideInterestsDialog = true },
-        showHideInterestsDialog = showHideInterestsDialog,
-        interestVisibilityState = interestVisibilityState,
-        onChangeInterestVisibility = component::updateInterestVisibility,
+        onDismissed = { showSubscriptionDialog = false },
+        onTopAppBarActionClickSubscriptions = { showSubscriptionDialog = true },
+        showSubscriptionDialog = showSubscriptionDialog,
+        topicsUiState = topicsUiState,
+        updateTopicSelection = component::updateTopicSelection,
         openDrawer = openDrawer,
     )
 }
@@ -81,16 +78,16 @@ internal fun InterestContent(
     navigationToComicList: (String?) -> Unit,
     modifier: Modifier = Modifier,
     onDismissed: () -> Unit,
-    onTopAppBarActionClick: () -> Unit,
-    showHideInterestsDialog: Boolean,
-    interestVisibilityState: Map<String, Boolean>,
-    onChangeInterestVisibility: (String, Boolean) -> Unit,
+    onTopAppBarActionClickSubscriptions: () -> Unit,
+    showSubscriptionDialog: Boolean,
+    topicsUiState: TopicsUiState,
+    updateTopicSelection: (String, Boolean) -> Unit,
     openDrawer: () -> Unit,
 ) {
-    if (showHideInterestsDialog) {
-        HideInterestDialog(
-            interestVisibilityState,
-            onChangeInterestVisibility = onChangeInterestVisibility,
+    if (showSubscriptionDialog) {
+        SubscriptionDialog(
+            topicsUiState,
+            onChnageTopicSelection = updateTopicSelection,
         ) { onDismissed() }
     }
     Scaffold(
@@ -98,8 +95,8 @@ internal fun InterestContent(
             TopAppBar(
                 {},
                 actions = {
-                    IconButton(onTopAppBarActionClick) {
-                        Icon(BikaIcons.VisibilityOff, "VisibilityOff")
+                    IconButton(onTopAppBarActionClickSubscriptions) {
+                        Icon(BikaIcons.Subscriptions, "Subscriptions")
                     }
                     IconButton({ navigationToSearch(null) }) {
                         Icon(Icons.Rounded.Search, "Search")
@@ -134,48 +131,50 @@ internal fun InterestContent(
                 GridCells.Fixed(3),
                 modifier = modifier.padding(innerPadding),
             ) {
-                if (interestVisibilityState.getOrDefault("推荐", true)) {
-                    item {
-                        Image(R.drawable.feature_interest_bika, "推荐") {
-                            navigationToComicList("recommend")
+                if (topicsUiState is TopicsUiState.Success) {
+                    if (topicsUiState.topics.getOrDefault("推荐", true)) {
+                        item {
+                            Image(R.drawable.feature_interest_bika, "推荐") {
+                                navigationToComicList("recommend")
+                            }
                         }
                     }
-                }
-                if (interestVisibilityState.getOrDefault("排行榜", true)) {
-                    item {
-                        Image(
-                            R.drawable.feature_interest_cat_leaderboard,
-                            "排行榜",
-                            navigationToRanking,
-                        )
-                    }
-                }
-                if (interestVisibilityState.getOrDefault("游戏推荐", true)) {
-                    item {
-                        Image(R.drawable.feature_interest_cat_game, "游戏推荐", {})
-                    }
-                }
-                if (interestVisibilityState.getOrDefault("哔咔小程序", true)) {
-                    item {
-                        Image(R.drawable.feature_interest_cat_love_pica, "哔咔小程序", {})
-                    }
-                }
-                if (interestVisibilityState.getOrDefault("留言板", true)) {
-                    item {
-                        Image(R.drawable.feature_interest_cat_forum, "留言板", {})
-                    }
-                }
-                if (interestVisibilityState.getOrDefault("最近更新", true)) {
-                    item {
-                        Image(R.drawable.feature_interest_cat_latest, "最近更新") {
-                            navigationToComicList(null)
+                    if (topicsUiState.topics.getOrDefault("排行榜", true)) {
+                        item {
+                            Image(
+                                R.drawable.feature_interest_cat_leaderboard,
+                                "排行榜",
+                                navigationToRanking,
+                            )
                         }
                     }
-                }
-                if (interestVisibilityState.getOrDefault("随机本子", true)) {
-                    item {
-                        Image(R.drawable.feature_interest_cat_random, "随机本子") {
-                            navigationToComicList("random")
+                    if (topicsUiState.topics.getOrDefault("游戏推荐", true)) {
+                        item {
+                            Image(R.drawable.feature_interest_cat_game, "游戏推荐", {})
+                        }
+                    }
+                    if (topicsUiState.topics.getOrDefault("哔咔小程序", true)) {
+                        item {
+                            Image(R.drawable.feature_interest_cat_love_pica, "哔咔小程序", {})
+                        }
+                    }
+                    if (topicsUiState.topics.getOrDefault("留言板", true)) {
+                        item {
+                            Image(R.drawable.feature_interest_cat_forum, "留言板", {})
+                        }
+                    }
+                    if (topicsUiState.topics.getOrDefault("最近更新", true)) {
+                        item {
+                            Image(R.drawable.feature_interest_cat_latest, "最近更新") {
+                                navigationToComicList(null)
+                            }
+                        }
+                    }
+                    if (topicsUiState.topics.getOrDefault("随机本子", true)) {
+                        item {
+                            Image(R.drawable.feature_interest_cat_random, "随机本子") {
+                                navigationToComicList("random")
+                            }
                         }
                     }
                 }

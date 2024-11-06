@@ -27,9 +27,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 
 @Composable
-fun HideInterestDialog(
-    interestVisibilityState: Map<String, Boolean>,
-    onChangeInterestVisibility: (String, Boolean) -> Unit,
+fun SubscriptionDialog(
+    topicsUiState: TopicsUiState,
+    onChnageTopicSelection: (String, Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -56,10 +56,17 @@ fun HideInterestDialog(
         text = {
             HorizontalDivider()
             Column(Modifier.verticalScroll(rememberScrollState())) {
-                Column(Modifier.selectableGroup()) {
-                    interestVisibilityState.forEach { (name, state) ->
-                        SettingsDialogChooserRow(name, state) {
-                            onChangeInterestVisibility(name, it)
+                when (topicsUiState) {
+                    TopicsUiState.Loading -> Text(
+                        text = "Loading…",
+                        modifier = Modifier.padding(vertical = 16.dp),
+                    )
+
+                    is TopicsUiState.Success -> Column(Modifier.selectableGroup()) {
+                        topicsUiState.topics.forEach { (name, state) ->
+                            SettingsDialogChooserRow(name, state) {
+                                onChnageTopicSelection(name, it)
+                            }
                         }
                     }
                 }

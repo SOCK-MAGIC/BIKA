@@ -41,7 +41,7 @@ data class UserPreferences(
         "Cosplay" to true,
         "重口地帶" to true,
     ),
-    val interestsVisibilityState: Map<String, Boolean> = mapOf(
+    val topics: Map<String, Boolean> = mapOf(
         "推荐" to true,
         "排行榜" to true,
         "游戏推荐" to true,
