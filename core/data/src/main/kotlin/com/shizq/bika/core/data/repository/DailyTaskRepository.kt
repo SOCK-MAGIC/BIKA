@@ -4,7 +4,7 @@ import android.util.Log
 import com.shizq.bika.core.data.Syncable
 import com.shizq.bika.core.data.Synchronizer
 import com.shizq.bika.core.data.dailyWork
-import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.datastore.BikaNetworkConfigDataSource
 import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import kotlinx.coroutines.flow.first
@@ -12,13 +12,13 @@ import javax.inject.Inject
 
 class DailyTaskRepository @Inject constructor(
     private val network: BikaNetworkDataSource,
-    private val bikaPreferencesDataSource: BikaPreferencesDataSource,
     private val bikaUserCredentialDataSource: BikaUserCredentialDataSource,
+    private val bikaNetworkConfigDataSource: BikaNetworkConfigDataSource,
 ) : Syncable {
     override suspend fun syncWith(synchronizer: Synchronizer): Boolean = synchronizer.dailyWork(
         networkInit = {
             val (addresses, _) = network.networkInit()
-            bikaPreferencesDataSource.setResolveAddress(addresses)
+            bikaNetworkConfigDataSource.setResolveAddress(addresses)
             Log.i("DailyTaskRepository", addresses.toString())
         },
         punchIn = {

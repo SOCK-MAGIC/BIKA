@@ -4,8 +4,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferences(
-    @Deprecated("NetworkConfig")
-    val dns: Set<String> = emptySet(),
     val categoriesVisibilityState: Map<String, Boolean> = mapOf(
         "全彩" to true,
         "長篇" to true,

@@ -37,11 +37,4 @@ class BikaPreferencesDataSource @Inject constructor(
             )
         }
     }
-
-    @Deprecated("NetworkConfig")
-    suspend fun setResolveAddress(addresses: Set<String>) {
-        userPreferences.updateData {
-            it.copy(dns = it.dns + addresses)
-        }
-    }
 }

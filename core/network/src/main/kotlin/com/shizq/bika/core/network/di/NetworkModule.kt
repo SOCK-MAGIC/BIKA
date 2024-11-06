@@ -8,7 +8,7 @@ import coil3.disk.directory
 import coil3.network.okhttp.OkHttpNetworkFetcherFactory
 import coil3.size.Precision
 import coil3.util.DebugLogger
-import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.datastore.BikaNetworkConfigDataSource
 import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaDispatchers
 import com.shizq.bika.core.network.BuildConfig
@@ -51,7 +51,6 @@ import kotlinx.serialization.serializer
 import okhttp3.Cache
 import okhttp3.Dns
 import okhttp3.OkHttpClient
-import javax.inject.Named
 import javax.inject.Singleton
 
 @OptIn(ExperimentalSerializationApi::class)
@@ -74,14 +73,14 @@ internal class NetworkModule {
     @Provides
     @Singleton
     fun okHttpClient(
-        preferencesDataSource: BikaPreferencesDataSource,
+        networkConfigDataSource: BikaNetworkConfigDataSource,
         @ApplicationContext application: Context,
         @Dispatcher(BikaDispatchers.IO) ioDispatcher: CoroutineDispatcher,
     ): OkHttpClient = trace("BikaOkHttpClient") {
         OkHttpClient.Builder()
             .dispatcher(okhttp3.Dispatcher(ioDispatcher.asExecutorService()))
             .dns {
-                val dns = runBlocking { preferencesDataSource.userData.first().dns }
+                val dns = runBlocking { networkConfigDataSource.networkConfig.first().dns }
                 dns.flatMap { Dns.SYSTEM.lookup(it) }
             }
             .cache(Cache(application.cacheDir.resolve("okhttp-cache"), 1024 * 1024 * 500))

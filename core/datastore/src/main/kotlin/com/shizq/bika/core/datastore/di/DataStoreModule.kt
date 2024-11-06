@@ -4,9 +4,11 @@ import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
+import com.shizq.bika.core.datastore.NetworkConfigSerializer
 import com.shizq.bika.core.datastore.UserCredentialSerializer
 import com.shizq.bika.core.datastore.UserInterestsSerializer
 import com.shizq.bika.core.datastore.UserPreferencesSerializer
+import com.shizq.bika.core.datastore.model.NetworkConfig
 import com.shizq.bika.core.datastore.model.UserCredential
 import com.shizq.bika.core.datastore.model.UserInterests
 import com.shizq.bika.core.datastore.model.UserPreferences
@@ -74,5 +76,20 @@ class DataStoreModule {
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
         ) {
             context.dataStoreFile("user_interests.pb")
+        }
+
+    @Provides
+    @Singleton
+    internal fun providesBikaNetworkConfigDataStore(
+        @ApplicationContext context: Context,
+        @Dispatcher(IO) ioDispatcher: CoroutineDispatcher,
+        @ApplicationScope scope: CoroutineScope,
+        networkConfigSerializer: NetworkConfigSerializer,
+    ): DataStore<NetworkConfig> =
+        DataStoreFactory.create(
+            serializer = networkConfigSerializer,
+            scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
+        ) {
+            context.dataStoreFile("network_config.pb")
         }
 }
