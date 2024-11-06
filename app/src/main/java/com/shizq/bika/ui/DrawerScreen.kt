@@ -54,14 +54,14 @@ fun DrawerScreen(
 fun ProfileContent(uiState: DrawerUiState.Success) {
     Column {
         AvatarAsyncImage(
-            uiState.user.avatar.imageUrl,
-            uiState.user.character,
+            uiState.netWorkUser.avatar.imageUrl,
+            uiState.netWorkUser.character,
             modifier = Modifier.size(64.dp),
         )
-        Text("${uiState.user.gender} LV.${uiState.user.level}(${uiState.user.exp}/${exp(uiState.user.level)})")
-        Text(uiState.user.name)
-        Text(uiState.user.title)
-        Text(uiState.user.slogan.ifEmpty { "这个人很神秘，什么都没有写" })
+        Text("${uiState.netWorkUser.gender} LV.${uiState.netWorkUser.level}(${uiState.netWorkUser.exp}/${exp(uiState.netWorkUser.level)})")
+        Text(uiState.netWorkUser.name)
+        Text(uiState.netWorkUser.title)
+        Text(uiState.netWorkUser.slogan.ifEmpty { "这个人很神秘，什么都没有写" })
     }
 }
 

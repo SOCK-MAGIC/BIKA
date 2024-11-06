@@ -2,7 +2,7 @@ package com.shizq.bika.core.data.paging
 
 import com.shizq.bika.core.data.model.PagingMetadata
 import com.shizq.bika.core.data.util.asComicResource
-import com.shizq.bika.core.datastore.BikaInterestsDataSource
+import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.Comics
@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.first
 
 class ComicListPagingSource @AssistedInject constructor(
     private val network: BikaNetworkDataSource,
-    private val userInterests: BikaInterestsDataSource,
+    private val preferences: BikaPreferencesDataSource,
     @Assisted private val sort: Sort,
     @Assisted private val comics: Comics,
     @Assisted private val page: Int?,
@@ -26,9 +26,7 @@ class ComicListPagingSource @AssistedInject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
         return try {
             Napier.i(tag = "ComicListPagingSource") { "$comics ${sort.name} $page" }
-            val hide = userInterests.userHideCategories.first()
-            Napier.i(tag = "ComicListPagingSource") { "filter category: $hide" }
-            // 当分类与主页面相同时会造成无限加载
+            val hide = preferences.userData.first().badHobbies
             if (hide.contains(comics.category)) return LoadResult.Invalid()
             val nextPageNumber = page ?: params.key ?: 1
             val originalComicList = network.getComicList(

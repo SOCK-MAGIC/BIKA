@@ -7,19 +7,6 @@ import com.shizq.bika.core.network.model.NetworkComicSimple
 
 fun ComicInSearch.Comics.asComicResource(): List<ComicResource> = docs.map { it.asComicResource() }
 
-fun ComicInSearch.Comics.Doc.asComicResource() =
-    ComicResource(
-        id,
-        thumb.imageUrl,
-        title,
-        author,
-        categories,
-        finished,
-        0,
-        0,
-        likesCount,
-    )
-
 fun NetworkComicList.Comics.asComicResource(): List<ComicResource> = docs.map { it.asComicResource() }
 
 fun NetworkComicSimple.asComicResource(): ComicResource = ComicResource(

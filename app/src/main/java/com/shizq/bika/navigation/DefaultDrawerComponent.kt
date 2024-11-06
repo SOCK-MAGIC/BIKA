@@ -3,8 +3,7 @@ package com.shizq.bika.navigation
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.core.network.model.NetworkUserProfile
-import com.shizq.bika.core.network.model.User
+import com.shizq.bika.core.network.model.NetworkUser
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
 import dagger.assisted.Assisted
@@ -26,7 +25,7 @@ class DefaultDrawerComponent @AssistedInject constructor(
             when (result) {
                 is Result.Error -> DrawerUiState.Loading
                 Result.Loading -> DrawerUiState.Loading
-                is Result.Success -> DrawerUiState.Success(result.data.user)
+                is Result.Success -> DrawerUiState.Success(result.data.netWorkUser)
             }
         }
         .stateIn(
@@ -45,5 +44,5 @@ class DefaultDrawerComponent @AssistedInject constructor(
 
 sealed interface DrawerUiState {
     data object Loading : DrawerUiState
-    data class Success(val user: User) : DrawerUiState
+    data class Success(val netWorkUser: NetworkUser) : DrawerUiState
 }

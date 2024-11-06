@@ -5,7 +5,7 @@ import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkRankingDetail
-import com.shizq.bika.core.network.model.User
+import com.shizq.bika.core.network.model.NetworkUser
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
 import dagger.assisted.Assisted
@@ -41,7 +41,7 @@ class RankingComponentImpl @AssistedInject constructor(
                         p1.first.asComicResource(),
                         p1.second.asComicResource(),
                         p2.first.asComicResource(),
-                        p2.second.users,
+                        p2.second.networkUsers,
                     )
                 }
             }
@@ -72,7 +72,7 @@ sealed interface RankUiState {
         val h24: List<ComicResource>,
         val d7: List<ComicResource>,
         val d30: List<ComicResource>,
-        val second: List<User>,
+        val second: List<NetworkUser>,
     ) : RankUiState
 }
 

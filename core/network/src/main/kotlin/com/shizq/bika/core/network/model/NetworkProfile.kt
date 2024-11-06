@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class NetworkProfile(
     @SerialName("user")
-    val user: User = User()
+    val netWorkUser: NetworkUser = NetworkUser()
 )

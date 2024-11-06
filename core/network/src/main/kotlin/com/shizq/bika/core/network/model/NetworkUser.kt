@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User(
+data class NetworkUser(
     @SerialName("avatar")
     val avatar: Thumb = Thumb(),
     @SerialName("birthday")

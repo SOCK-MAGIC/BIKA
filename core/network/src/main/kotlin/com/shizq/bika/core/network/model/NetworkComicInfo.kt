@@ -25,7 +25,7 @@ data class NetworkComicInfo(
         @SerialName("created_at")
         val createdAt: String = "",
         @SerialName("_creator")
-        val creator: User = User(),
+        val creator: NetworkUser = NetworkUser(),
         @SerialName("description")
         val description: String = "",
         @SerialName("epsCount")

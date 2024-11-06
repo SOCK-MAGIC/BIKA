@@ -72,5 +72,5 @@ data class CommentDoc(
     @SerialName("totalComments")
     val totalComments: Int = 0,
     @SerialName("_user")
-    val user: User = User(),
+    val netWorkUser: NetworkUser = NetworkUser(),
 )
