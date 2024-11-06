@@ -21,6 +21,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -31,20 +32,19 @@ class ReaderComponentImpl @AssistedInject constructor(
     @Assisted id: String,
     @Assisted order: Int,
     readerPagingSourceFactory: ReaderPagingSource.Factory,
-    @ApplicationContext appContext: Context,
+    @ApplicationContext private val appContext: Context,
 ) : ReaderComponent,
     ComponentContext by componentContext {
     private val currentItemIndex by derivedStateOf { lazyListState.firstVisibleItemIndex }
-    private val width = appContext.resources.displayMetrics.widthPixels
-    private val height = appContext.resources.displayMetrics.heightPixels
 
-    var showActionMenu by mutableStateOf(false)
+    override var showActionMenu by mutableStateOf(false)
 
     override var pageCount by mutableFloatStateOf(1f)
 
     override val lazyListState =
         LazyListState(prefetchStrategy = LazyListPrefetchStrategy(NESTED_PREFETCH_ITEM_COUNT))
-    override var bottomText = snapshotFlow { "$currentItemIndex/$pageCount" }
+
+    override var bottomText = snapshotFlow { "$currentItemIndex/${pageCount.toInt()}" }
         .stateIn(
             componentScope,
             SharingStarted.WhileSubscribed(5000),
@@ -61,13 +61,17 @@ class ReaderComponentImpl @AssistedInject constructor(
         .flow
         .cachedIn(componentScope)
 
-    override fun onClick(offset: Offset) {
-        val scale = Offset(offset.x / width, offset.y / height)
-        onClick(getScrollingDirection(scale))
+    override fun onClick(offset: Offset, scope: CoroutineScope) {
+        val metrics = appContext.resources.displayMetrics
+        val scale = Offset(offset.x / metrics.widthPixels, offset.y / metrics.heightPixels)
+        onClick(getScrollingDirection(scale), scope)
     }
 
-    override fun onClick(direction: PageScrollingDirection) {
-        componentScope.launch {
+    override fun onClick(
+        direction: PageScrollingDirection,
+        scope: CoroutineScope,
+    ) {
+        scope.launch {
             when (direction) {
                 PageScrollingDirection.NONE -> showActionMenu = !showActionMenu
                 PageScrollingDirection.PREV -> {

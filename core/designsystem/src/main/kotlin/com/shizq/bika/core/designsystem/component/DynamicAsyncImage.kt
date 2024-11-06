@@ -103,6 +103,7 @@ fun ComicReadingAsyncImage(
             imageRequest,
             context.imageLoader,
             contentScale = ContentScale.Crop,
+            placeholder =
         )
     Image(
         imagePainter,

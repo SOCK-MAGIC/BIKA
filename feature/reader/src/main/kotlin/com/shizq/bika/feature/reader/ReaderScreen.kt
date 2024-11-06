@@ -1,21 +1,27 @@
 package com.shizq.bika.feature.reader
 
 import android.view.KeyEvent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ScreenRotationAlt
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
@@ -26,6 +32,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +42,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -44,19 +52,21 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.shizq.bika.core.designsystem.component.ComicReadingAsyncImage
+import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.Picture
 
 @Composable
 fun ReaderScreen(component: ReaderComponent) {
     val items = component.picturePagingFlow.collectAsLazyPagingItems()
     val bottomText by component.bottomText.collectAsStateWithLifecycle()
-
+    val scope = rememberCoroutineScope()
     ReaderContent(
         lazyPagingItems = items,
         bottomText = bottomText,
         lazyListState = component.lazyListState,
-        onClick = { component.onClick(it) },
-        physicalClick = { component.onClick(it) },
+        showActionMenu = component.showActionMenu,
+        onClick = { component.onClick(it, scope) },
+        physicalClick = { component.onClick(it, scope) },
     )
 }
 
@@ -65,42 +75,61 @@ internal fun ReaderContent(
     lazyPagingItems: LazyPagingItems<Picture>,
     lazyListState: LazyListState,
     bottomText: String,
+    showActionMenu: Boolean,
     onClick: (Offset) -> Unit,
     physicalClick: (PageScrollingDirection) -> Unit,
 ) {
+    val density = LocalDensity.current
     Scaffold(
         topBar = {},
-        bottomBar = {},
-        modifier = Modifier
-            .pointerInput(Unit) {
-                detectTapGestures {
-                    onClick(it)
-                }
+        bottomBar = {
+            AnimatedVisibility(
+                showActionMenu,
+                enter = slideInVertically {
+                    with(density) { 80.dp.roundToPx() }
+                } + expandVertically(
+                    expandFrom = Alignment.Bottom,
+                ) + fadeIn(
+                    initialAlpha = 0.3f,
+                ),
+                exit = slideOutVertically { with(density) { 80.dp.roundToPx() } } + shrinkVertically() + fadeOut(),
+            ) {
+                BikaBottomBar()
             }
+        },
+        modifier = Modifier
             .fillMaxSize(),
     ) { innerPadding ->
         Box(
             Modifier
                 .padding(innerPadding)
-                .onKeyEvent {
-                    it.nativeKeyEvent.startTracking()
-                    when (it.key) {
-                        Key.VolumeUp -> {
-                            physicalClick(PageScrollingDirection.NEXT)
-                            true
-                        }
-
-                        Key.VolumeDown -> {
-                            physicalClick(PageScrollingDirection.PREV)
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
                 .fillMaxSize(),
         ) {
-            LazyColumn(state = lazyListState, modifier = Modifier.fillMaxSize()) {
+            LazyColumn(
+                state = lazyListState,
+                modifier = Modifier
+                    .pointerInput(Unit) {
+                        detectTapGestures {
+                            onClick(it)
+                        }
+                    }
+                    .onKeyEvent {
+                        when (it.key) {
+                            Key.VolumeUp -> {
+                                physicalClick(PageScrollingDirection.NEXT)
+                                true
+                            }
+
+                            Key.VolumeDown -> {
+                                physicalClick(PageScrollingDirection.PREV)
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
+                    .fillMaxSize(),
+            ) {
                 items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id }) { index ->
                     lazyPagingItems[index]?.let {
                         ComicReadingAsyncImage(it.url, modifier = Modifier.fillMaxSize())
@@ -109,7 +138,9 @@ internal fun ReaderContent(
             }
             Text(
                 bottomText,
-                modifier = Modifier.align(Alignment.BottomEnd),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(end = 16.dp),
             )
         }
     }
@@ -143,20 +174,34 @@ private fun BottomOptions() {
 
 @Composable
 internal fun BikaBottomBar(modifier: Modifier = Modifier) {
-    BottomAppBar {
+    BottomAppBar(modifier, tonalElevation = 1.dp) {
         BikaBottomBarItem {
-            Icon(Icons.Default.ScreenRotationAlt, "屏幕方向")
+            Icon(BikaIcons.ScreenRotationAlt, "屏幕方向")
             Text("屏幕方向")
+        }
+        BikaBottomBarItem {
+            if (true) {
+                Icon(BikaIcons.SwapVert, "滑动方向")
+            } else {
+                Icon(BikaIcons.SwapHoriz, "滑动方向")
+            }
+            Text("滑动方向")
         }
     }
 }
 
 @Composable
-internal fun BikaBottomBarItem(
+internal fun RowScope.BikaBottomBarItem(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(modifier, content = content)
+    Column(
+        modifier
+            .weight(1f),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        content = content,
+    )
 }
 
 @Composable
