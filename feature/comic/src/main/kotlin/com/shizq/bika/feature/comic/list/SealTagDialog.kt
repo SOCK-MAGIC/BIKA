@@ -18,9 +18,9 @@ import com.shizq.bika.core.designsystem.component.Dialog
 import com.shizq.bika.core.designsystem.component.DialogToggleRow
 
 @Composable
-fun SettingsDialog(
-    categoryVisibilityUiState: Map<String, Boolean>,
-    onChangeCategoryState: (String, Boolean) -> Unit,
+fun HobbyDialog(
+    hobbyUiState: HobbyUiState,
+    onChangeHobby: (String, Boolean) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val configuration = LocalConfiguration.current
@@ -39,13 +39,20 @@ fun SettingsDialog(
         HorizontalDivider()
         Column(Modifier.verticalScroll(rememberScrollState())) {
             Column(Modifier.selectableGroup()) {
-                categoryVisibilityUiState.forEach { (name, state) ->
-                    DialogToggleRow(name, state) {
-                        onChangeCategoryState(name, it)
+                when (hobbyUiState) {
+                    HobbyUiState.Loading -> Text(
+                        text = "Loading…",
+                        modifier = Modifier.padding(vertical = 16.dp),
+                    )
+
+                    is HobbyUiState.Success -> hobbyUiState.hobbies.forEach { (name, state) ->
+                        DialogToggleRow(name, state) {
+                            onChangeHobby(name, it)
+                        }
                     }
                 }
+                HorizontalDivider(Modifier.padding(top = 8.dp))
             }
-            HorizontalDivider(Modifier.padding(top = 8.dp))
         }
     }
 }

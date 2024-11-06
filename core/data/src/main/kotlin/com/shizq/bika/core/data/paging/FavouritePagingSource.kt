@@ -11,18 +11,18 @@ import dagger.assisted.AssistedInject
 
 class FavouritePagingSource @AssistedInject constructor(
     private val network: BikaNetworkDataSource,
-    // private val sort: Sort,
+    @Assisted private val sort: Sort,
     @Assisted private val pagingMetadata: (PagingMetadata) -> Unit,
 ) : BikaComicListPagingSource() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
-        val nextPageNumber = params.key ?: 1
-        val comicList = network.favouriteComics(sort = Sort.SORT_DEFAULT, page = nextPageNumber)
-
-        val page = comicList.comics.page
-        val pages = comicList.comics.pages
-        pagingMetadata(PagingMetadata(comicList.comics.total, page, pages))
         return try {
+            val nextPageNumber = params.key ?: 1
+            val comicList = network.favouriteComics(sort = sort, page = nextPageNumber)
+
+            val page = comicList.comics.page
+            val pages = comicList.comics.pages
+            pagingMetadata(PagingMetadata(comicList.comics.total, page, pages))
             LoadResult.Page(
                 data = comicList.comics.asComicResource(),
                 prevKey = if (page > 2) page - 1 else null,
@@ -36,6 +36,7 @@ class FavouritePagingSource @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         operator fun invoke(
+            sort: Sort,
             pagingMetadata: (PagingMetadata) -> Unit,
         ): FavouritePagingSource
     }

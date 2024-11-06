@@ -11,10 +11,9 @@ class ComicRecommendPagingSource @Inject constructor(
 ) : BikaComicListPagingSource() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
-        val comicList = network.getRecommend().collections
-            .flatMap { collection -> collection.comics.map { it.asComicResource() } }
-
         return try {
+            val comicList = network.getRecommend().collections
+                .flatMap { collection -> collection.comics.map { it.asComicResource() } }
             LoadResult.Page(
                 data = comicList,
                 prevKey = null,

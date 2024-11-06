@@ -24,22 +24,22 @@ class ComicListPagingSource @AssistedInject constructor(
     override val jumpingSupported = true
     override val keyReuseSupported = true
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
-        Napier.i(tag = "ComicListPagingSource") { "$comics ${sort.name} $page" }
-        val hide = userInterests.userHideCategories.first()
-        Napier.i(tag = "ComicListPagingSource") { "filter category: $hide" }
-        // 当分类与主页面相同时会造成无限加载
-        if (hide.contains(comics.category)) return LoadResult.Invalid()
-        val nextPageNumber = page ?: params.key ?: 1
-        val originalComicList = network.getComicList(
-            sort = sort,
-            page = nextPageNumber,
-            comics = comics,
-        )
-        val (docs, limit, page, pages, total) = originalComicList.comics
-        pagingMetadata(PagingMetadata(total, page, pages))
-        val comicList = docs.map { it.asComicResource() }
-
         return try {
+            Napier.i(tag = "ComicListPagingSource") { "$comics ${sort.name} $page" }
+            val hide = userInterests.userHideCategories.first()
+            Napier.i(tag = "ComicListPagingSource") { "filter category: $hide" }
+            // 当分类与主页面相同时会造成无限加载
+            if (hide.contains(comics.category)) return LoadResult.Invalid()
+            val nextPageNumber = page ?: params.key ?: 1
+            val originalComicList = network.getComicList(
+                sort = sort,
+                page = nextPageNumber,
+                comics = comics,
+            )
+            val (docs, limit, page, pages, total) = originalComicList.comics
+            pagingMetadata(PagingMetadata(total, page, pages))
+            val comicList = docs.map { it.asComicResource() }
+
             LoadResult.Page(
                 data = comicList,
                 prevKey = if (page > 2) page - 1 else null,

@@ -12,15 +12,15 @@ class BikaPreferencesDataSource @Inject constructor(
     val userData = userPreferences.data.map { preferences ->
         UserData(
             topics = preferences.topics,
-            subscribeCategories = preferences.categoriesVisibilityState,
-            unsubscribedTopics = preferences.topics.filterNot { it.value },
+            hobbies = preferences.hobbies,
+            badHobbies = preferences.topics.filterNot { it.value }.keys,
         )
     }
 
-    suspend fun setCategoriesFollowed(name: String, state: Boolean) {
+    suspend fun setHobbiesFollowed(name: String, state: Boolean) {
         userPreferences.updateData {
             it.copy(
-                categoriesVisibilityState = it.categoriesVisibilityState.toMutableMap().apply {
+                hobbies = it.hobbies.toMutableMap().apply {
                     this[name] = state
                 },
             )

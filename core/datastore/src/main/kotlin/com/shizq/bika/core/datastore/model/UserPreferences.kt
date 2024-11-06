@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserPreferences(
-    val categoriesVisibilityState: Map<String, Boolean> = mapOf(
+    val hobbies: Map<String, Boolean> = mapOf(
         "全彩" to true,
         "長篇" to true,
         "同人" to true,

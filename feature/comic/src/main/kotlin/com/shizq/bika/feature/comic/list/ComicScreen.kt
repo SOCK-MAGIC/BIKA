@@ -5,9 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Sort
-import androidx.compose.material.icons.rounded.HideSource
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,13 +32,14 @@ import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -> Unit) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
-    val categoryVisibilityUiState by component.categoryVisibilityUiState.collectAsStateWithLifecycle()
+    val hobbyUiState by component.hobbyUiState.collectAsStateWithLifecycle()
     var showSealTagDialog by rememberSaveable { mutableStateOf(false) }
     var showSortDialog by rememberSaveable { mutableStateOf(false) }
     ComicContent(
@@ -52,11 +50,11 @@ fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -
             showSealTagDialog = false
             showSortDialog = false
         },
-        onTopAppBarActionClick = { showSealTagDialog = true },
+        onActionClickHobbyDialog = { showSealTagDialog = true },
         showSortDialog = showSortDialog,
-        onActionSortDialogClick = { showSortDialog = true },
-        categoryVisibilityUiState = categoryVisibilityUiState,
-        onChangeCategoryState = component::updateCategoryState,
+        onActionClickSortDialog = { showSortDialog = true },
+        hobbyUiState = hobbyUiState,
+        onChangeHobbiesSelection = component::updateHobbiesSelection,
     )
 }
 
@@ -64,18 +62,18 @@ fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -
 @Composable
 internal fun ComicContent(
     lazyPagingItems: LazyPagingItems<ComicResource>,
-    categoryVisibilityUiState: Map<String, Boolean>,
+    hobbyUiState: HobbyUiState,
     showSealCategoriesDialog: Boolean,
     showSortDialog: Boolean,
     modifier: Modifier = Modifier,
-    onTopAppBarActionClick: () -> Unit,
+    onActionClickHobbyDialog: () -> Unit,
     onDismissed: () -> Unit,
-    onActionSortDialogClick: () -> Unit,
+    onActionClickSortDialog: () -> Unit,
     navigationToComicInfo: (String) -> Unit,
-    onChangeCategoryState: (String, Boolean) -> Unit,
+    onChangeHobbiesSelection: (String, Boolean) -> Unit,
 ) {
     if (showSealCategoriesDialog) {
-        SettingsDialog(categoryVisibilityUiState, onChangeCategoryState) { onDismissed() }
+        HobbyDialog(hobbyUiState, onChangeHobbiesSelection) { onDismissed() }
     }
     if (showSortDialog) {
         SortDialog { onDismissed() }
@@ -91,13 +89,13 @@ internal fun ComicContent(
             TopAppBar(
                 {},
                 actions = {
-                    IconButton(onActionSortDialogClick) {
-                        Icon(Icons.AutoMirrored.Rounded.Sort, "sort")
+                    IconButton(onActionClickSortDialog) {
+                        Icon(BikaIcons.Sort, "sort")
                     }
-                    IconButton(onTopAppBarActionClick) {
-                        Icon(Icons.Rounded.HideSource, "hide tag")
+                    IconButton(onActionClickHobbyDialog) {
+                        Icon(BikaIcons.HideSource, "hide tag")
                     }
-                    val pageMetadata = PageMetaData.pageMetadata
+                    val pageMetadata = PageMetaData.metadata
                     if (pageMetadata != null) {
                         Text(
                             "${pageMetadata.currentPage} / ${pageMetadata.totalPages}",

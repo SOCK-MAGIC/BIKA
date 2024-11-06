@@ -20,14 +20,15 @@ import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class CompositeComicListRepository @Inject constructor(
-    private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
     @ApplicationScope private val scope: CoroutineScope,
+    private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
     private val comicRecommendPagingSource: ComicRecommendPagingSource,
     private val comicRandomPagingSource: ComicRandomPagingSource,
     private val favouritePagingSourceFactory: FavouritePagingSource.Factory,
     private val comicListPagingSourceFactory: ComicListPagingSource.Factory,
 ) {
-    fun getPagingFlowByCategories(
+
+    operator fun invoke(
         comics: Comics,
         page: Int? = null,
         sort: Sort,
@@ -39,7 +40,7 @@ class CompositeComicListRepository @Inject constructor(
                 "recommend" -> comicRecommendPagingSource
                 "random" -> comicRandomPagingSource
                 "recently" -> recentlyViewedComicRepository.getRecentWatchedComicQueries()
-                "favourite" -> favouritePagingSourceFactory(pagingMetadata)
+                "favourite" -> favouritePagingSourceFactory(sort, pagingMetadata)
                 else -> comicListPagingSourceFactory(
                     sort = sort,
                     comics = comics,

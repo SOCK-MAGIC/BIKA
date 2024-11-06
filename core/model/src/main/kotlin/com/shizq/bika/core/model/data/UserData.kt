@@ -5,6 +5,6 @@ package com.shizq.bika.core.model.data
  */
 data class UserData(
     val topics: Map<String, Boolean>,
-    val subscribeCategories: Map<String, Boolean>,
-    val unsubscribedTopics: Map<String, Boolean>,
+    val hobbies: Map<String, Boolean>,
+    val badHobbies: Set<String>,
 )

@@ -12,9 +12,8 @@ class ComicRandomPagingSource @Inject constructor(
     override suspend fun load(
         params: LoadParams<Int>,
     ): LoadResult<Int, ComicResource> {
-        val comicList = network.comicsRandom().comics.map { it.asComicResource() }
-
         return try {
+            val comicList = network.comicsRandom().comics.map { it.asComicResource() }
             LoadResult.Page(
                 data = comicList,
                 prevKey = null,

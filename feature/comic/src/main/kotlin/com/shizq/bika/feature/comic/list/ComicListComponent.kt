@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 
 interface ComicListComponent {
     val comicFlow: Flow<PagingData<ComicResource>>
-    val categoryVisibilityUiState: StateFlow<Map<String, Boolean>>
-    fun updateCategoryState(name: String, state: Boolean)
+    val hobbyUiState: StateFlow<HobbyUiState>
+    fun updateHobbiesSelection(name: String, state: Boolean)
 
     interface Factory {
         operator fun invoke(
