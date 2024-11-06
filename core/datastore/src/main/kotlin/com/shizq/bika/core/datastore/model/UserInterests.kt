@@ -2,8 +2,10 @@ package com.shizq.bika.core.datastore.model
 
 import kotlinx.serialization.Serializable
 
+@Deprecated("UserPreferences")
 @Serializable
 data class UserInterests(
+    @Deprecated("UserPreferences")
     val interestsVisibility: Map<String, Boolean> = mapOf(
         "推荐" to true,
         "排行榜" to true,
@@ -59,6 +61,7 @@ data class UserInterests(
         "Cosplay" to true,
         "重口地帶" to true,
     ),
+    @Deprecated("UserPreferences")
     val categoriesVisibility: Map<String, Boolean> = mapOf(
         "全彩" to true,
         "長篇" to true,

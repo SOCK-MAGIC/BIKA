@@ -10,6 +10,7 @@ android {
 
 dependencies {
     api(libs.androidx.datastore)
+    api(projects.core.model)
 
     implementation(projects.core.common)
 

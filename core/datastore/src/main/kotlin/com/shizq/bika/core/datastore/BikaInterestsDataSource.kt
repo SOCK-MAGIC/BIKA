@@ -5,6 +5,7 @@ import com.shizq.bika.core.datastore.model.UserInterests
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@Deprecated("")
 class BikaInterestsDataSource @Inject constructor(
     private val userInterests: DataStore<UserInterests>,
 ) {

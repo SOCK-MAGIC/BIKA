@@ -92,11 +92,6 @@ class MainViewModel @Inject constructor(
     }
 
     fun getSignIn() {
-        viewModelScope.launch {
-            val account = bikaPreferencesDataSource.userData.first().account
-            // val token = network.signIn(account.email, account.password)
-            // bikaPreferencesDataSource.setToken(token.token)
-        }
     }
 
     fun getCategories() {

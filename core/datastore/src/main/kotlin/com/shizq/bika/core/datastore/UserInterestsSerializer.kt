@@ -9,7 +9,7 @@ import kotlinx.serialization.json.encodeToStream
 import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
-
+@Deprecated("")
 class UserInterestsSerializer @Inject constructor() : Serializer<UserInterests> {
     override val defaultValue: UserInterests = UserInterests()
 
