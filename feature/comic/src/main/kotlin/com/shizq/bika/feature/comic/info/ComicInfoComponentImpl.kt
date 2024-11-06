@@ -62,7 +62,7 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                         updatedAt = comic.updatedAt,
                         viewsCount = comic.viewsCount,
                         comicResource = info.asComicResource(),
-                        bottomRecommend =  recommend.comics.map { it.asComicResource() }
+                        bottomRecommend = recommend.comics.map { it.asComicResource() },
                     )
                 }
             }
@@ -115,4 +115,3 @@ class ComicInfoComponentImpl @AssistedInject constructor(
         ): ComicInfoComponentImpl
     }
 }
-

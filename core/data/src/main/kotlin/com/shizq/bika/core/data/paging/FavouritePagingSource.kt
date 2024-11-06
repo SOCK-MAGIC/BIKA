@@ -15,22 +15,20 @@ class FavouritePagingSource @AssistedInject constructor(
     @Assisted private val pagingMetadata: (PagingMetadata) -> Unit,
 ) : BikaComicListPagingSource() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> {
-        return try {
-            val nextPageNumber = params.key ?: 1
-            val comicList = network.favouriteComics(sort = sort, page = nextPageNumber)
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ComicResource> = try {
+        val nextPageNumber = params.key ?: 1
+        val comicList = network.favouriteComics(sort = sort, page = nextPageNumber)
 
-            val page = comicList.comics.page
-            val pages = comicList.comics.pages
-            pagingMetadata(PagingMetadata(comicList.comics.total, page, pages))
-            LoadResult.Page(
-                data = comicList.comics.asComicResource(),
-                prevKey = if (page > 2) page - 1 else null,
-                nextKey = if (nextPageNumber < pages) page + 1 else null,
-            )
-        } catch (e: Exception) {
-            LoadResult.Error(e)
-        }
+        val page = comicList.comics.page
+        val pages = comicList.comics.pages
+        pagingMetadata(PagingMetadata(comicList.comics.total, page, pages))
+        LoadResult.Page(
+            data = comicList.comics.asComicResource(),
+            prevKey = if (page > 2) page - 1 else null,
+            nextKey = if (nextPageNumber < pages) page + 1 else null,
+        )
+    } catch (e: Exception) {
+        LoadResult.Error(e)
     }
 
     @AssistedFactory

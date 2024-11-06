@@ -31,7 +31,7 @@ class CommentComponentImpl @AssistedInject constructor(
             childCommentListRepository(it)
         }
 
-  override  fun changeCommentContent(text: String) {
+    override fun changeCommentContent(text: String) {
         commentContent = text
     }
 

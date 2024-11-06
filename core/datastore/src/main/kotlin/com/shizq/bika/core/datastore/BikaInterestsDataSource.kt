@@ -11,5 +11,4 @@ class BikaInterestsDataSource @Inject constructor(
 ) {
     val userHideCategories =
         userInterests.data.map { interests -> interests.categoriesVisibility.filterValues { !it }.keys }
-
 }

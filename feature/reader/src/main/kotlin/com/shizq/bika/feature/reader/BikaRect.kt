@@ -25,7 +25,5 @@ sealed class BikaRect(
     data object BottomCenter : BikaRect(left = 0.33f, top = 0.66f, right = 0.66f, bottom = 1f)
     data object BottomEnd : BikaRect(left = 0.66f, top = 0.66f, right = 1f, bottom = 1f)
 
-    operator fun contains(offset: Offset): Boolean {
-        return offset.x >= left && offset.x < right && offset.y >= top && offset.y < bottom
-    }
+    operator fun contains(offset: Offset): Boolean = offset.x >= left && offset.x < right && offset.y >= top && offset.y < bottom
 }
