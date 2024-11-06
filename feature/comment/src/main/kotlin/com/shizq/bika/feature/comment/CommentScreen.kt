@@ -28,12 +28,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
@@ -46,8 +41,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.arkivanov.essenty.backhandler.BackCallback
-import com.arkivanov.essenty.backhandler.BackHandler
+import com.shizq.bika.core.backhandle.BackHandler
 import com.shizq.bika.core.data.model.Comment
 import com.shizq.bika.core.data.model.User
 import com.shizq.bika.core.designsystem.component.AvatarAsyncImage
@@ -155,20 +149,6 @@ internal fun CommentContent(
                 maxLines = 3,
             )
         }
-    }
-}
-
-@Composable
-fun BackHandler(backHandler: BackHandler, isEnabled: Boolean = true, onBack: () -> Unit) {
-    val currentOnBack by rememberUpdatedState(onBack)
-
-    val callback = remember { BackCallback(isEnabled = isEnabled) { currentOnBack() } }
-
-    SideEffect { callback.isEnabled = isEnabled }
-
-    DisposableEffect(backHandler) {
-        backHandler.register(callback)
-        onDispose { backHandler.unregister(callback) }
     }
 }
 

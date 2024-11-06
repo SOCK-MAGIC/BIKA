@@ -15,8 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,10 +37,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
+import com.shizq.bika.core.backhandle.BackHandler
+import com.shizq.bika.core.context.findActivity
 import com.shizq.bika.core.designsystem.component.BikaLoadingWheel
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
-import io.github.aakira.napier.Napier
 
 @Composable
 fun InterestScreen(
@@ -55,6 +54,14 @@ fun InterestScreen(
     val uiState by component.interestUiState.collectAsState()
     val topicsUiState by component.topicsUiState.collectAsState()
     var showSubscriptionDialog by rememberSaveable { mutableStateOf(false) }
+    val context = LocalContext.current
+    BackHandler(component.backHandler) {
+        if (showSubscriptionDialog) {
+            showSubscriptionDialog = false
+            return@BackHandler
+        }
+        context.findActivity()?.finish()
+    }
     InterestContent(
         interestsUiState = uiState,
         navigationToSearch = navigationToSearch,
@@ -87,8 +94,9 @@ internal fun InterestContent(
     if (showSubscriptionDialog) {
         SubscriptionDialog(
             topicsUiState,
-            onChnageTopicSelection = updateTopicSelection,
-        ) { onDismissed() }
+            onChangeTopicSelection = updateTopicSelection,
+            onDismissed,
+        )
     }
     Scaffold(
         topBar = {
@@ -99,7 +107,7 @@ internal fun InterestContent(
                         Icon(BikaIcons.Subscriptions, "Subscriptions")
                     }
                     IconButton({ navigationToSearch(null) }) {
-                        Icon(Icons.Rounded.Search, "Search")
+                        Icon(BikaIcons.Search, "Search")
                     }
                 },
                 navigationIcon = {
@@ -110,7 +118,6 @@ internal fun InterestContent(
             )
         },
     ) { innerPadding ->
-        Napier.d(tag = "InterestContent") { interestsUiState.toString() }
         when (interestsUiState) {
             InterestsUiState.Empty -> Box(
                 Modifier.fillMaxSize(),
@@ -131,53 +138,6 @@ internal fun InterestContent(
                 GridCells.Fixed(3),
                 modifier = modifier.padding(innerPadding),
             ) {
-                // if (topicsUiState is TopicsUiState.Success) {
-                //     if (topicsUiState.topics.getOrDefault("推荐", true)) {
-                //         item {
-                //             Image(R.drawable.feature_interest_bika, "推荐") {
-                //                 navigationToComicList("recommend")
-                //             }
-                //         }
-                //     }
-                //     if (topicsUiState.topics.getOrDefault("排行榜", true)) {
-                //         item {
-                //             Image(
-                //                 R.drawable.feature_interest_cat_leaderboard,
-                //                 "排行榜",
-                //                 navigationToRanking,
-                //             )
-                //         }
-                //     }
-                //     if (topicsUiState.topics.getOrDefault("游戏推荐", true)) {
-                //         item {
-                //             Image(R.drawable.feature_interest_cat_game, "游戏推荐", {})
-                //         }
-                //     }
-                //     if (topicsUiState.topics.getOrDefault("哔咔小程序", true)) {
-                //         item {
-                //             Image(R.drawable.feature_interest_cat_love_pica, "哔咔小程序", {})
-                //         }
-                //     }
-                //     if (topicsUiState.topics.getOrDefault("留言板", true)) {
-                //         item {
-                //             Image(R.drawable.feature_interest_cat_forum, "留言板", {})
-                //         }
-                //     }
-                //     if (topicsUiState.topics.getOrDefault("最近更新", true)) {
-                //         item {
-                //             Image(R.drawable.feature_interest_cat_latest, "最近更新") {
-                //                 navigationToComicList(null)
-                //             }
-                //         }
-                //     }
-                //     if (topicsUiState.topics.getOrDefault("随机本子", true)) {
-                //         item {
-                //             Image(R.drawable.feature_interest_cat_random, "随机本子") {
-                //                 navigationToComicList("random")
-                //             }
-                //         }
-                //     }
-                // }
                 items(interestsUiState.interests, key = { it.title }) { item ->
                     val context = LocalContext.current
                     Image(item.model, item.title, item.title) {

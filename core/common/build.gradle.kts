@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.bika.android.library)
+    alias(libs.plugins.bika.android.compose)
     alias(libs.plugins.bika.hilt)
 }
 
@@ -8,8 +9,9 @@ android {
 }
 
 dependencies {
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.decompose)
     implementation(libs.kotlinx.coroutines.core)
     api(libs.napier)
+
+    implementation(libs.androidx.compose.runtime)
 }

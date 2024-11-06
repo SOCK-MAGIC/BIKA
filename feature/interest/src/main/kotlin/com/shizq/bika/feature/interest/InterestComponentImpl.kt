@@ -17,8 +17,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import kotlin.uuid.ExperimentalUuidApi
-import kotlin.uuid.Uuid
 
 class InterestComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
@@ -74,23 +72,6 @@ class InterestComponentImpl @AssistedInject constructor(
         ): InterestComponentImpl
     }
 }
-
-sealed interface InterestsUiState {
-    data object Loading : InterestsUiState
-
-    data class Interests(val interests: List<Interest>) : InterestsUiState
-
-    data object Empty : InterestsUiState
-}
-
-@OptIn(ExperimentalUuidApi::class)
-data class Interest(
-    val title: String,
-    val model: Any,
-    val id: String = Uuid.random().toString(),
-    val isWeb: Boolean = false,
-    val link: String = "",
-)
 
 private fun NetworkCategories.Category.asInterest(token: String): Interest {
     val newLink =

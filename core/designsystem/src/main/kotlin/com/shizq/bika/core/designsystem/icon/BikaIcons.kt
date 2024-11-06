@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.History
 import androidx.compose.material.icons.rounded.Mail
 import androidx.compose.material.icons.rounded.Menu
+import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material.icons.rounded.Subject
 import androidx.compose.material.icons.rounded.Subscriptions
 import androidx.compose.material.icons.rounded.VisibilityOff
@@ -22,6 +23,7 @@ object BikaIcons {
     val VisibilityOff = Icons.Rounded.VisibilityOff
     val Subject = Icons.AutoMirrored.Rounded.Subject
     val Subscriptions = Icons.Rounded.Subscriptions
+    val Search = Icons.Rounded.Search
     val Menu = Icons.Rounded.Menu
     val History = Icons.Rounded.History
     val Bookmarks = Icons.Rounded.Bookmarks
