@@ -13,15 +13,12 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,15 +31,11 @@ internal fun UserDialog(
     slogan: String,
     onDismiss: () -> Unit,
 ) {
-    var show by remember { mutableStateOf(false) }
-    if (false) {
-        Pop(avatarUrl) { show = false }
-    }
     BasicAlertDialog(onDismiss) {
         Surface(
             shape = MaterialTheme.shapes.large,
             tonalElevation = AlertDialogDefaults.TonalElevation,
-            modifier = Modifier.clickable { show = true },
+            modifier = Modifier.clickable { },
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -61,15 +54,5 @@ internal fun UserDialog(
                 Text(slogan)
             }
         }
-    }
-}
-
-@Composable
-fun Pop(avatarUrl: String, onDismiss: () -> Unit) {
-    Popup(alignment = Alignment.Center, onDismissRequest = onDismiss) {
-        DynamicAsyncImage(
-            avatarUrl,
-            modifier = Modifier,
-        )
     }
 }
