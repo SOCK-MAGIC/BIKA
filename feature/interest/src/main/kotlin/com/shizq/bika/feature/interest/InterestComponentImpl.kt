@@ -27,10 +27,10 @@ class InterestComponentImpl @AssistedInject constructor(
     private val preferencesDataSource: BikaPreferencesDataSource,
 ) : InterestComponent,
     ComponentContext by componentContext {
-    override val topicsUiState = preferencesDataSource.userData.map {
-        TopicsUiState.Success(it.topics)
-    }
-        .stateIn(
+    override val topicsUiState =
+        preferencesDataSource.userData.map {
+            TopicsUiState.Success(it.topics)
+        }.stateIn(
             componentScope,
             SharingStarted.WhileSubscribed(5000),
             TopicsUiState.Loading,
