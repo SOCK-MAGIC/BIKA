@@ -5,12 +5,12 @@ import com.shizq.bika.core.datastore.model.NetworkConfig
 import javax.inject.Inject
 
 class BikaNetworkConfigDataSource @Inject constructor(
-    private val network: DataStore<NetworkConfig>,
+    private val dataStore: DataStore<NetworkConfig>,
 ) {
-    val networkConfig = network.data
+    val networkConfig = dataStore.data
 
     suspend fun setResolveAddress(address: Set<String>) {
-        network.updateData {
+        dataStore.updateData {
             it.copy(dns = it.dns + address)
         }
     }
