@@ -11,8 +11,11 @@ data class Thumb(
     @SerialName("originalName")
     val originalName: String = "",
     @SerialName("path")
-    val path: String = ""
+    val path: String = "",
 ) {
+    @Transient
+    val staticImageUrl = "$fileServer/static/$path"
+
     @Transient
     val imageUrl = if (fileServer.endsWith("/")) {
         "$fileServer$path"

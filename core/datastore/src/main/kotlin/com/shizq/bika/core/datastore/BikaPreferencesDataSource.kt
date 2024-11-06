@@ -9,8 +9,7 @@ import javax.inject.Inject
 class BikaPreferencesDataSource @Inject constructor(
     private val userPreferences: DataStore<UserPreferences>,
 ) {
-    val userData = userPreferences.data
-    val userData2 = userPreferences.data.map { preferences ->
+    val userData = userPreferences.data.map { preferences ->
         UserData(
             topics = preferences.topics,
             subscribeCategories = preferences.categoriesVisibilityState,

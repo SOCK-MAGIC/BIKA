@@ -2,7 +2,6 @@ package com.shizq.bika.feature.interest
 
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
-import com.shizq.bika.core.datastore.BikaInterestsDataSource
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
@@ -18,16 +17,17 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
 class InterestComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     private val network: BikaNetworkDataSource,
-    private val userInterests: BikaInterestsDataSource,
     userCredential: BikaUserCredentialDataSource,
-    preferencesDataSource: BikaPreferencesDataSource,
+    private val preferencesDataSource: BikaPreferencesDataSource,
 ) : InterestComponent,
     ComponentContext by componentContext {
-    override val topicsUiState = preferencesDataSource.userData2.map {
+    override val topicsUiState = preferencesDataSource.userData.map {
         TopicsUiState.Success(it.topics)
     }
         .stateIn(
@@ -38,17 +38,19 @@ class InterestComponentImpl @AssistedInject constructor(
     override val interestUiState = combine(
         flow { emit(network.getCategories()) }.asResult(),
         userCredential.userData,
-        preferencesDataSource.userData2,
+        preferencesDataSource.userData,
     ) { result, credential, preferences ->
         when (result) {
             is Result.Error -> InterestsUiState.Empty
             Result.Loading -> InterestsUiState.Loading
             is Result.Success -> {
                 val interests =
-                    result.data.categories
-                        .filter { preferences.topics.getOrElse(it.title) { true } }
-                        .map { it.asInterest(credential.token) }
-                InterestsUiState.Interests(interests)
+                    FixedInterests + result.data.categories.map { it.asInterest(credential.token) }
+                InterestsUiState.Interests(
+                    interests.filter {
+                        preferences.topics.getOrElse(it.title) { true }
+                    },
+                )
             }
         }
     }
@@ -60,7 +62,7 @@ class InterestComponentImpl @AssistedInject constructor(
 
     override fun updateTopicSelection(title: String, state: Boolean) {
         componentScope.launch {
-            userInterests.setInterestVisibility(title, state)
+            preferencesDataSource.setTopicIdFollowed(title, state)
         }
     }
 
@@ -80,26 +82,33 @@ sealed interface InterestsUiState {
     data object Empty : InterestsUiState
 }
 
+@OptIn(ExperimentalUuidApi::class)
 data class Interest(
-    val id: String,
-    val isWeb: Boolean,
-    val link: String,
     val title: String,
-    val imageUrl: String,
+    val model: Any,
+    val id: String = Uuid.random().toString(),
+    val isWeb: Boolean = false,
+    val link: String = "",
 )
 
 private fun NetworkCategories.Category.asInterest(token: String): Interest {
     val newLink =
-        if (isWeb) "$link/?token=$token&secret=pb6XkQ94iBBny1WUAxY0dY5fksexw0dt" else link
+        if (!isWeb) link else "$link/?token=$token&secret=pb6XkQ94iBBny1WUAxY0dY5fksexw0dt"
     return Interest(
-        id,
-        isWeb,
-        newLink,
-        title,
-        if (title == "嗶咔小禮物" || title == "嗶咔畫廊") {
-            "https://s3.picacomic.com/static/${thumb.path}"
-        } else {
-            thumb.imageUrl
-        },
+        title = title,
+        model = "https://s3.picacomic.com/static/${thumb.path}",
+        id = id,
+        isWeb = isWeb,
+        link = newLink,
     )
 }
+
+private val FixedInterests = listOf(
+    Interest("推荐", R.drawable.feature_interest_bika),
+    Interest("排行榜", R.drawable.feature_interest_cat_leaderboard),
+    Interest("游戏推荐", R.drawable.feature_interest_cat_game),
+    Interest("哔咔小程序", R.drawable.feature_interest_cat_love_pica),
+    Interest("留言板", R.drawable.feature_interest_cat_forum),
+    Interest("最近更新", R.drawable.feature_interest_cat_latest),
+    Interest("随机本子", R.drawable.feature_interest_cat_random),
+)

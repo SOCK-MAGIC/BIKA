@@ -24,6 +24,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.NonRestartableComposable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +36,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
@@ -56,7 +56,7 @@ fun InterestScreen(
     val topicsUiState by component.topicsUiState.collectAsState()
     var showSubscriptionDialog by rememberSaveable { mutableStateOf(false) }
     InterestContent(
-        uiState = uiState,
+        interestsUiState = uiState,
         navigationToSearch = navigationToSearch,
         navigationToComicList = navigationToComicList,
         navigationToRanking = navigationToRanking,
@@ -72,7 +72,7 @@ fun InterestScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun InterestContent(
-    uiState: InterestsUiState,
+    interestsUiState: InterestsUiState,
     navigationToSearch: (String?) -> Unit,
     navigationToRanking: () -> Unit,
     navigationToComicList: (String?) -> Unit,
@@ -110,8 +110,8 @@ internal fun InterestContent(
             )
         },
     ) { innerPadding ->
-        Napier.d(tag = "InterestContent") { uiState.toString() }
-        when (uiState) {
+        Napier.d(tag = "InterestContent") { interestsUiState.toString() }
+        when (interestsUiState) {
             InterestsUiState.Empty -> Box(
                 Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center,
@@ -131,60 +131,64 @@ internal fun InterestContent(
                 GridCells.Fixed(3),
                 modifier = modifier.padding(innerPadding),
             ) {
-                if (topicsUiState is TopicsUiState.Success) {
-                    if (topicsUiState.topics.getOrDefault("推荐", true)) {
-                        item {
-                            Image(R.drawable.feature_interest_bika, "推荐") {
-                                navigationToComicList("recommend")
-                            }
-                        }
-                    }
-                    if (topicsUiState.topics.getOrDefault("排行榜", true)) {
-                        item {
-                            Image(
-                                R.drawable.feature_interest_cat_leaderboard,
-                                "排行榜",
-                                navigationToRanking,
-                            )
-                        }
-                    }
-                    if (topicsUiState.topics.getOrDefault("游戏推荐", true)) {
-                        item {
-                            Image(R.drawable.feature_interest_cat_game, "游戏推荐", {})
-                        }
-                    }
-                    if (topicsUiState.topics.getOrDefault("哔咔小程序", true)) {
-                        item {
-                            Image(R.drawable.feature_interest_cat_love_pica, "哔咔小程序", {})
-                        }
-                    }
-                    if (topicsUiState.topics.getOrDefault("留言板", true)) {
-                        item {
-                            Image(R.drawable.feature_interest_cat_forum, "留言板", {})
-                        }
-                    }
-                    if (topicsUiState.topics.getOrDefault("最近更新", true)) {
-                        item {
-                            Image(R.drawable.feature_interest_cat_latest, "最近更新") {
-                                navigationToComicList(null)
-                            }
-                        }
-                    }
-                    if (topicsUiState.topics.getOrDefault("随机本子", true)) {
-                        item {
-                            Image(R.drawable.feature_interest_cat_random, "随机本子") {
-                                navigationToComicList("random")
-                            }
-                        }
-                    }
-                }
-                items(uiState.interests, key = { it.title }) { item ->
+                // if (topicsUiState is TopicsUiState.Success) {
+                //     if (topicsUiState.topics.getOrDefault("推荐", true)) {
+                //         item {
+                //             Image(R.drawable.feature_interest_bika, "推荐") {
+                //                 navigationToComicList("recommend")
+                //             }
+                //         }
+                //     }
+                //     if (topicsUiState.topics.getOrDefault("排行榜", true)) {
+                //         item {
+                //             Image(
+                //                 R.drawable.feature_interest_cat_leaderboard,
+                //                 "排行榜",
+                //                 navigationToRanking,
+                //             )
+                //         }
+                //     }
+                //     if (topicsUiState.topics.getOrDefault("游戏推荐", true)) {
+                //         item {
+                //             Image(R.drawable.feature_interest_cat_game, "游戏推荐", {})
+                //         }
+                //     }
+                //     if (topicsUiState.topics.getOrDefault("哔咔小程序", true)) {
+                //         item {
+                //             Image(R.drawable.feature_interest_cat_love_pica, "哔咔小程序", {})
+                //         }
+                //     }
+                //     if (topicsUiState.topics.getOrDefault("留言板", true)) {
+                //         item {
+                //             Image(R.drawable.feature_interest_cat_forum, "留言板", {})
+                //         }
+                //     }
+                //     if (topicsUiState.topics.getOrDefault("最近更新", true)) {
+                //         item {
+                //             Image(R.drawable.feature_interest_cat_latest, "最近更新") {
+                //                 navigationToComicList(null)
+                //             }
+                //         }
+                //     }
+                //     if (topicsUiState.topics.getOrDefault("随机本子", true)) {
+                //         item {
+                //             Image(R.drawable.feature_interest_cat_random, "随机本子") {
+                //                 navigationToComicList("random")
+                //             }
+                //         }
+                //     }
+                // }
+                items(interestsUiState.interests, key = { it.title }) { item ->
                     val context = LocalContext.current
-                    Image(item.imageUrl, item.title, item.title) {
+                    Image(item.model, item.title, item.title) {
                         if (item.isWeb) {
                             launchCustomChromeTab(context, item.link.toUri())
                         } else {
-                            navigationToComicList(item.title)
+                            navigationRouter(
+                                item.title,
+                                navigationToRanking,
+                                navigationToComicList,
+                            )
                         }
                     }
                 }
@@ -194,8 +198,9 @@ internal fun InterestContent(
 }
 
 @Composable
+@NonRestartableComposable
 private fun Image(
-    imageUrl: String,
+    imageUrl: Any,
     title: String,
     contentDescription: String?,
     action: () -> Unit,
@@ -203,33 +208,45 @@ private fun Image(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        DynamicAsyncImage(
-            imageUrl,
-            contentDescription,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .clickable { action() },
-        )
+        when (imageUrl) {
+            is Int -> Image(
+                painterResource(imageUrl),
+                null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(32.dp))
+                    .clickable { action() },
+            )
+
+            is String ->
+                DynamicAsyncImage(
+                    imageUrl,
+                    contentDescription,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(RoundedCornerShape(32.dp))
+                        .clickable { action() },
+                )
+        }
         Text(title, fontSize = 14.sp)
     }
 }
 
-@Composable
-private fun Image(id: Int, title: String, action: () -> Unit) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Image(
-            painterResource(id),
-            null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .size(100.dp)
-                .clip(RoundedCornerShape(32.dp))
-                .clickable { action() },
-        )
-        Text(title, fontSize = 14.sp)
+private fun navigationRouter(
+    title: String,
+    navigationToRanking: () -> Unit,
+    navigationToComicList: (String?) -> Unit,
+) {
+    when (title) {
+        "推荐" -> navigationToComicList("recommend")
+        "排行榜" -> navigationToRanking()
+        "游戏推荐" -> {}
+        "哔咔小程序" -> {}
+        "留言板" -> {}
+        "最近更新" -> navigationToComicList(null)
+        "随机本子" -> navigationToComicList("random")
+        else -> navigationToComicList(title)
     }
 }
 
