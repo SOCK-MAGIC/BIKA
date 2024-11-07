@@ -176,11 +176,13 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
                 is RootComponent.Child.ComicList -> ComicScreen(
                     component = child.component,
+                    animatedVisibilityScope = this,
                     navigationToComicInfo = component::navigationToComicInfo,
                 )
 
                 is RootComponent.Child.ComicInfo -> ComicInfoScreen(
                     component = child.component,
+                    animatedVisibilityScope = this,
                     navigationToReader = component::navigationToReader,
                     navigationToComicList = component::navigationToComicList,
                     navigationToComment = component::navigationToComment,

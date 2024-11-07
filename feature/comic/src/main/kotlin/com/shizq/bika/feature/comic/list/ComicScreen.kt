@@ -1,5 +1,8 @@
 package com.shizq.bika.feature.comic.list
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -36,8 +39,13 @@ import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.ui.comicCardItems
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun ComicScreen(component: ComicListComponent, navigationToComicInfo: (String) -> Unit) {
+fun SharedTransitionScope.ComicScreen(
+    component: ComicListComponent,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    navigationToComicInfo: (String) -> Unit,
+) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
     val hobbyUiState by component.hobbyUiState.collectAsStateWithLifecycle()
     var showSealTagDialog by rememberSaveable { mutableStateOf(false) }

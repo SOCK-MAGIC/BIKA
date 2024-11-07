@@ -57,18 +57,23 @@ fun ComicCard(
                 Text(
                     "${comicResource.epsCount}E/${comicResource.pagesCount}P",
                     style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(top = 4.dp),
                 )
                 Text(
                     comicResource.author,
                     color = MaterialTheme.colorScheme.primary,
                     style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(vertical = 4.dp),
                 )
                 Text(
                     comicResource.categories.fastJoinToString(" "),
                     style = MaterialTheme.typography.bodyMedium,
                 )
                 Spacer(Modifier.weight(1f))
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                ) {
                     Image(Icons.Default.Favorite, null, Modifier.size(20.dp))
                     Spacer(Modifier.width(8.dp))
                     Text(comicResource.likeCount.toString())

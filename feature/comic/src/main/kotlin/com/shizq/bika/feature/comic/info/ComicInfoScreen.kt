@@ -1,5 +1,8 @@
 package com.shizq.bika.feature.comic.info
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -57,9 +60,11 @@ import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
 import com.webtoonscorp.android.readmore.material3.ReadMoreText
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun ComicInfoScreen(
+fun SharedTransitionScope.ComicInfoScreen(
     component: ComicInfoComponent,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
     navigationToComment: (String) -> Unit,
