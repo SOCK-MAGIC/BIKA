@@ -137,7 +137,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
 
     implementation(libs.decompose)
-    implementation(libs.decompose.compose)
     implementation(libs.decompose.compose.experimental)
 
     implementation(libs.coil.kt)
