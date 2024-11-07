@@ -1,8 +1,8 @@
 package com.shizq.bika.core.ui
 
-import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -28,168 +28,112 @@ import androidx.compose.ui.util.fastJoinToString
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.model.ComicResource
 
-@Composable
-fun ComicCard(
-    comicResource: ComicResource,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    Card(
-        onClick = onClick,
-        modifier = modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min),
-    ) {
-        Row(Modifier.wrapContentSize()) {
-            DynamicAsyncImage(
-                comicResource.imageUrl,
-                null,
-                Modifier.size(120.dp, 180.dp),
-            )
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp),
-            ) {
-                Text(
-                    comicResource.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    maxLines = 2,
-                    color = if (comicResource.finished) MaterialTheme.colorScheme.primary else Color.Unspecified,
-                )
-                Text(
-                    "${comicResource.epsCount}E/${comicResource.pagesCount}P",
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 4.dp),
-                )
-                Text(
-                    comicResource.author,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(vertical = 4.dp),
-                )
-                Text(
-                    comicResource.categories.fastJoinToString(" "),
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                Spacer(Modifier.weight(1f))
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(bottom = 8.dp),
-                ) {
-                    Image(Icons.Default.Favorite, null, Modifier.size(20.dp))
-                    Spacer(Modifier.width(8.dp))
-                    Text(comicResource.likeCount.toString())
-                }
-            }
-        }
-    }
-}
-
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ComicCard(
     comicResource: ComicResource,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
     with(sharedTransitionScope) {
-        Card(
-            onClick = onClick,
-            modifier = modifier
-                .padding(8.dp)
-                .fillMaxWidth()
-                .height(IntrinsicSize.Min)
-                .sharedBounds(
-                    rememberSharedContentState(
-                        ComicCardSharedElementKey(
-                            comicResource.id,
-                            ComicCardSharedElementType.Bounds,
-                        ),
-                    ),
-                    animatedVisibilityScope,
-                ),
-        ) {
-            Row(Modifier.wrapContentSize()) {
-                DynamicAsyncImage(
-                    comicResource.imageUrl,
-                    null,
-                    Modifier
-                        .size(120.dp, 180.dp)
-                        .sharedElement(
-                            rememberSharedContentState(
-                                ComicCardSharedElementKey(
-                                    comicResource.id,
-                                    ComicCardSharedElementType.Image,
-                                ),
+        with(animatedVisibilityScope){
+            Card(
+                onClick = onClick,
+                modifier = modifier
+                    .padding(8.dp)
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+                    .sharedBounds(
+                        rememberSharedContentState(
+                            ComicCardSharedElementKey(
+                                comicResource.id,
+                                ComicCardSharedElementType.Bounds,
                             ),
-                            animatedVisibilityScope,
                         ),
-                )
-                Column(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp),
-                ) {
-                    Text(
-                        comicResource.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 2,
-                        color = if (comicResource.finished) MaterialTheme.colorScheme.primary else Color.Unspecified,
-                        modifier = Modifier.sharedElement(
-                            rememberSharedContentState(
-                                ComicCardSharedElementKey(
-                                    comicResource.id,
-                                    ComicCardSharedElementType.Title,
-                                ),
-                            ),
-                            animatedVisibilityScope,
-                        ),
+                        animatedVisibilityScope,
                     )
-                    Text(
-                        "${comicResource.epsCount}E/${comicResource.pagesCount}P",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.padding(top = 4.dp),
-                    )
-                    Text(
-                        comicResource.author,
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier
-                            .padding(vertical = 4.dp)
+                    .animateEnterExit(),
+            ) {
+                Row(Modifier.wrapContentSize()) {
+                    DynamicAsyncImage(
+                        comicResource.imageUrl,
+                        null,
+                        Modifier
+                            .size(120.dp, 180.dp)
                             .sharedElement(
                                 rememberSharedContentState(
                                     ComicCardSharedElementKey(
                                         comicResource.id,
-                                        ComicCardSharedElementType.Author,
+                                        ComicCardSharedElementType.Image,
                                     ),
                                 ),
                                 animatedVisibilityScope,
                             ),
                     )
-                    Text(
-                        comicResource.categories.fastJoinToString(" "),
-                        style = MaterialTheme.typography.bodyMedium,
-                        // todo
-                        modifier = Modifier.sharedElement(
-                            rememberSharedContentState(
-                                ComicCardSharedElementKey(
-                                    comicResource.id,
-                                    ComicCardSharedElementType.Tagline,
-                                ),
-                            ),
-                            animatedVisibilityScope,
-                        ),
-                    )
-                    Spacer(Modifier.weight(1f))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(bottom = 8.dp),
+                    Column(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp),
                     ) {
-                        Image(Icons.Default.Favorite, null, Modifier.size(20.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(comicResource.likeCount.toString())
+                        Text(
+                            comicResource.title,
+                            style = MaterialTheme.typography.titleMedium,
+                            maxLines = 2,
+                            color = if (comicResource.finished) MaterialTheme.colorScheme.primary else Color.Unspecified,
+                            modifier = Modifier.sharedElement(
+                                rememberSharedContentState(
+                                    ComicCardSharedElementKey(
+                                        comicResource.id,
+                                        ComicCardSharedElementType.Title,
+                                    ),
+                                ),
+                                animatedVisibilityScope,
+                            ),
+                        )
+                        Text(
+                            "${comicResource.epsCount}E/${comicResource.pagesCount}P",
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.padding(top = 4.dp),
+                        )
+                        Text(
+                            comicResource.author,
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier
+                                .padding(vertical = 4.dp)
+                                .sharedElement(
+                                    rememberSharedContentState(
+                                        ComicCardSharedElementKey(
+                                            comicResource.id,
+                                            ComicCardSharedElementType.Author,
+                                        ),
+                                    ),
+                                    animatedVisibilityScope,
+                                ),
+                        )
+                        Text(
+                            comicResource.categories.fastJoinToString(" "),
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.sharedElement(
+                                rememberSharedContentState(
+                                    ComicCardSharedElementKey(
+                                        comicResource.id,
+                                        ComicCardSharedElementType.Tagline,
+                                    ),
+                                ),
+                                animatedVisibilityScope,
+                            ),
+                        )
+                        Spacer(Modifier.weight(1f))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                        ) {
+                            Image(Icons.Default.Favorite, null, Modifier.size(20.dp))
+                            Spacer(Modifier.width(8.dp))
+                            Text(comicResource.likeCount.toString())
+                        }
                     }
                 }
             }
@@ -197,21 +141,26 @@ fun ComicCard(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @DevicePreviews
 @Composable
 private fun ComicCardPreview() {
-    ComicCard(
-        ComicResource(
-            id = "ddd",
-            imageUrl = "",
-            title = "petentiumdddddddddddddddddddddddddddddddddddddddddddddddddd",
-            author = "etiam",
-            categories = listOf("tractatos", "aractatos"),
-            finished = false,
-            epsCount = 7864,
-            pagesCount = 2924,
-            likeCount = 4109,
-        ),
-        onClick = {},
-    )
+    SharedTransitionLayout {
+        AnimatedContent("dddddddddd") {
+            ComicCard(
+                ComicResource(
+                    id = it,
+                    imageUrl = "",
+                    title = "petentiumdddddddddddddddddddddddddddddddddddddddddddddddddd",
+                    author = "etiam",
+                    categories = listOf("tractatos", "aractatos"),
+                    finished = false,
+                    epsCount = 7864,
+                    pagesCount = 2924,
+                    likeCount = 4109,
+                ),
+                onClick = {},
+            )
+        }
+    }
 }

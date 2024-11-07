@@ -40,7 +40,7 @@ fun LazyListScope.comicCardItems(
     onComicClick: (String) -> Unit,
 ) = items(lazyPagingItems.itemCount, { it }) {
     lazyPagingItems[it]?.let { resource ->
-        ComicCard(resource, sharedTransitionScope, animatedVisibilityScope, itemModifier) {
+        ComicCard(resource, itemModifier) {
             onComicClick(resource.id)
         }
     }

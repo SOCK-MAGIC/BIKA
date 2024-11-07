@@ -1,8 +1,6 @@
 package com.shizq.bika.feature.comic.info
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -58,13 +56,15 @@ import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
+import com.shizq.bika.core.ui.ComicCardSharedElementKey
+import com.shizq.bika.core.ui.ComicCardSharedElementType
+import com.shizq.bika.core.ui.LocalAnimatedVisibilityScope
+import com.shizq.bika.core.ui.LocalSharedTransitionScope
 import com.webtoonscorp.android.readmore.material3.ReadMoreText
 
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.ComicInfoScreen(
+fun ComicInfoScreen(
     component: ComicInfoComponent,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
     navigationToComment: (String) -> Unit,
@@ -85,7 +85,7 @@ fun SharedTransitionScope.ComicInfoScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun ComicInfoContent(
     uiState: ComicInfoUiState,
@@ -135,13 +135,10 @@ internal fun ComicInfoContent(
                 ) {
                     item {
                         Info(
-                            uiState.comicResource.imageUrl,
-                            title = uiState.comicResource.title,
-                            author = uiState.comicResource.author,
+                            uiState.comicResource,
                             translator = uiState.chineseTeam,
                             total = uiState.totalViews,
-                            uiState.comicResource.categories,
-                            navigationToComicList,
+                            navigationToComicList = navigationToComicList,
                             modifier = Modifier,
                         )
                     }
@@ -150,8 +147,7 @@ internal fun ComicInfoContent(
                             uiState.toolItem,
                             modifier = Modifier.padding(vertical = 8.dp),
                             onSwitchLike,
-                            { navigationToComment(uiState.comicResource.id) },
-                        )
+                        ) { navigationToComment(uiState.comicResource.id) }
                     }
                     item {
                         Creator(
@@ -291,43 +287,83 @@ fun ToolBarItem(modifier: Modifier = Modifier, content: @Composable ColumnScope.
     )
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 internal fun Info(
-    cover: String,
-    title: String,
-    author: String,
+    resource: ComicResource,
     translator: String,
     total: Int,
-    categories: List<String>,
     navigationToComicList: (Comics) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(modifier = modifier) {
-        DynamicAsyncImage(cover, "cover", Modifier.size(120.dp, 180.dp))
-        Column(modifier = Modifier.padding(start = 8.dp)) {
-            Text(
-                title,
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.titleMedium,
+    val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
+    val sharedTransitionScope = LocalSharedTransitionScope.current
+    with(sharedTransitionScope) {
+        Row(
+            modifier = modifier.sharedBounds(
+                rememberSharedContentState(
+                    ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Bounds),
+                ),
+                animatedVisibilityScope,
+            ),
+        ) {
+            DynamicAsyncImage(
+                resource.imageUrl,
+                "cover",
+                Modifier
+                    .size(120.dp, 180.dp)
+                    .sharedElement(
+                        rememberSharedContentState(
+                            ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Image),
+                        ),
+                        animatedVisibilityScope,
+                    ),
             )
-            Text(
-                author,
-                color = MaterialTheme.colorScheme.primary,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .clickable { navigationToComicList(Comics(author = author)) },
-            )
-            Text(
-                translator,
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .clickable { navigationToComicList(Comics(chineseTeam = translator)) },
-            )
-            Text("绅士指名次数：$total")
-            Text("分类：${categories.fastJoinToString(" ")}")
+            Column(modifier = Modifier.padding(start = 8.dp)) {
+                Text(
+                    resource.title,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(
+                            ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Title),
+                        ),
+                        animatedVisibilityScope,
+                    ),
+                )
+                Text(
+                    resource.author,
+                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .clickable { navigationToComicList(Comics(author = resource.author)) }
+                        .sharedElement(
+                            rememberSharedContentState(
+                                ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Author),
+                            ),
+                            animatedVisibilityScope,
+                        ),
+                )
+                Text(
+                    translator,
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier
+                        .padding(vertical = 4.dp)
+                        .clickable { navigationToComicList(Comics(chineseTeam = translator)) },
+                )
+                Text("绅士指名次数：$total")
+                Text(
+                    "分类：${resource.categories.fastJoinToString(" ")}",
+                    modifier = Modifier.sharedElement(
+                        rememberSharedContentState(
+                            ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Tagline),
+                        ),
+                        animatedVisibilityScope,
+                    ),
+                )
+            }
         }
     }
 }

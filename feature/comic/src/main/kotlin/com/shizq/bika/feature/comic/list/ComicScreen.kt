@@ -41,9 +41,8 @@ import com.shizq.bika.core.ui.comicCardItems
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SharedTransitionScope.ComicScreen(
+fun ComicScreen(
     component: ComicListComponent,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     navigationToComicInfo: (String) -> Unit,
 ) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
@@ -52,7 +51,6 @@ fun SharedTransitionScope.ComicScreen(
     var showSortDialog by rememberSaveable { mutableStateOf(false) }
     ComicContent(
         comicsPagingItems,
-        animatedVisibilityScope,
         navigationToComicInfo = navigationToComicInfo,
         showSealCategoriesDialog = showSealTagDialog,
         onDismissed = {
@@ -69,9 +67,8 @@ fun SharedTransitionScope.ComicScreen(
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-internal fun SharedTransitionScope.ComicContent(
+internal fun ComicContent(
     lazyPagingItems: LazyPagingItems<ComicResource>,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     hobbyUiState: HobbyUiState,
     showSealCategoriesDialog: Boolean,
     showSortDialog: Boolean,
@@ -94,33 +91,35 @@ internal fun SharedTransitionScope.ComicContent(
             PageMetaData.redirectedPage = it
         }
     }
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        {},
-                        actions = {
-                            IconButton(onActionClickSortDialog) {
-                                Icon(BikaIcons.Sort, "sort")
-                            }
-                            IconButton(onActionClickHobbyDialog) {
-                                Icon(BikaIcons.HideSource, "hide tag")
-                            }
-                            val pageMetadata = PageMetaData.metadata
-                            if (pageMetadata != null) {
-                                Text(
-                                    "${pageMetadata.currentPage} / ${pageMetadata.totalPages}",
-                                    modifier = Modifier.clickable { showTextFieldDialog = true },
-                                )
-                            }
-                        },
-                    )
-                },
-            ) { innerPadding ->
-                LazyColumn(modifier = modifier.padding(innerPadding)) {
-                    comicCardItems(lazyPagingItems) {
-                        navigationToComicInfo(it)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                {},
+                actions = {
+                    IconButton(onActionClickSortDialog) {
+                        Icon(BikaIcons.Sort, "sort")
                     }
-                }
+                    IconButton(onActionClickHobbyDialog) {
+                        Icon(BikaIcons.HideSource, "hide tag")
+                    }
+                    val pageMetadata = PageMetaData.metadata
+                    if (pageMetadata != null) {
+                        Text(
+                            "${pageMetadata.currentPage} / ${pageMetadata.totalPages}",
+                            modifier = Modifier.clickable { showTextFieldDialog = true },
+                        )
+                    }
+                },
+            )
+        },
+    ) { innerPadding ->
+        LazyColumn(modifier = modifier.padding(innerPadding)) {
+            comicCardItems(
+                lazyPagingItems,
+            ) {
+                navigationToComicInfo(it)
+            }
+        }
     }
 }
 
