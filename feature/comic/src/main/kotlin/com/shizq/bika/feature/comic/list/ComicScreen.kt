@@ -52,6 +52,7 @@ fun SharedTransitionScope.ComicScreen(
     var showSortDialog by rememberSaveable { mutableStateOf(false) }
     ComicContent(
         comicsPagingItems,
+        animatedVisibilityScope,
         navigationToComicInfo = navigationToComicInfo,
         showSealCategoriesDialog = showSealTagDialog,
         onDismissed = {
@@ -66,10 +67,11 @@ fun SharedTransitionScope.ComicScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
 @Composable
-internal fun ComicContent(
+internal fun SharedTransitionScope.ComicContent(
     lazyPagingItems: LazyPagingItems<ComicResource>,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     hobbyUiState: HobbyUiState,
     showSealCategoriesDialog: Boolean,
     showSortDialog: Boolean,
@@ -92,33 +94,33 @@ internal fun ComicContent(
             PageMetaData.redirectedPage = it
         }
     }
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                {},
-                actions = {
-                    IconButton(onActionClickSortDialog) {
-                        Icon(BikaIcons.Sort, "sort")
-                    }
-                    IconButton(onActionClickHobbyDialog) {
-                        Icon(BikaIcons.HideSource, "hide tag")
-                    }
-                    val pageMetadata = PageMetaData.metadata
-                    if (pageMetadata != null) {
-                        Text(
-                            "${pageMetadata.currentPage} / ${pageMetadata.totalPages}",
-                            modifier = Modifier.clickable { showTextFieldDialog = true },
-                        )
-                    }
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        {},
+                        actions = {
+                            IconButton(onActionClickSortDialog) {
+                                Icon(BikaIcons.Sort, "sort")
+                            }
+                            IconButton(onActionClickHobbyDialog) {
+                                Icon(BikaIcons.HideSource, "hide tag")
+                            }
+                            val pageMetadata = PageMetaData.metadata
+                            if (pageMetadata != null) {
+                                Text(
+                                    "${pageMetadata.currentPage} / ${pageMetadata.totalPages}",
+                                    modifier = Modifier.clickable { showTextFieldDialog = true },
+                                )
+                            }
+                        },
+                    )
                 },
-            )
-        },
-    ) { innerPadding ->
-        LazyColumn(modifier = modifier.padding(innerPadding)) {
-            comicCardItems(lazyPagingItems) {
-                navigationToComicInfo(it)
-            }
-        }
+            ) { innerPadding ->
+                LazyColumn(modifier = modifier.padding(innerPadding)) {
+                    comicCardItems(lazyPagingItems) {
+                        navigationToComicInfo(it)
+                    }
+                }
     }
 }
 

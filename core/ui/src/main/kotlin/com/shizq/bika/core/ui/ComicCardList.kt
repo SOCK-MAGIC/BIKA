@@ -1,5 +1,8 @@
 package com.shizq.bika.core.ui
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.ui.Modifier
@@ -23,6 +26,21 @@ fun LazyListScope.comicCardItems(
 ) = items(lazyPagingItems.itemCount, { it }) {
     lazyPagingItems[it]?.let { resource ->
         ComicCard(resource, itemModifier) {
+            onComicClick(resource.id)
+        }
+    }
+}
+
+@OptIn(ExperimentalSharedTransitionApi::class)
+fun LazyListScope.comicCardItems(
+    lazyPagingItems: LazyPagingItems<ComicResource>,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    itemModifier: Modifier = Modifier,
+    onComicClick: (String) -> Unit,
+) = items(lazyPagingItems.itemCount, { it }) {
+    lazyPagingItems[it]?.let { resource ->
+        ComicCard(resource, sharedTransitionScope, animatedVisibilityScope, itemModifier) {
             onComicClick(resource.id)
         }
     }
