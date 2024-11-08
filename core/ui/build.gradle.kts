@@ -15,4 +15,5 @@ dependencies {
     implementation(libs.coil.kt)
 
     implementation(libs.androidx.paging.compose)
+    implementation("androidx.navigation:navigation-compose:2.8.3")
 }

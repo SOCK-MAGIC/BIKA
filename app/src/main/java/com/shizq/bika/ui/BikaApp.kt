@@ -156,7 +156,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
                 when (child.instance) {
                     is RootComponent.Child.ComicList,
                     is RootComponent.Child.ComicInfo,
-                    -> scale()
+                    -> null
 
                     else -> slide() + fade()
                 }

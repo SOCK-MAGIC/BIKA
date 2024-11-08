@@ -1,6 +1,10 @@
 package com.shizq.bika.feature.comic.info
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +27,7 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -60,6 +65,9 @@ import com.shizq.bika.core.ui.ComicCardSharedElementKey
 import com.shizq.bika.core.ui.ComicCardSharedElementType
 import com.shizq.bika.core.ui.LocalAnimatedVisibilityScope
 import com.shizq.bika.core.ui.LocalSharedTransitionScope
+import com.shizq.bika.core.ui.BikaDetailBoundsTransform
+import com.shizq.bika.core.ui.nonSpatialExpressiveSpring
+import com.shizq.bika.core.ui.spatialExpressiveSpring
 import com.webtoonscorp.android.readmore.material3.ReadMoreText
 
 @Composable
@@ -299,70 +307,95 @@ internal fun Info(
     val animatedVisibilityScope = LocalAnimatedVisibilityScope.current
     val sharedTransitionScope = LocalSharedTransitionScope.current
     with(sharedTransitionScope) {
-        Row(
-            modifier = modifier.sharedBounds(
-                rememberSharedContentState(
-                    ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Bounds),
-                ),
-                animatedVisibilityScope,
-            ),
-        ) {
-            DynamicAsyncImage(
-                resource.imageUrl,
-                "cover",
-                Modifier
-                    .size(120.dp, 180.dp)
-                    .sharedElement(
+        with(animatedVisibilityScope) {
+            Row(
+                modifier = modifier
+                    .sharedBounds(
                         rememberSharedContentState(
-                            ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Image),
+                            ComicCardSharedElementKey(
+                                resource.id,
+                                ComicCardSharedElementType.Bounds
+                            ),
                         ),
                         animatedVisibilityScope,
+                        boundsTransform = BikaDetailBoundsTransform,
+                        exit = fadeOut(nonSpatialExpressiveSpring()),
+                        enter = fadeIn(nonSpatialExpressiveSpring()),
+                    )
+                    .animateEnterExit(
+                        enter = slideInVertically(spatialExpressiveSpring()) { -it },
+                        exit = slideOutVertically(spatialExpressiveSpring()) { -it },
                     ),
-            )
-            Column(modifier = Modifier.padding(start = 8.dp)) {
-                Text(
-                    resource.title,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.sharedElement(
-                        rememberSharedContentState(
-                            ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Title),
-                        ),
-                        animatedVisibilityScope,
-                    ),
-                )
-                Text(
-                    resource.author,
-                    color = MaterialTheme.colorScheme.primary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .clickable { navigationToComicList(Comics(author = resource.author)) }
+            ) {
+                DynamicAsyncImage(
+                    resource.imageUrl,
+                    "cover",
+                    Modifier
+                        .size(120.dp, 180.dp)
                         .sharedElement(
                             rememberSharedContentState(
-                                ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Author),
+                                ComicCardSharedElementKey(
+                                    resource.id,
+                                    ComicCardSharedElementType.Image,
+                                ),
                             ),
                             animatedVisibilityScope,
                         ),
                 )
-                Text(
-                    translator,
-                    color = MaterialTheme.colorScheme.secondary,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier
-                        .padding(vertical = 4.dp)
-                        .clickable { navigationToComicList(Comics(chineseTeam = translator)) },
-                )
-                Text("绅士指名次数：$total")
-                Text(
-                    "分类：${resource.categories.fastJoinToString(" ")}",
-                    modifier = Modifier.sharedElement(
-                        rememberSharedContentState(
-                            ComicCardSharedElementKey(resource.id, ComicCardSharedElementType.Tagline),
+                Column(modifier = Modifier.padding(start = 8.dp)) {
+                    Text(
+                        resource.title,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(
+                                ComicCardSharedElementKey(
+                                    resource.id,
+                                    ComicCardSharedElementType.Title,
+                                ),
+                            ),
+                            animatedVisibilityScope,
                         ),
-                        animatedVisibilityScope,
-                    ),
-                )
+                    )
+                    Text(
+                        resource.author,
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .clickable { navigationToComicList(Comics(author = resource.author)) }
+                            .sharedElement(
+                                rememberSharedContentState(
+                                    ComicCardSharedElementKey(
+                                        resource.id,
+                                        ComicCardSharedElementType.Author,
+                                    ),
+                                ),
+                                animatedVisibilityScope,
+                            ),
+                    )
+                    Text(
+                        translator,
+                        color = MaterialTheme.colorScheme.secondary,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(vertical = 4.dp)
+                            .clickable { navigationToComicList(Comics(chineseTeam = translator)) },
+                    )
+                    Text("绅士指名次数：$total")
+                    Text(
+                        "分类：${resource.categories.fastJoinToString(" ")}",
+                        modifier = Modifier.sharedElement(
+                            rememberSharedContentState(
+                                ComicCardSharedElementKey(
+                                    resource.id,
+                                    ComicCardSharedElementType.Tagline,
+                                ),
+                            ),
+                            animatedVisibilityScope,
+                        ),
+                    )
+                }
             }
         }
     }
