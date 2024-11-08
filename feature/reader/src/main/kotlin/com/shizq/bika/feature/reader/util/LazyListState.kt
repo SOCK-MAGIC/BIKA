@@ -1,4 +1,4 @@
-package com.shizq.bika.feature.reader
+package com.shizq.bika.feature.reader.util
 
 import androidx.compose.foundation.lazy.LazyListItemInfo
 import androidx.compose.foundation.lazy.LazyListState
@@ -38,4 +38,18 @@ val LazyListState.fullyVisibleIndices: List<Int>
         }
 
         fullyVisibleItemsInfo.map { it.index }
+    }
+
+val LazyListState.firstVisibleIndices: Int
+    get() = if (layoutInfo.visibleItemsInfo.isEmpty()) {
+        0
+    } else {
+        val fullyVisibleItemsInfo = layoutInfo.visibleItemsInfo.toMutableList()
+
+        val firstItemIfLeft = fullyVisibleItemsInfo.firstOrNull()
+        if (firstItemIfLeft != null && firstItemIfLeft.offset < layoutInfo.viewportStartOffset) {
+            fullyVisibleItemsInfo.removeAt(0)
+        }
+
+        fullyVisibleItemsInfo.first().index
     }

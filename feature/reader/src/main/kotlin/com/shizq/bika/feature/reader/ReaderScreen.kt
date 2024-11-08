@@ -1,6 +1,6 @@
 package com.shizq.bika.feature.reader
 
-import android.content.res.Configuration
+import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -14,11 +14,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,33 +23,27 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.shizq.bika.core.datastore.model.Orientation
 import com.shizq.bika.core.designsystem.component.ComicReadingAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.Picture
@@ -64,11 +55,15 @@ fun ReaderScreen(component: ReaderComponent) {
     val scope = rememberCoroutineScope()
     ReaderContent(
         lazyPagingItems = items,
-        bottomText = bottomText,
         lazyListState = component.lazyListState,
+        sliderValue = component.currentItemIndex.toFloat(),
+        sliderRange = 0f..items.itemCount.toFloat(),
+        onChangeSliderFinished = { component.updateCurrentItemIndex(scope) },
+        onChangeSliderTrack = { component.currentItemIndex = it.toInt() },
+        onChangeOrientation = component::updateOrientation,
+        bottomText = bottomText,
         showActionMenu = component.showActionMenu,
         onClick = { component.onClick(it, scope) },
-        physicalClick = { component.onClick(it, scope) },
     )
 }
 
@@ -79,7 +74,11 @@ internal fun ReaderContent(
     bottomText: String,
     showActionMenu: Boolean,
     onClick: (Offset) -> Unit,
-    physicalClick: (PageScrollingDirection) -> Unit,
+    sliderValue: Float,
+    sliderRange: ClosedFloatingPointRange<Float>,
+    onChangeSliderTrack: (Float) -> Unit,
+    onChangeSliderFinished: () -> Unit,
+    onChangeOrientation: (Orientation) -> Unit,
 ) {
     val density = LocalDensity.current
     Scaffold(
@@ -96,7 +95,12 @@ internal fun ReaderContent(
                 ),
                 exit = slideOutVertically { with(density) { 80.dp.roundToPx() } } + shrinkVertically() + fadeOut(),
             ) {
-                BikaBottomBar()
+                BikaBottomBar(
+                    sliderValue,
+                    sliderRange,
+                    onChangeSliderTrack,
+                    onFinished = onChangeSliderFinished,
+                )
             }
         },
         modifier = Modifier
@@ -113,21 +117,6 @@ internal fun ReaderContent(
                     .pointerInput(Unit) {
                         detectTapGestures {
                             onClick(it)
-                        }
-                    }
-                    .onKeyEvent {
-                        when (it.key) {
-                            Key.VolumeUp -> {
-                                physicalClick(PageScrollingDirection.NEXT)
-                                true
-                            }
-
-                            Key.VolumeDown -> {
-                                physicalClick(PageScrollingDirection.PREV)
-                                true
-                            }
-
-                            else -> false
                         }
                     }
                     .fillMaxSize(),
@@ -148,42 +137,16 @@ internal fun ReaderContent(
     }
 }
 
-@Preview
 @Composable
-private fun BottomOptions() {
-    Surface(
-        modifier = Modifier
-            .height(200.dp)
-            .fillMaxWidth(),
-    ) {
-        var value by remember { mutableFloatStateOf(0f) }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text("1/200")
-            Slider(
-                value,
-                onValueChange = {
-                    value = it
-                },
-                valueRange = 1f..200f,
-                onValueChangeFinished = {},
-                modifier = Modifier.padding(horizontal = 8.dp),
-            )
-        }
-    }
-}
-
-@Composable
-internal fun BikaBottomBar(modifier: Modifier = Modifier) {
-    val configuration = LocalConfiguration.current
-    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
-    // if (isLandscape) {
-    //     LandscapeLayout()
-    // } else {
-    //     PortraitLayout()
-    // }
-    BottomAppBar(modifier, tonalElevation = 1.dp) {
+internal fun BikaBottomBar(
+    index: Float,
+    range: ClosedFloatingPointRange<Float>,
+    updateTrack: (Float) -> Unit,
+    modifier: Modifier = Modifier,
+    onFinished: () -> Unit,
+) {
+    BottomAppBar(modifier, tonalElevation = 3.dp) {
+        BikaSlider(index, range, updateTrack, onFinished)
         BikaBottomBarItem {
             Icon(BikaIcons.ScreenRotationAlt, "屏幕方向")
             Text("屏幕方向")
@@ -199,19 +162,21 @@ internal fun BikaBottomBar(modifier: Modifier = Modifier) {
     }
 }
 
-@Preview(device = "spec:parent=pixel_5")
 @Composable
-fun ConfigChangeExample() {
-    val configuration = LocalConfiguration.current
-    when (configuration.orientation) {
-        Configuration.ORIENTATION_LANDSCAPE -> {
-            Text("Landscape")
-        }
-
-        else -> {
-            Text("Portrait")
-        }
-    }
+private fun BikaSlider(
+    index: Float,
+    range: ClosedFloatingPointRange<Float>,
+    updateTrack: (Float) -> Unit,
+    onFinished: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Slider(
+        index,
+        updateTrack,
+        valueRange = range,
+        modifier = modifier,
+        onValueChangeFinished = onFinished,
+    )
 }
 
 @Composable

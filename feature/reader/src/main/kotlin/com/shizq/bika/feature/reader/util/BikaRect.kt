@@ -1,4 +1,4 @@
-package com.shizq.bika.feature.reader
+package com.shizq.bika.feature.reader.util
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

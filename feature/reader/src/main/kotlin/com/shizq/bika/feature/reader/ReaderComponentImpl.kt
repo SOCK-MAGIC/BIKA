@@ -1,15 +1,14 @@
 package com.shizq.bika.feature.reader
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyListPrefetchStrategy
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.geometry.Offset
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -19,13 +18,16 @@ import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.paging.ReaderPagingSource
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.datastore.model.Orientation
+import com.shizq.bika.feature.reader.util.BikaRect
+import com.shizq.bika.feature.reader.util.Debounce
+import com.shizq.bika.feature.reader.util.PageScrollingDirection
+import com.shizq.bika.feature.reader.util.firstVisibleIndices
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -38,7 +40,21 @@ class ReaderComponentImpl @AssistedInject constructor(
     private val preferences: BikaPreferencesDataSource,
 ) : ReaderComponent,
     ComponentContext by componentContext {
-    private val currentItemIndex by derivedStateOf { lazyListState.firstVisibleItemIndex }
+    private val debounce = Debounce(MINIMUM_CLICK_INTERVAL)
+    private var lastCallTime = -1L
+    override var currentItemIndex: Int = 1
+        get() {
+            lazyListState
+            val first = lazyListState.firstVisibleItemIndex
+            lazyListState.layoutInfo
+            lazyListState.firstVisibleItemScrollOffset
+            field > first
+            return field
+        }
+        set(value) {
+            Log.d("ReaderComponent", "set $value")
+            field = value
+        }
 
     override var showActionMenu by mutableStateOf(false)
 
@@ -47,14 +63,15 @@ class ReaderComponentImpl @AssistedInject constructor(
     override val lazyListState =
         LazyListState(prefetchStrategy = LazyListPrefetchStrategy(NESTED_PREFETCH_ITEM_COUNT))
 
-    override var bottomText = snapshotFlow { "$currentItemIndex/${pageCount.toInt()}" }
-        .stateIn(
-            componentScope,
-            SharingStarted.WhileSubscribed(5000),
-            "",
-        )
+    override val bottomText = MutableStateFlow("")
 
-    fun changeOrientation(orientation: Orientation) {
+    override fun updateCurrentItemIndex(scope: CoroutineScope) {
+        scope.launch {
+            lazyListState.scrollToItem(currentItemIndex)
+        }
+    }
+
+    override fun updateOrientation(orientation: Orientation) {
         componentScope.launch {
             preferences.setOrientation(orientation)
         }
@@ -80,22 +97,34 @@ class ReaderComponentImpl @AssistedInject constructor(
         direction: PageScrollingDirection,
         scope: CoroutineScope,
     ) {
-        scope.launch {
-            when (direction) {
-                PageScrollingDirection.NONE -> showActionMenu = !showActionMenu
-                PageScrollingDirection.PREV -> {
-                    if (lazyListState.canScrollBackward) {
-                        lazyListState.animateScrollToItem(currentItemIndex - 1)
+        debounce {
+            scope.launch {
+                Log.d(
+                    "ReaderComponent ",
+                    "onClick ${lazyListState.firstVisibleIndices} ${lazyListState.firstVisibleItemIndex}",
+                )
+                when (direction) {
+                    PageScrollingDirection.NONE -> showActionMenu = !showActionMenu
+                    PageScrollingDirection.PREV -> {
+                        if (lazyListState.canScrollBackward) {
+                            lazyListState.animateScrollToItem(lazyListState.firstVisibleIndices - 1)
+                        }
+                        hideActionMenu()
                     }
-                }
 
-                PageScrollingDirection.NEXT -> {
-                    if (lazyListState.canScrollForward) {
-                        lazyListState.animateScrollToItem(currentItemIndex + 1)
+                    PageScrollingDirection.NEXT -> {
+                        if (lazyListState.canScrollForward) {
+                            lazyListState.animateScrollToItem(lazyListState.firstVisibleIndices + 1)
+                        }
+                        hideActionMenu()
                     }
                 }
             }
         }
+    }
+
+    private fun hideActionMenu() {
+        showActionMenu = false
     }
 
     private fun getScrollingDirection(offset: Offset) = when (offset) {
@@ -121,4 +150,5 @@ class ReaderComponentImpl @AssistedInject constructor(
     }
 }
 
-private const val NESTED_PREFETCH_ITEM_COUNT = 20
+private const val NESTED_PREFETCH_ITEM_COUNT = 5
+private const val MINIMUM_CLICK_INTERVAL = 200L

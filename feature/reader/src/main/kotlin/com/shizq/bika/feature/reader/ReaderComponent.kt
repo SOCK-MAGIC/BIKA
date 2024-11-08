@@ -4,7 +4,9 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.ui.geometry.Offset
 import androidx.paging.PagingData
 import com.arkivanov.decompose.ComponentContext
+import com.shizq.bika.core.datastore.model.Orientation
 import com.shizq.bika.core.model.Picture
+import com.shizq.bika.feature.reader.util.PageScrollingDirection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -27,4 +29,7 @@ interface ReaderComponent {
     val bottomText: StateFlow<String>
     val lazyListState: LazyListState
     val showActionMenu: Boolean
+    fun updateOrientation(orientation: Orientation)
+    fun updateCurrentItemIndex(scope: CoroutineScope)
+    var currentItemIndex: Int
 }
