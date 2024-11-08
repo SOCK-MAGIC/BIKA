@@ -1,5 +1,6 @@
 package com.shizq.bika.feature.reader
 
+import android.content.res.Configuration
 import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -41,6 +42,7 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
@@ -174,6 +176,13 @@ private fun BottomOptions() {
 
 @Composable
 internal fun BikaBottomBar(modifier: Modifier = Modifier) {
+    val configuration = LocalConfiguration.current
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+    // if (isLandscape) {
+    //     LandscapeLayout()
+    // } else {
+    //     PortraitLayout()
+    // }
     BottomAppBar(modifier, tonalElevation = 1.dp) {
         BikaBottomBarItem {
             Icon(BikaIcons.ScreenRotationAlt, "屏幕方向")
@@ -186,6 +195,21 @@ internal fun BikaBottomBar(modifier: Modifier = Modifier) {
                 Icon(BikaIcons.SwapHoriz, "滑动方向")
             }
             Text("滑动方向")
+        }
+    }
+}
+
+@Preview(device = "spec:parent=pixel_5")
+@Composable
+fun ConfigChangeExample() {
+    val configuration = LocalConfiguration.current
+    when (configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> {
+            Text("Landscape")
+        }
+
+        else -> {
+            Text("Portrait")
         }
     }
 }

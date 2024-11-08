@@ -1,6 +1,7 @@
 package com.shizq.bika.core.datastore
 
 import androidx.datastore.core.DataStore
+import com.shizq.bika.core.datastore.model.Orientation
 import com.shizq.bika.core.datastore.model.UserPreferences
 import com.shizq.bika.core.model.data.UserData
 import kotlinx.coroutines.flow.map
@@ -33,6 +34,14 @@ class BikaPreferencesDataSource @Inject constructor(
                 topics = it.topics.toMutableMap().apply {
                     this[name] = state
                 },
+            )
+        }
+    }
+
+    suspend fun setOrientation(orientation: Orientation) {
+        userPreferences.updateData {
+            it.copy(
+                orientation = orientation,
             )
         }
     }

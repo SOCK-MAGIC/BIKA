@@ -17,6 +17,8 @@ import androidx.paging.cachedIn
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.data.paging.ReaderPagingSource
+import com.shizq.bika.core.datastore.BikaPreferencesDataSource
+import com.shizq.bika.core.datastore.model.Orientation
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -31,8 +33,9 @@ class ReaderComponentImpl @AssistedInject constructor(
     @Assisted componentContext: ComponentContext,
     @Assisted id: String,
     @Assisted order: Int,
-    readerPagingSourceFactory: ReaderPagingSource.Factory,
     @ApplicationContext private val appContext: Context,
+    readerPagingSourceFactory: ReaderPagingSource.Factory,
+    private val preferences: BikaPreferencesDataSource,
 ) : ReaderComponent,
     ComponentContext by componentContext {
     private val currentItemIndex by derivedStateOf { lazyListState.firstVisibleItemIndex }
@@ -50,6 +53,12 @@ class ReaderComponentImpl @AssistedInject constructor(
             SharingStarted.WhileSubscribed(5000),
             "",
         )
+
+    fun changeOrientation(orientation: Orientation) {
+        componentScope.launch {
+            preferences.setOrientation(orientation)
+        }
+    }
 
     override val picturePagingFlow = Pager(
         PagingConfig(pageSize = 40),

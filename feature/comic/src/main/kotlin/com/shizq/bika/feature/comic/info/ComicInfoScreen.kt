@@ -27,7 +27,6 @@ import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -61,11 +60,11 @@ import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.Comics
+import com.shizq.bika.core.ui.BikaDetailBoundsTransform
 import com.shizq.bika.core.ui.ComicCardSharedElementKey
 import com.shizq.bika.core.ui.ComicCardSharedElementType
 import com.shizq.bika.core.ui.LocalAnimatedVisibilityScope
 import com.shizq.bika.core.ui.LocalSharedTransitionScope
-import com.shizq.bika.core.ui.BikaDetailBoundsTransform
 import com.shizq.bika.core.ui.nonSpatialExpressiveSpring
 import com.shizq.bika.core.ui.spatialExpressiveSpring
 import com.webtoonscorp.android.readmore.material3.ReadMoreText
@@ -314,7 +313,7 @@ internal fun Info(
                         rememberSharedContentState(
                             ComicCardSharedElementKey(
                                 resource.id,
-                                ComicCardSharedElementType.Bounds
+                                ComicCardSharedElementType.Bounds,
                             ),
                         ),
                         animatedVisibilityScope,

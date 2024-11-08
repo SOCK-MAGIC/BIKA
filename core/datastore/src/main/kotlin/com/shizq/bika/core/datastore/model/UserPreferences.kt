@@ -96,4 +96,10 @@ data class UserPreferences(
         "Cosplay" to true,
         "重口地帶" to true,
     ),
+    val orientation: Orientation = Orientation.PORTRAIT,
 )
+
+enum class Orientation {
+    PORTRAIT,
+    LANDSCAPE
+}

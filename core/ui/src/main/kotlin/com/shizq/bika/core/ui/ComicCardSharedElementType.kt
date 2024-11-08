@@ -10,5 +10,5 @@ enum class ComicCardSharedElementType {
     Image,
     Title,
     Tagline,
-    Author
+    Author,
 }
