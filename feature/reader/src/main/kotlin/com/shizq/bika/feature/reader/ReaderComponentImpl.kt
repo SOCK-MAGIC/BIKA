@@ -7,8 +7,10 @@ import androidx.compose.foundation.lazy.LazyListPrefetchStrategy
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.geometry.Offset
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -28,6 +30,8 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -41,20 +45,8 @@ class ReaderComponentImpl @AssistedInject constructor(
 ) : ReaderComponent,
     ComponentContext by componentContext {
     private val debounce = Debounce(MINIMUM_CLICK_INTERVAL)
-    private var lastCallTime = -1L
-    override var currentItemIndex: Int = 1
-        get() {
-            lazyListState
-            val first = lazyListState.firstVisibleItemIndex
-            lazyListState.layoutInfo
-            lazyListState.firstVisibleItemScrollOffset
-            field > first
-            return field
-        }
-        set(value) {
-            Log.d("ReaderComponent", "set $value")
-            field = value
-        }
+    override var slideTrack by mutableIntStateOf(1)
+    override val currentItemIndex = snapshotFlow { lazyListState.firstVisibleItemIndex.toFloat() }
 
     override var showActionMenu by mutableStateOf(false)
 
@@ -66,9 +58,9 @@ class ReaderComponentImpl @AssistedInject constructor(
     override val bottomText = MutableStateFlow("")
 
     override fun updateCurrentItemIndex(scope: CoroutineScope) {
-        scope.launch {
-            lazyListState.scrollToItem(currentItemIndex)
-        }
+        snapshotFlow { slideTrack }
+            .map { lazyListState.scrollToItem(it) }
+            .launchIn(scope)
     }
 
     override fun updateOrientation(orientation: Orientation) {
@@ -78,7 +70,7 @@ class ReaderComponentImpl @AssistedInject constructor(
     }
 
     override val picturePagingFlow = Pager(
-        PagingConfig(pageSize = 40),
+        PagingConfig(pageSize = 5, prefetchDistance = 3),
     ) {
         readerPagingSourceFactory(id, order) {
             pageCount = it.totalPages.toFloat()

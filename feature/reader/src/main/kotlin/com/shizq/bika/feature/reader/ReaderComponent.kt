@@ -31,5 +31,6 @@ interface ReaderComponent {
     val showActionMenu: Boolean
     fun updateOrientation(orientation: Orientation)
     fun updateCurrentItemIndex(scope: CoroutineScope)
-    var currentItemIndex: Int
+    val currentItemIndex: Flow<Float>
+    var slideTrack: Int
 }

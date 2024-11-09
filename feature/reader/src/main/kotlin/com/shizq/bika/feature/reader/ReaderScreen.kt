@@ -1,6 +1,5 @@
 package com.shizq.bika.feature.reader
 
-import android.util.Log
 import android.view.KeyEvent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -20,16 +19,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -45,21 +42,21 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
 import com.shizq.bika.core.datastore.model.Orientation
 import com.shizq.bika.core.designsystem.component.ComicReadingAsyncImage
-import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.Picture
 
 @Composable
 fun ReaderScreen(component: ReaderComponent) {
     val items = component.picturePagingFlow.collectAsLazyPagingItems()
     val bottomText by component.bottomText.collectAsStateWithLifecycle()
+    val sliderValue by component.currentItemIndex.collectAsStateWithLifecycle(1f)
     val scope = rememberCoroutineScope()
     ReaderContent(
         lazyPagingItems = items,
         lazyListState = component.lazyListState,
-        sliderValue = component.currentItemIndex.toFloat(),
+        sliderValue = sliderValue,
         sliderRange = 0f..items.itemCount.toFloat(),
         onChangeSliderFinished = { component.updateCurrentItemIndex(scope) },
-        onChangeSliderTrack = { component.currentItemIndex = it.toInt() },
+        onChangeSliderTrack = { component.slideTrack = it.toInt() },
         onChangeOrientation = component::updateOrientation,
         bottomText = bottomText,
         showActionMenu = component.showActionMenu,
@@ -147,18 +144,18 @@ internal fun BikaBottomBar(
 ) {
     BottomAppBar(modifier, tonalElevation = 3.dp) {
         BikaSlider(index, range, updateTrack, onFinished)
-        BikaBottomBarItem {
-            Icon(BikaIcons.ScreenRotationAlt, "屏幕方向")
-            Text("屏幕方向")
-        }
-        BikaBottomBarItem {
-            if (true) {
-                Icon(BikaIcons.SwapVert, "滑动方向")
-            } else {
-                Icon(BikaIcons.SwapHoriz, "滑动方向")
-            }
-            Text("滑动方向")
-        }
+        // BikaBottomBarItem {
+        //     Icon(BikaIcons.ScreenRotationAlt, "屏幕方向")
+        //     Text("屏幕方向")
+        // }
+        // BikaBottomBarItem {
+        //     if (true) {
+        //         Icon(BikaIcons.SwapVert, "滑动方向")
+        //     } else {
+        //         Icon(BikaIcons.SwapHoriz, "滑动方向")
+        //     }
+        //     Text("滑动方向")
+        // }
     }
 }
 

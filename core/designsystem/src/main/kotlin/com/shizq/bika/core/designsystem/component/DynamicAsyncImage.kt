@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,7 +19,6 @@ import androidx.compose.ui.graphics.Color.Companion.Unspecified
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -28,8 +26,8 @@ import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Loading
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
-import coil3.imageLoader
 import coil3.request.ImageRequest
+import coil3.request.placeholder
 import coil3.size.Precision
 import com.shizq.bika.core.designsystem.R
 import com.shizq.bika.core.designsystem.theme.LocalTintTheme
@@ -47,12 +45,8 @@ fun DynamicAsyncImage(
     val iconTint = LocalTintTheme.current.iconTint
     var isLoading by remember { mutableStateOf(true) }
     var isError by remember { mutableStateOf(false) }
-    val context = LocalPlatformContext.current
     val imageLoader = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(context)
-            .data(imageUrl)
-            .diskCacheKey(imageUrl.substringAfterLast("/"))
-            .build(),
+        model = BikaRequest(imageUrl),
         onState = { state ->
             isLoading = state is Loading
             isError = state is Error
@@ -87,25 +81,8 @@ fun ComicReadingAsyncImage(
     imageUrl: String,
     modifier: Modifier = Modifier,
 ) {
-    val context = LocalContext.current
-    val imageRequest = remember(context, imageUrl) {
-        ImageRequest.Builder(context)
-            .data(imageUrl)
-            .diskCacheKey(imageUrl.substringAfterLast("/"))
-            .precision(Precision.INEXACT)
-            .build()
-    }
-    LaunchedEffect(imageRequest) {
-        context.imageLoader.enqueue(imageRequest)
-    }
-    val imagePainter =
-        rememberAsyncImagePainter(
-            imageRequest,
-            context.imageLoader,
-            contentScale = ContentScale.Crop,
-        )
-    Image(
-        imagePainter,
+    AsyncImage(
+        BikaRequest(imageUrl),
         contentDescription = null,
         modifier = modifier,
         contentScale = ContentScale.Crop,
@@ -118,7 +95,7 @@ fun DynamicAsyncImage(
     modifier: Modifier = Modifier,
 ) {
     AsyncImage(
-        model = imageUrl,
+        model = BikaRequest(imageUrl),
         contentDescription = null,
         modifier = modifier,
         contentScale = ContentScale.Crop,
@@ -133,12 +110,12 @@ fun AvatarAsyncImage(
 ) {
     Box(modifier.size(80.dp), contentAlignment = Alignment.Center) {
         AsyncImage(
-            avatarUrl,
+            BikaRequest(avatarUrl),
             "Avatar",
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape),
-            contentScale = ContentScale.Crop
+            contentScale = ContentScale.Crop,
         )
         AsyncImage(
             avatarBorderUrl,
@@ -146,4 +123,21 @@ fun AvatarAsyncImage(
             Modifier.fillMaxSize(),
         )
     }
+}
+
+@Composable
+private fun BikaRequest(
+    imageUrl: String,
+    placeholder: Int = R.drawable.core_designsystem_ic_placeholder_default,
+): ImageRequest {
+    return ImageRequest.Builder(LocalPlatformContext.current).data(imageUrl)
+        .diskCacheKey(imageUrl.substringLast('/'))
+        .precision(Precision.INEXACT)
+        .placeholder(placeholder)
+        .build()
+}
+
+private fun String.substringLast(delimiter: Char, missingDelimiterValue: String = this): String {
+    val index = indexOf(delimiter, "https://".length)
+    return if (index == -1) missingDelimiterValue else substring(index + 1, length)
 }
