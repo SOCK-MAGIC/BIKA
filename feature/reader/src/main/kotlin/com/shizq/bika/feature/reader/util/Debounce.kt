@@ -17,7 +17,5 @@ class Debounce(
         }
     }
 
-    private fun shouldInvoke(time: Long): Boolean {
-        return time - lastCallTime > interval
-    }
+    private fun shouldInvoke(time: Long): Boolean = time - lastCallTime > interval
 }

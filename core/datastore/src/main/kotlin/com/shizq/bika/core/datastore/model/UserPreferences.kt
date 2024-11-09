@@ -101,5 +101,5 @@ data class UserPreferences(
 
 enum class Orientation {
     PORTRAIT,
-    LANDSCAPE
+    LANDSCAPE,
 }
