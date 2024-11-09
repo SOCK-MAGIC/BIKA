@@ -22,11 +22,13 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import coil3.compose.AsyncImage
 import coil3.compose.AsyncImagePainter.State.Loading
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
 import coil3.request.ImageRequest
+import coil3.request.lifecycle
 import coil3.request.placeholder
 import coil3.size.Precision
 import com.shizq.bika.core.designsystem.R
@@ -130,7 +132,8 @@ private fun BikaRequest(
     imageUrl: String,
     placeholder: Int = R.drawable.core_designsystem_ic_placeholder_default,
 ): ImageRequest {
-    return ImageRequest.Builder(LocalPlatformContext.current).data(imageUrl)
+    return ImageRequest.Builder(LocalPlatformContext.current)
+        .data(imageUrl)
         .diskCacheKey(imageUrl.substringLast('/'))
         .precision(Precision.INEXACT)
         .placeholder(placeholder)
