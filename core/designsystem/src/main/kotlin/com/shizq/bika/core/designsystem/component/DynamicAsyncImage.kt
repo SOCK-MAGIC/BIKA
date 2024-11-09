@@ -120,7 +120,7 @@ fun AvatarAsyncImage(
             contentScale = ContentScale.Crop,
         )
         AsyncImage(
-            avatarBorderUrl,
+            BikaRequest(avatarBorderUrl),
             "Avatar Border",
             Modifier.fillMaxSize(),
         )
