@@ -119,7 +119,13 @@ internal fun ReaderContent(
             ) {
                 items(lazyPagingItems.itemCount, key = lazyPagingItems.itemKey { it.id }) { index ->
                     lazyPagingItems[index]?.let {
-                        ComicReadingAsyncImage(it.url, modifier = Modifier.fillMaxSize())
+                        val nextImage =
+                            lazyPagingItems.peek((index + 1).coerceAtMost(lazyPagingItems.itemCount))
+                        ComicReadingAsyncImage(
+                            it.url,
+                            nextImage?.url,
+                            modifier = Modifier.fillMaxSize(),
+                        )
                     }
                 }
             }

@@ -152,6 +152,7 @@ internal class NetworkModule {
             .diskCache {
                 DiskCache.Builder()
                     .directory(application.cacheDir.resolve("coil-cache"))
+                    .maxSizePercent(1.0)
                     .build()
             }
             .apply {
