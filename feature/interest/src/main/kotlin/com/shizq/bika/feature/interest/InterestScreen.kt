@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -64,6 +65,7 @@ fun InterestScreen(
     }
     InterestContent(
         interestsUiState = uiState,
+        state = component.state,
         navigationToSearch = navigationToSearch,
         navigationToComicList = navigationToComicList,
         navigationToRanking = navigationToRanking,
@@ -80,16 +82,17 @@ fun InterestScreen(
 @Composable
 internal fun InterestContent(
     interestsUiState: InterestsUiState,
+    state: LazyGridState,
+    topicsUiState: TopicsUiState,
     navigationToSearch: (String?) -> Unit,
     navigationToRanking: () -> Unit,
     navigationToComicList: (String?) -> Unit,
-    modifier: Modifier = Modifier,
     onDismissed: () -> Unit,
     onTopAppBarActionClickSubscriptions: () -> Unit,
     showSubscriptionDialog: Boolean,
-    topicsUiState: TopicsUiState,
     updateTopicSelection: (String, Boolean) -> Unit,
     openDrawer: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (showSubscriptionDialog) {
         SubscriptionDialog(
@@ -137,6 +140,7 @@ internal fun InterestContent(
             is InterestsUiState.Interests -> LazyVerticalGrid(
                 GridCells.Fixed(3),
                 modifier = modifier.padding(innerPadding),
+                state = state,
             ) {
                 items(interestsUiState.interests, key = { it.title }) { item ->
                     val context = LocalContext.current

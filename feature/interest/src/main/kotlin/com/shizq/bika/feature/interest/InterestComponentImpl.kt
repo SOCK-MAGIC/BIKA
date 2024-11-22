@@ -1,5 +1,6 @@
 package com.shizq.bika.feature.interest
 
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import com.arkivanov.decompose.ComponentContext
 import com.shizq.bika.core.component.componentScope
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
@@ -25,7 +26,7 @@ class InterestComponentImpl @AssistedInject constructor(
     private val preferencesDataSource: BikaPreferencesDataSource,
 ) : InterestComponent,
     ComponentContext by componentContext {
-
+    override val state: LazyGridState = LazyGridState()
     override val topicsUiState =
         preferencesDataSource.userData.map {
             TopicsUiState.Success(it.topics)
