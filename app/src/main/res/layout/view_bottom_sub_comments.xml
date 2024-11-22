@@ -37,8 +37,8 @@
         android:id="@+id/sub_comments_reply_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="?attr/colorSurface"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorSurface">
 
         <ImageView
             android:id="@+id/sub_comments_reply_icon"
@@ -62,8 +62,8 @@
         android:id="@+id/sub_comments_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/sub_comments_head_layout"
         android:layout_above="@id/sub_comments_reply_layout"
+        android:layout_below="@id/sub_comments_head_layout"
         tools:listitem="@layout/item_comments" />
 
 </RelativeLayout>

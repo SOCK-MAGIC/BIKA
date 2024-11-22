@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <data>
-    </data>
+    <data></data>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,35 +16,35 @@
             android:layout_height="match_parent"
             android:paddingStart="6dp"
             android:paddingEnd="6dp"
-            tools:listitem="@layout/item_knight"/>
+            tools:listitem="@layout/item_knight" />
 
         <LinearLayout
             android:id="@+id/leaderboard_knight_load_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
+            android:gravity="center"
             android:orientation="vertical"
-            android:gravity="center">
+            android:visibility="visible">
 
             <ProgressBar
                 android:id="@+id/leaderboard_knight_load_progressBar"
                 android:layout_width="48dp"
-                android:layout_height="48dp"
-                />
+                android:layout_height="48dp" />
+
             <ImageView
                 android:id="@+id/leaderboard_knight_load_error"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:visibility="gone"
                 android:src="@drawable/ic_error"
-                />
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/leaderboard_knight_load_text"
-                android:textAppearance="?attr/textAppearanceHeadline6"
-                android:layout_marginTop="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"/>
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:textAppearance="?attr/textAppearanceHeadline6" />
         </LinearLayout>
     </RelativeLayout>
-</layout>
+</LinearLayout>

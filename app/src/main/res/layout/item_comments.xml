@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
 
     <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/comments_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/comments_layout"
         android:orientation="vertical">
 
         <!--头像-->
@@ -26,8 +28,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:src="@drawable/placeholder_avatar_2"
-                app:shapeAppearance="@style/CircleStyle"
-                />
+                app:shapeAppearance="@style/CircleStyle" />
 
             <ImageView
                 android:id="@+id/comments_user_character"
@@ -39,8 +40,8 @@
             android:id="@+id/comments_user_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
             android:layout_alignTop="@id/comments_image_layout"
+            android:layout_marginEnd="6dp"
             android:layout_toEndOf="@+id/comments_image_layout">
             <!--点赞-->
             <LinearLayout
@@ -99,8 +100,8 @@
                         android:paddingTop="1dp"
                         android:paddingEnd="3dp"
                         android:paddingBottom="1.5dp"
-                        android:textSize="10sp"
                         android:textColor="?attr/colorOutline"
+                        android:textSize="10sp"
                         android:visibility="visible" />
 
                     <TextView
@@ -133,10 +134,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/comments_user_layout"
-            android:layout_toEndOf="@+id/comments_image_layout"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
             android:layout_marginEnd="6dp"
+            android:layout_marginBottom="4dp"
+            android:layout_toEndOf="@+id/comments_image_layout"
             android:text="这是条评论"
             android:textSize="14sp" />
 
@@ -188,21 +189,22 @@
 
         <LinearLayout
             android:id="@+id/item_comments_line"
-            android:layout_below="@id/comments_sub_layout_cv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/comments_sub_layout_cv"
             android:background="?attr/colorOnSurfaceInverse"
             android:orientation="vertical">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="4dp"
                 android:layout_gravity="center"
+                android:padding="4dp"
                 android:text="相关回复"
                 android:textSize="12sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
     </RelativeLayout>
 
-</layout>
+</LinearLayout>

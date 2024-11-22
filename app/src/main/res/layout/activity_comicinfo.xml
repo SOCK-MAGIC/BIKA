@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="clickListener"
-            type="com.shizq.bika.ui.comicinfo.ComicInfoActivity.ClickListener" />
-
-        <variable
-            name="viewModel"
-            type="com.shizq.bika.ui.comicinfo.ComicInfoViewModel" />
-    </data>
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -61,7 +50,6 @@
                             android:id="@+id/comicinfo_image"
                             android:layout_width="120dp"
                             android:layout_height="170dp"
-                            android:onClick="@{()->clickListener.Image()}"
                             android:scaleType="centerCrop" />
 
                     </com.google.android.material.card.MaterialCardView>
@@ -73,7 +61,6 @@
                         android:layout_marginStart="20dp"
                         android:layout_toEndOf="@id/comicinfo_image_layout"
                         android:maxLines="4"
-                        android:text="@{viewModel.title}"
                         android:textIsSelectable="true"
                         android:textSize="20sp"
                         android:textStyle="bold"
@@ -89,12 +76,9 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="4dp"
                         android:layout_toEndOf="@id/comicinfo_image_layout"
-                        android:onClick="@{()->clickListener.Author()}"
-                        android:text="@{viewModel.author}"
                         android:textColor="@color/pink"
                         android:textIsSelectable="true"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.author==null||viewModel.author.length() == 0?View.GONE:View.VISIBLE}" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/comicinfo_translator"
@@ -104,7 +88,6 @@
                         android:layout_marginStart="20dp"
                         android:layout_marginTop="4dp"
                         android:layout_toEndOf="@id/comicinfo_image_layout"
-                        android:onClick="@{()->clickListener.Translator()}"
                         android:textColor="?attr/colorPrimary"
                         android:textSize="16sp"
                         android:visibility="gone" />
@@ -138,7 +121,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:onClick="@{()->clickListener.Like()}"
                         android:orientation="vertical">
 
                         <ImageView
@@ -182,7 +164,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:onClick="@{()->clickListener.Comment()}"
                         android:orientation="vertical">
 
                         <ImageView
@@ -208,7 +189,6 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="12dp"
                     android:foreground="?selectableItemBackground"
-                    android:onClick="@{()->clickListener.CreatorLayout()}"
                     android:visibility="visible">
 
                     <RelativeLayout
@@ -239,7 +219,6 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:lines="1"
-                                android:onClick="@{()->clickListener.Creator()}"
                                 android:singleLine="true"
                                 android:textIsSelectable="true"
                                 android:textSize="16sp" />
@@ -342,4 +321,4 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-</layout>
+</LinearLayout>

@@ -27,7 +27,7 @@
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
                 android:src="@color/by_skeleton_light_transparent"
-                app:shapeAppearance="@style/CircleStyle"/>
+                app:shapeAppearance="@style/CircleStyle" />
 
         </RelativeLayout>
 
@@ -48,9 +48,9 @@
                     android:id="@+id/knight_user_name"
                     android:layout_width="120dp"
                     android:layout_height="20dp"
+                    android:background="@color/by_skeleton_light_transparent"
                     android:ellipsize="end"
-                    android:singleLine="true"
-                    android:background="@color/by_skeleton_light_transparent" />
+                    android:singleLine="true" />
 
 
                 <View
@@ -58,8 +58,8 @@
                     android:layout_width="40dp"
                     android:layout_height="16dp"
                     android:layout_marginTop="4dp"
-                    android:text="@{@string/level + m.level}"
-                    android:background="@color/by_skeleton_light_transparent" />
+                    android:background="@color/by_skeleton_light_transparent"
+                    android:text="@{@string/level + m.level}" />
 
             </LinearLayout>
 

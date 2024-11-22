@@ -8,18 +8,17 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/categories_item_container"
         style="?attr/materialCardViewFilledStyle"
-        app:cardBackgroundColor="@color/by_skeleton_light_transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
+        app:cardBackgroundColor="@color/by_skeleton_light_transparent">
 
         <ImageView
             android:id="@+id/categories_item_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@drawable/p"
             android:adjustViewBounds="true"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/p" />
     </com.google.android.material.card.MaterialCardView>
 
     <View

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/comiclist_item_container"
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
@@ -55,9 +54,9 @@
             android:layout_marginTop="4dp"
             android:layout_marginEnd="4dp"
             android:layout_toEndOf="@id/comiclist_item_image"
+            android:background="@color/by_skeleton_light_transparent"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:background="@color/by_skeleton_light_transparent" />
+            android:maxLines="2" />
 
         <View
             android:id="@+id/comiclist_item_likeimage"
@@ -69,7 +68,7 @@
             android:layout_marginEnd="4dp"
             android:layout_marginBottom="4dp"
             android:layout_toEndOf="@id/comiclist_item_image"
-            android:background="@color/by_skeleton_light_transparent"/>
+            android:background="@color/by_skeleton_light_transparent" />
 
     </RelativeLayout>
 

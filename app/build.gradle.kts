@@ -26,18 +26,12 @@ android {
         }
     }
     buildTypes {
-        debug {
-            signingConfig = signingConfigs.getByName("keyStore")
-        }
+        debug {}
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            signingConfig = signingConfigs.getByName("debug")
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-                "retrofit2.pro",
-            )
+            signingConfig = signingConfigs.getByName("keyStore")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
             baselineProfile.automaticGenerationDuringBuild = true
         }
     }
@@ -48,7 +42,6 @@ android {
     }
     buildFeatures {
         viewBinding = true
-        dataBinding = true
         buildConfig = true
     }
     applicationVariants.all {
