@@ -30,7 +30,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.isDigitsOnly
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.shizq.bika.core.designsystem.icon.BikaIcons
@@ -44,42 +43,28 @@ fun ComicScreen(
     navigationToComicInfo: (String) -> Unit,
 ) {
     val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
-    val hobbyUiState by component.hobbyUiState.collectAsStateWithLifecycle()
-    var showSealTagDialog by rememberSaveable { mutableStateOf(false) }
     var showSortDialog by rememberSaveable { mutableStateOf(false) }
     ComicContent(
         comicsPagingItems,
-        navigationToComicInfo = navigationToComicInfo,
-        showSealCategoriesDialog = showSealTagDialog,
+        showSortDialog = showSortDialog,
         onDismissed = {
-            showSealTagDialog = false
             showSortDialog = false
         },
-        onActionClickHobbyDialog = { showSealTagDialog = true },
-        showSortDialog = showSortDialog,
         onActionClickSortDialog = { showSortDialog = true },
-        hobbyUiState = hobbyUiState,
-        onChangeHobbiesSelection = component::updateHobbiesSelection,
+        navigationToComicInfo = navigationToComicInfo,
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ComicContent(
     lazyPagingItems: LazyPagingItems<ComicResource>,
-    hobbyUiState: HobbyUiState,
-    showSealCategoriesDialog: Boolean,
     showSortDialog: Boolean,
     modifier: Modifier = Modifier,
-    onActionClickHobbyDialog: () -> Unit,
     onDismissed: () -> Unit,
     onActionClickSortDialog: () -> Unit,
     navigationToComicInfo: (String) -> Unit,
-    onChangeHobbiesSelection: (String, Boolean) -> Unit,
 ) {
-    if (showSealCategoriesDialog) {
-        HobbyDialog(hobbyUiState, onChangeHobbiesSelection) { onDismissed() }
-    }
     if (showSortDialog) {
         SortDialog { onDismissed() }
     }
@@ -96,9 +81,6 @@ internal fun ComicContent(
                 actions = {
                     IconButton(onActionClickSortDialog) {
                         Icon(BikaIcons.Sort, "sort")
-                    }
-                    IconButton(onActionClickHobbyDialog) {
-                        Icon(BikaIcons.HideSource, "hide tag")
                     }
                     val pageMetadata = PageMetaData.metadata
                     if (pageMetadata != null) {

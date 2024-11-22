@@ -22,13 +22,6 @@ class ComicListComponentImpl @AssistedInject constructor(
     compositeComicListRepository: CompositeComicListRepository,
 ) : ComicListComponent,
     ComponentContext by componentContext {
-    override val hobbyUiState =
-        preferences.userData.map { HobbyUiState.Success(it.hobbies) }
-            .stateIn(
-                componentScope,
-                SharingStarted.WhileSubscribed(5000),
-                HobbyUiState.Loading,
-            )
 
     override val comicFlow =
         combine(
@@ -47,12 +40,6 @@ class ComicListComponentImpl @AssistedInject constructor(
                     PageMetaData.metadata = it
                 }
             }
-
-    override fun updateHobbiesSelection(name: String, state: Boolean) {
-        componentScope.launch {
-            preferences.setHobbiesFollowed(name, state)
-        }
-    }
 
     @AssistedFactory
     interface Factory : ComicListComponent.Factory {
