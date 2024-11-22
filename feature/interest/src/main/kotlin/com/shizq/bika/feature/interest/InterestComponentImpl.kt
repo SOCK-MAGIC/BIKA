@@ -56,7 +56,7 @@ class InterestComponentImpl @AssistedInject constructor(
         }
     }.stateIn(
         scope = componentScope,
-        started = SharingStarted.WhileSubscribed(5_000),
+        started = SharingStarted.Eagerly,
         initialValue = InterestsUiState.Loading,
     )
 
