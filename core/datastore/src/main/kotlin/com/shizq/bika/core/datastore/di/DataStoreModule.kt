@@ -43,7 +43,7 @@ class DataStoreModule {
             serializer = userPreferencesSerializer,
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
         ) {
-            context.dataStoreFile("user_preferences.pb")
+            context.dataStoreFile("user_preferences.json")
         }
 
     @Provides
@@ -58,7 +58,7 @@ class DataStoreModule {
             serializer = userCredentialSerializer,
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
         ) {
-            context.dataStoreFile("user_credential.pb")
+            context.dataStoreFile("user_credential.json")
         }
 
     @Provides
@@ -73,6 +73,6 @@ class DataStoreModule {
             serializer = networkConfigSerializer,
             scope = CoroutineScope(scope.coroutineContext + ioDispatcher),
         ) {
-            context.dataStoreFile("network_config.pb")
+            context.dataStoreFile("network_config.json")
         }
 }
