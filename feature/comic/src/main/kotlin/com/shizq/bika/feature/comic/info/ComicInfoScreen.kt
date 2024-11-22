@@ -65,6 +65,8 @@ import com.shizq.bika.core.ui.ComicCardSharedElementKey
 import com.shizq.bika.core.ui.ComicCardSharedElementType
 import com.shizq.bika.core.ui.LocalAnimatedVisibilityScope
 import com.shizq.bika.core.ui.LocalSharedTransitionScope
+import com.shizq.bika.core.ui.UserDialog
+import com.shizq.bika.core.ui.UserInfo
 import com.shizq.bika.core.ui.nonSpatialExpressiveSpring
 import com.shizq.bika.core.ui.spatialExpressiveSpring
 import com.webtoonscorp.android.readmore.material3.ReadMoreText
@@ -402,26 +404,20 @@ internal fun Info(
 
 @Composable
 private fun Creator(
-    creator: Creator,
+    userInfo: UserInfo,
     updatedAt: String,
     navigationToComicList: (Comics) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var show by remember { mutableStateOf(false) }
     if (show) {
-        UserDialog(
-            creator.avatarUrl,
-            creator.gender,
-            creator.level.toString(),
-            creator.name,
-            creator.slogan,
-        ) { show = false }
+        UserDialog(userInfo) { show = false }
     }
     ElevatedCard(modifier = modifier) {
         ListItem(
             leadingContent = {
                 DynamicAsyncImage(
-                    creator.avatarUrl,
+                    userInfo.avatarUrl,
                     "avatar",
                     modifier = Modifier
                         .size(48.dp)
@@ -431,8 +427,8 @@ private fun Creator(
             },
             headlineContent = {
                 Text(
-                    creator.name,
-                    modifier = Modifier.clickable { navigationToComicList(Comics(creatorId = creator.id)) },
+                    userInfo.name,
+                    modifier = Modifier.clickable { navigationToComicList(Comics(creatorId = userInfo.id)) },
                 )
             },
             supportingContent = {

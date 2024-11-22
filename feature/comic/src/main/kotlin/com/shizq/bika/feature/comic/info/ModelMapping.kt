@@ -3,6 +3,7 @@ package com.shizq.bika.feature.comic.info
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.model.NetworkComicEp
 import com.shizq.bika.core.network.model.NetworkComicInfo
+import com.shizq.bika.core.ui.UserInfo
 
 internal fun NetworkComicInfo.asToolItems(): ToolItem = ToolItem(
     allowComment = comic.allowComment,
@@ -27,21 +28,17 @@ internal fun NetworkComicInfo.asComicResource(): ComicResource = ComicResource(
     comic.likesCount,
 )
 
-internal fun NetworkComicInfo.asCreator(): Creator {
+internal fun NetworkComicInfo.asCreator(): UserInfo {
     val creator = comic.creator
-    return Creator(
-        avatarUrl = "${creator.avatar.fileServer}/static/${creator.avatar.path}",
-        characters = creator.characters,
-        gender = when (creator.gender) {
-            "m" -> "(绅士)"
-            "f" -> "(淑女)"
-            else -> "(机器人)"
-        },
-        level = creator.level,
+    return UserInfo(
+        avatarUrl = creator.avatar.staticImageUrl,
+        character = creator.character,
+        gender = creator.gender,
+        level = creator.level.toString(),
         name = creator.name,
         slogan = creator.slogan,
         title = creator.title,
-        creator.id,
+        id = creator.id,
     )
 }
 
@@ -50,7 +47,7 @@ internal fun NetworkComicEp.Eps.Doc.asEpDoc() =
 
 data class EpDoc(
     val id: String,
-    val order: Int = 0,
-    val title: String = "",
-    val updatedAt: String = "",
+    val order: Int,
+    val title: String,
+    val updatedAt: String,
 )

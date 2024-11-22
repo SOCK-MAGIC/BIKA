@@ -1,6 +1,7 @@
 package com.shizq.bika.feature.comic.info
 
 import com.shizq.bika.core.model.ComicResource
+import com.shizq.bika.core.ui.UserInfo
 
 sealed interface ComicInfoUiState {
     data object Loading : ComicInfoUiState
@@ -9,7 +10,7 @@ sealed interface ComicInfoUiState {
         val toolItem: ToolItem,
         val chineseTeam: String = "",
         val createdAt: String = "",
-        val creator: Creator,
+        val creator: UserInfo,
         val description: String = "",
         val tags: List<String> = listOf(),
         val totalViews: Int = 0,
@@ -23,21 +24,8 @@ sealed interface ComicInfoUiState {
 sealed interface EpUiState {
     data object Loading : EpUiState
     data object Error : EpUiState
-    data class Success(
-        val eps: List<List<EpDoc>>,
-    ) : EpUiState
+    data class Success(val eps: List<List<EpDoc>>) : EpUiState
 }
-
-data class Creator(
-    val avatarUrl: String,
-    val characters: List<String> = listOf(),
-    val gender: String = "",
-    val level: Int = 0,
-    val name: String = "",
-    val slogan: String = "",
-    val title: String = "",
-    val id: String,
-)
 
 data class ToolItem(
     val allowComment: Boolean,

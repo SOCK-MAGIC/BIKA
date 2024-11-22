@@ -1,5 +1,6 @@
 package com.shizq.bika.core.ui
 
+import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -28,10 +29,13 @@ import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 
 data class UserInfo(
     val avatarUrl: String,
+    val character: String,
     val gender: String,
     val level: String,
-    val username: String,
+    val name: String,
+    val title: String,
     val slogan: String,
+    val id: String,
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -56,8 +60,8 @@ fun UserDialog(
                         .size(96.dp)
                         .clip(CircleShape),
                 )
-                Text("${user.gender} Lv.${user.level}",)
-                Text(user.username, fontWeight = FontWeight.Bold)
+                Text("${user.gender} Lv.${user.level}")
+                Text(user.name, fontWeight = FontWeight.Bold)
                 Text(user.slogan)
             }
         }
@@ -69,16 +73,19 @@ fun UserDialog(
 @Composable
 private fun UserDialogPreview() {
     val previewHandler = AsyncImagePreviewHandler {
-        ColorDrawable(android.graphics.Color.RED).asImage()
+        ColorDrawable(Color.RED).asImage()
     }
     CompositionLocalProvider(LocalAsyncImagePreviewHandler provides previewHandler) {
         UserDialog(
-            UserInfo(
+            user = UserInfo(
                 avatarUrl = "",
                 gender = "男",
                 level = "1",
-                username = "shizq",
+                name = "shizq",
                 slogan = "slogan",
+                character = "character",
+                title = "title",
+                id = "id",
             ),
             onDismiss = {},
         )
