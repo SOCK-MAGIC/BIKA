@@ -48,10 +48,7 @@ roborazzi = "1.32.2"
 androidxRecyclerview = "1.3.2"
 byrecyclerview = "1.4.1"
 commonsCodec = "1.17.1"
-glide = "4.16.0"
 material = "1.12.0"
-androidxNavigationFragment = "2.8.4"
-okhttp3Integration = "4.16.0"
 photoview = "2.3.0"
 pictureselector = "v3.11.3"
 retrofit = "2.11.0"
@@ -97,8 +94,6 @@ androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "life
 androidx-lifecycle-runtimeTesting = { group = "androidx.lifecycle", name = "lifecycle-runtime-testing", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-metrics = { group = "androidx.metrics",name="metrics-performance", version.ref = "androidXMetrics" }
-androidx-navigation-fragment-ktx = { group = "androidx.navigation",name="navigation-fragment-ktx", version.ref = "androidxNavigationFragment" }
-androidx-navigation-ui-ktx = { group = "androidx.navigation",name="navigation-ui-ktx", version.ref = "androidxNavigationFragment" }
 androidx-paging-compose = { group = "androidx.paging",name="paging-compose", version.ref = "androidxPaging" }
 androidx-paging-runtime = { group = "androidx.paging",name="paging-runtime", version.ref = "androidxPaging" }
 androidx-preference-ktx = { group = "androidx.preference",name="preference-ktx", version.ref = "androidxPreference" }
@@ -124,11 +119,8 @@ coil-network = { group = "io.coil-kt.coil3",name="coil-network-okhttp", version.
 commons-codec = { group = "commons-codec",name="commons-codec", version.ref = "commonsCodec" }
 
 decompose = { group = "com.arkivanov.decompose",name="decompose", version.ref = "decompose" }
-decompose-compose = { group = "com.arkivanov.decompose",name="extensions-compose", version.ref = "decompose" }
 decompose-compose-experimental = { group = "com.arkivanov.decompose",name="extensions-compose-experimental", version.ref = "decompose" }
 
-glide = { group = "com.github.bumptech.glide",name="glide", version.ref = "glide" }
-glide-okhttp3 = { group = "com.github.bumptech.glide",name="okhttp3-integration", version.ref = "okhttp3Integration" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
@@ -148,15 +140,10 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 material = { group = "com.google.android.material",name="material", version.ref = "material" }
 napier = { group = "io.github.aakira",name="napier", version.ref = "napier" }
 okhttp = { group = "com.squareup.okhttp3",name="okhttp", version.ref = "okhttp" }
-okhttp-logging-interceptor = { group = "com.squareup.okhttp3",name="logging-interceptor", version.ref = "okhttp" }
 photoview = { group = "com.github.chrisbanes",name="PhotoView", version.ref = "photoview" }
 pictureselector = { group = "io.github.lucksiege",name="pictureselector", version.ref = "pictureselector" }
 retrofit = { group = "com.squareup.retrofit2",name="retrofit", version.ref = "retrofit" }
-retrofit-adapter-rxjava3 = { group = "com.squareup.retrofit2",name="adapter-rxjava3", version.ref = "retrofit" }
-retrofit-converter-kotlinx-serialization = { group = "com.squareup.retrofit2",name="converter-kotlinx-serialization", version.ref = "retrofit" }
-retrofit-converter-gson = { group = "com.squareup.retrofit2",name="converter-gson", version.ref = "retrofit" }
 rxandroid = { group = "io.reactivex.rxjava3",name="rxandroid", version.ref = "rxandroid" }
-ucrop = { group = "io.github.lucksiege",name="ucrop", version.ref = "pictureselector" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "androidTools" }

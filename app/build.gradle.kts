@@ -96,24 +96,12 @@ dependencies {
     implementation(libs.byrecyclerview)
 
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.gson)
-    implementation(libs.retrofit.adapter.rxjava3)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
-
-    implementation(libs.glide)
-    implementation(libs.glide.okhttp3)
 
     implementation(libs.rxandroid)
 
     implementation(libs.pictureselector)
-    implementation(libs.ucrop)
 
     implementation(libs.photoview)
-
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.okhttp.logging.interceptor)
 
     implementation(libs.commons.codec)
 
@@ -137,7 +125,6 @@ dependencies {
     implementation(libs.decompose.compose.experimental)
 
     implementation(libs.coil.kt)
-    implementation(libs.okhttp)
     implementation(libs.coil.network)
 
     baselineProfile(projects.benchmarks)
