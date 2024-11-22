@@ -81,16 +81,7 @@
             android:name=".ui.games.GameInfoActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.apps.AppsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.chatroom.old.ChatRoomActivity"
-            android:exported="false" />
-        <activity
             android:name=".ui.chatroom.current.ChatRoomActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.user.UserActivity"
             android:exported="false" />
         <activity
             android:name=".ui.chatroom.current.roomlist.ChatRoomListActivity"
@@ -98,9 +89,6 @@
         <activity
             android:name=".ui.chatroom.current.blacklist.ChatBlacklistActivity"
             android:exported="false" />
-
-        <service android:name=".service.ChatWebSocketServiceOld" />
         <service android:name=".service.ChatWebSocketService" />
     </application>
-
 </manifest>

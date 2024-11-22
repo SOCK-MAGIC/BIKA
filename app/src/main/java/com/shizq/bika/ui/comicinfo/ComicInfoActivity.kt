@@ -16,7 +16,6 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shizq.bika.BR
 import com.shizq.bika.R
-import com.shizq.bika.adapter.EpisodeAdapter
 import com.shizq.bika.adapter.RecommendAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityComicinfoBinding
@@ -38,10 +37,7 @@ import kotlinx.coroutines.launch
 class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewModel>() {
     var fileserver: String = ""
     var imageurl: String = ""
-
-    private lateinit var mAdapterEpisode: EpisodeAdapter
     private lateinit var episodeFooterBinding: ItemEpisodeFooterViewBinding
-    private lateinit var mAdapterRecommend: RecommendAdapter
 
     private lateinit var userViewDialog: UserViewDialog
 
@@ -83,11 +79,9 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
 
         userViewDialog = UserViewDialog(this)
 
-        //漫画章节
-        mAdapterEpisode = EpisodeAdapter()
+
         binding.comicInfoTotalEps.isNestedScrollingEnabled = false
         binding.comicInfoEpsRv.layoutManager = LinearLayoutManager(this)
-        binding.comicInfoEpsRv.adapter = mAdapterEpisode
         episodeFooterBinding = DataBindingUtil.inflate(
             LayoutInflater.from(this), R.layout.item_episode_footer_view,
             binding.comicInfoEpsRv.parent as ViewGroup, false
@@ -108,19 +102,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
             .into(binding.comicinfoImage)
         binding.comicinfoAuthor.text = viewModel.author
         binding.comicinfoTotalViews.text = "指数：${viewModel.totalViews}"
-
-        //网络请求
-        if (binding.comicinfoTagslist.size < 1) {
-            //防止重复加载 判断标签数是否为0
-            binding.comicinfoProgressbar.visibility = View.VISIBLE
-            viewModel.getInfo()
-            viewModel.episodePage = 0
-            mAdapterEpisode.clear()
-            viewModel.getEpisode()
-            viewModel.getRecommend()
-        }
-        // TODO 加載進度條有問題
-
     }
 
     //toolbar菜单
@@ -564,12 +545,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
                 when (it) {
                     is Result.Success -> {
                         viewModel.totalEps = it.data.eps.total
-                        if (it.data.eps.page == 1) {//防止重复添加
-                            mAdapterEpisode.clear()
-                            mAdapterEpisode.addData(it.data.eps.docs)
-                        } else {
-                            mAdapterEpisode.addData(it.data.eps.docs)
-                        }
 
                         if (it.data.eps.pages == it.data.eps.page) {
                             //总页数等于当前页数 不显示加载布局

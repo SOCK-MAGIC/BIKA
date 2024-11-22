@@ -15,10 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.shizq.bika.BR
 import com.shizq.bika.R
-import com.shizq.bika.adapter.CategoriesAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityMainBinding
-import com.shizq.bika.ui.apps.AppsActivity
 import com.shizq.bika.ui.chatroom.current.roomlist.ChatRoomListActivity
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
@@ -36,7 +34,6 @@ import me.jingbin.library.skeleton.BySkeleton
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
-    private lateinit var adapter_categories: CategoriesAdapter
     private lateinit var skeletonScreen: ByRVItemSkeletonScreen
 
     private val ERROR_PROFILE = 0
@@ -55,26 +52,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         binding.toolbar.title = "哔咔"
         setSupportActionBar(binding.toolbar)
 
-        adapter_categories = CategoriesAdapter()
         binding.mainRv.layoutManager = GridLayoutManager(
             this@MainActivity,
             if (getWindowWidth() > getWindowHeight()) 6 else 3
         ) // 初步适配平板（没卵用
         skeletonScreen = BySkeleton
             .bindItem(binding.mainRv)
-            .adapter(adapter_categories) // 必须设置adapter，且在此之前不要设置adapter
             .load(R.layout.item_categories_skeleton) // item骨架图
             .duration(2000) // 微光一次显示时间
             .count(18) // item个数
             .show()
 
         initListener()
-
-        if (adapter_categories.data.size < 1) {
-            // 防止重复加载
-            showProgressBar(true, "检查账号信息...")
-            viewModel.getProfile() // 先获得个人信息
-        }
     }
 
     override fun onTopResumedActivityChanged(isTopResumedActivity: Boolean) {
@@ -225,64 +214,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
         }
 
         binding.mainRv.setOnItemClickListener { _, position ->
-            val intent = Intent(this, ComicListActivity::class.java)
-            val datas = adapter_categories.getItemData(position)
-            when (datas.imageRes) {
-                // 根据ResId来判断 以后改
-                R.drawable.cat_game -> {
-                    startActivity(Intent(this, GamesActivity::class.java))
-                }
 
-                R.drawable.cat_love_pica -> {
-                    startActivity(Intent(this, AppsActivity::class.java))
-                }
-
-                R.drawable.ic_chat -> {
-                    startActivity(Intent(this, ChatRoomListActivity::class.java))
-                }
-
-                R.drawable.cat_forum -> {
-                    val intentComments = Intent(this, CommentsActivity::class.java)
-                    intentComments.putExtra("id", "5822a6e3ad7ede654696e482")
-                    intentComments.putExtra("comics_games", "comics")
-                    startActivity(intentComments)
-                }
-
-                R.drawable.cat_latest -> {
-                    intent.putExtra("tag", "latest")
-                    intent.putExtra("title", datas.title)
-                    intent.putExtra("value", datas.title)
-                    startActivity(intent)
-                }
-
-                R.drawable.cat_random -> {
-                    intent.putExtra("tag", "random")
-                    intent.putExtra("title", datas.title)
-                    intent.putExtra("value", datas.title)
-                    startActivity(intent)
-                }
-
-                else -> {
-                    if (datas.isWeb) {
-                        val intent = Intent()
-                        intent.action = "android.intent.action.VIEW"
-                        intent.data = Uri.parse(
-                            "${datas.link}/?token=${
-                                SPUtil.get<String>(
-                                    "token",
-                                    ""
-                                )
-                            }&secret=pb6XkQ94iBBny1WUAxY0dY5fksexw0dt"
-                        )
-                        startActivity(intent)
-                    } else {
-                        intent.putExtra("tag", "categories")
-                        intent.putExtra("title", datas.title)
-                        intent.putExtra("value", datas.title)
-                        startActivity(intent)
-                    }
-                }
-            }
         }
         // 网络重试点击事件监听
         binding.mainLoadLayout.setOnClickListener {
@@ -428,10 +360,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 binding.mainLoadLayout.visibility = ViewGroup.GONE
                 viewModel.categoriesList = viewModel.cList()
                 viewModel.categoriesList.addAll(it.data.categories)
-                if (adapter_categories.data.size < 1) {
-                    // 防止重复添加
-                    adapter_categories.addData(viewModel.categoriesList)
-                }
             } else {
                 ERROR = this.ERROR_CATEGORIES
                 showProgressBar(
