@@ -10,7 +10,6 @@ import com.shizq.bika.bean.ChatMessageBean
 import com.shizq.bika.databinding.ItemChatMessageSendBinding
 import com.bumptech.glide.Glide
 import com.shizq.bika.utils.GlideUrlNewKey
-import com.shizq.bika.widget.UserViewDialog
 
 //新聊天室 我发送的消息
 class ChatMessageSendHolder (viewGroup: ViewGroup, layoutId: Int) :
@@ -111,11 +110,6 @@ class ChatMessageSendHolder (viewGroup: ViewGroup, layoutId: Int) :
 //                chip.height = 24.dp
                 chip.setEnsureMinTouchTargetSize(false)//去除视图的顶部和底部的额外空间
                 binding.chatAtGroupR.addView(chip)
-
-                chip.setOnClickListener {
-                    //通过id展示用户信息
-                    UserViewDialog(holder.itemView.context as AppCompatActivity).showUserDialog(i.id)
-                }
             }
         } else {
             binding.chatAtGroupR.visibility = View.GONE

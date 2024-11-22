@@ -11,11 +11,9 @@ import com.shizq.bika.adapter.NotificationsAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityNotificationsBinding
 import com.shizq.bika.ui.comment.CommentsActivity
-import com.shizq.bika.widget.UserViewDialog
 
 class NotificationsActivity : BaseActivity<ActivityNotificationsBinding, NotificationsViewModel>() {
     lateinit var mAdapter: NotificationsAdapter
-    private lateinit var userViewDialog: UserViewDialog
 
     override fun initContentView(savedInstanceState: Bundle?): Int {
         return R.layout.activity_notifications
@@ -33,8 +31,6 @@ class NotificationsActivity : BaseActivity<ActivityNotificationsBinding, Notific
         binding.notificationsRv.layoutManager = LinearLayoutManager(this)
         mAdapter = NotificationsAdapter()
         binding.notificationsRv.adapter = mAdapter
-
-        userViewDialog = UserViewDialog(this)
 
         binding.notificationsBottomInclude.loadLayout.isEnabled = false
         viewModel.getNotifications()
@@ -81,12 +77,6 @@ class NotificationsActivity : BaseActivity<ActivityNotificationsBinding, Notific
                     intentComments.putExtra("comics_games", "games")
                 }
                 startActivity(intentComments)
-            }
-        }
-
-        binding.notificationsRv.setOnItemChildClickListener { view, position ->
-            if (view.id == R.id.item_notifications_image_layout && mAdapter.getItemData(position).redirectType == "comment") {
-                userViewDialog.showUserDialog(mAdapter.getItemData(position)._sender)
             }
         }
     }

@@ -34,14 +34,12 @@ import com.shizq.bika.service.ChatWebSocketService
 import com.shizq.bika.ui.chatroom.current.blacklist.ChatBlacklistActivity
 import com.shizq.bika.ui.image.ImageActivity
 import com.shizq.bika.utils.*
-import com.shizq.bika.widget.UserViewDialog
 import com.yalantis.ucrop.UCrop
 
 //新聊天室
 //消息是websocket实现，消息是实时，不会留记录,网络不好会丢失消息
 class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel>() {
     private lateinit var adapter: ChatMessageMultiAdapter
-    private lateinit var userViewDialog: UserViewDialog
     var chatRvBottom = false//false表示底部
     private val atUser = ArrayList<UserMention>() //@的用户名
 
@@ -69,7 +67,7 @@ class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel
     @SuppressLint("ResourceType")
     override fun initData() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)//屏幕常亮
-        AndroidBug5497Workaround.assistActivity(this)
+        // AndroidBug5497Workaround.assistActivity(this)
 
         val intentService = Intent(this, ChatWebSocketService::class.java)
         bindService(intentService, connection, BIND_AUTO_CREATE)
@@ -81,10 +79,6 @@ class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel
         adapter = ChatMessageMultiAdapter()
         binding.chatRv.layoutManager = LinearLayoutManager(this)
         binding.chatRv.adapter = adapter
-
-
-        userViewDialog = UserViewDialog(this)
-
         binding.chatProgressbar.show()
         initListener()
     }
@@ -136,10 +130,6 @@ class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel
 //
             val id = view.id
             val data = adapter.getItemData(position)
-            //点击头像 查看用户信息
-            if (id == R.id.chat_avatar_layout_l) {
-                userViewDialog.showUserDialog(data.data.profile)
-            }
             //点击名字 用于 @
             if (id == R.id.chat_name_l) {
                 initChipGroup(data.data.profile.id, data.data.profile.name)
@@ -268,7 +258,6 @@ class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel
                             .start(fragment.requireActivity(), fragment, requestCode);
                     }
                     .setSelectionMode(1)
-                    .setImageEngine(GlideEngine.createGlideEngine())
                     .forResult(object : OnResultCallbackListener<LocalMedia> {
                         override fun onResult(result: ArrayList<LocalMedia>) {
                             //发送图片 不添加回复与文字 纯图片发送//后面优化

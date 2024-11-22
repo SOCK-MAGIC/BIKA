@@ -13,7 +13,6 @@ import com.shizq.bika.R
 import com.shizq.bika.bean.GameInfoBean
 import com.bumptech.glide.Glide
 import com.shizq.bika.utils.GlideUrlNewKey
-import com.shizq.bika.utils.dp
 
 class GameScreenshotAdapter(val context: Context) :
     RecyclerView.Adapter<GameScreenshotAdapter.ViewHolder>() {
@@ -54,13 +53,6 @@ class GameScreenshotAdapter(val context: Context) :
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
-        var mImageView: ImageView
-
-        init {
-            mImageView = view.findViewById(R.id.game_screenshot)
-        }
-
         fun setData(bean: GameInfoBean.Game, position: Int) {
             val item = bean.screenshots[position]
             Glide.with(itemView)
@@ -68,29 +60,6 @@ class GameScreenshotAdapter(val context: Context) :
                 .centerCrop()
                 .placeholder(R.drawable.placeholder_transparent)
                 .dontTransform()
-                .into(object : CustomTarget<Drawable>(1, 240.dp) {
-                    override fun onLoadStarted(placeholder: Drawable?) {
-                        super.onLoadStarted(placeholder)
-                        mImageView.setImageDrawable(placeholder)
-                    }
-
-                    override fun onLoadFailed(errorDrawable: Drawable?) {
-                        super.onLoadFailed(errorDrawable)
-                        mImageView.setImageDrawable(null)
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable,
-                        transition: Transition<in Drawable>?
-                    ) {
-                        mImageView.setImageDrawable(resource)
-                    }
-
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        mImageView.setImageDrawable(placeholder)
-                    }
-
-                })
         }
 
     }

@@ -6,10 +6,6 @@ import android.util.Base64
 import java.io.ByteArrayOutputStream
 
 class Base64Util {
-    fun base64ToBitmap(base64Data: String): Bitmap {
-        val bytes = Base64.decode(base64Data.split(",").toTypedArray()[1], Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-    }
 
     fun getBase64(path: String): String {
         val baos = ByteArrayOutputStream()

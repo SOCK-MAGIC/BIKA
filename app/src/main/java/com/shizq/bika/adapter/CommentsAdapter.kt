@@ -11,7 +11,6 @@ import com.shizq.bika.databinding.ItemCommentsBinding
 import com.bumptech.glide.Glide
 import com.shizq.bika.utils.GlideUrlNewKey
 import com.shizq.bika.utils.TimeUtil
-import com.shizq.bika.widget.IconTextSpan
 
 class CommentsAdapter: BaseBindingAdapter<CommentsBean.Comments.Doc, ItemCommentsBinding>(R.layout.item_comments) {
 
@@ -78,10 +77,8 @@ class CommentsAdapter: BaseBindingAdapter<CommentsBean.Comments.Doc, ItemComment
 //            comments_total++ //评论总数被置顶评论占用 所以加回去
             val stringBuilder = StringBuilder()
             stringBuilder.append(" ")
-            val topSpan = IconTextSpan(holder.itemView.context, R.color.pink, "置顶")
             stringBuilder.append(bean.content.trim())
             val spannableString = SpannableString(stringBuilder.toString())
-            spannableString.setSpan(topSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             binding.commentsContentText.text = spannableString//评论内容
             binding.commentsFloor.text = ""//评论楼层

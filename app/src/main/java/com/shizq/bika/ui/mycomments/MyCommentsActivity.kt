@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.compose.ui.unit.dp
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -20,14 +21,11 @@ import com.shizq.bika.databinding.ActivityMyCommentsBinding
 import com.shizq.bika.ui.comicinfo.ComicInfoActivity
 import com.shizq.bika.ui.games.GameInfoActivity
 import com.shizq.bika.utils.*
-import com.shizq.bika.widget.UserViewDialog
 import me.jingbin.library.ByRecyclerView
 
 class MyCommentsActivity : BaseActivity<ActivityMyCommentsBinding, MyCommentsViewModel>() {
     lateinit var mAdapter: MyCommentsAdapter
     lateinit var adapter_sub: CommentsAdapter
-
-    private lateinit var userViewDialog: UserViewDialog
 
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var sub_comments_view: View
@@ -52,8 +50,6 @@ class MyCommentsActivity : BaseActivity<ActivityMyCommentsBinding, MyCommentsVie
         binding.myCommentsRv.layoutManager = LinearLayoutManager(this)
         mAdapter = MyCommentsAdapter()
         binding.myCommentsRv.adapter = mAdapter
-
-        userViewDialog = UserViewDialog(this)
 
         //        //子评论 bottomSheetDialog
         sub_comments_view = View.inflate(this, R.layout.view_bottom_sub_comments, null)
@@ -82,7 +78,7 @@ class MyCommentsActivity : BaseActivity<ActivityMyCommentsBinding, MyCommentsVie
     }
 
     private fun getWindowHeight(): Int {
-        return resources.displayMetrics.heightPixels - 50.dp
+        return 0
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -178,16 +174,10 @@ class MyCommentsActivity : BaseActivity<ActivityMyCommentsBinding, MyCommentsVie
         }
 
         sub_comments_rv.setOnItemClickListener { v, position ->
-            if (position != 0) {
-                userViewDialog.showUserDialog(adapter_sub.getItemData(position)._user)
-            }
         }
         sub_comments_rv.setOnItemChildClickListener { view, position ->
             val id = view.id
             val data = adapter_sub.getItemData(position)
-            if (id == R.id.comments_name || id == R.id.comments_image_layout) {
-                userViewDialog.showUserDialog(data._user)
-            }
             //点赞
             if (id == R.id.comments_like_layout) {
                 viewModel.likeSubPosition = position//保存当前要点赞的position

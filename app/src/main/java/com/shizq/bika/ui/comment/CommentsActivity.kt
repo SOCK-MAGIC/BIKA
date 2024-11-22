@@ -22,9 +22,6 @@ import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.bean.CommentsBean
 import com.shizq.bika.databinding.ActivityCommentsBinding
 import com.shizq.bika.network.Result
-import com.shizq.bika.utils.dp
-import com.shizq.bika.widget.InputTextMsgDialog
-import com.shizq.bika.widget.UserViewDialog
 import kotlinx.coroutines.launch
 import me.jingbin.library.ByRecyclerView
 import kotlin.math.ceil
@@ -44,12 +41,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
     private lateinit var sub_comments_title: TextView
     private lateinit var sub_comments_rv: ByRecyclerView
     private lateinit var sub_comments_reply_layout: View
-
-    private lateinit var userViewDialog: UserViewDialog
-
-    private lateinit var dialog_send_comments: InputTextMsgDialog
-    private lateinit var dialog_send_sub_comments: InputTextMsgDialog
-
 
     override fun initContentView(savedInstanceState: Bundle?): Int {
         return R.layout.activity_comments
@@ -71,8 +62,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
         binding.commentsRv.layoutManager = LinearLayoutManager(this)
         adapter_v2 = CommentsAdapter()
         binding.commentsRv.adapter = adapter_v2
-
-        userViewDialog = UserViewDialog(this)
 
         //子评论 bottomSheetDialog
         sub_comments_view =
@@ -97,9 +86,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
         adapter_sub = CommentsAdapter()
         sub_comments_rv.adapter = adapter_sub
 
-        dialog_send_comments = InputTextMsgDialog(this)
-        dialog_send_sub_comments = InputTextMsgDialog(this)
-
         binding.commentsLoadLayout.isEnabled = false
         viewModel.requestComment()
 
@@ -107,7 +93,7 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
     }
 
     private fun getWindowHeight(): Int {
-        return resources.displayMetrics.heightPixels - 50.dp
+        return 0
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -160,8 +146,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
             if (adapter_v2.getItemData(position)._user != null) {
                 val data = adapter_v2.getItemData(position)
                 viewModel.commentId = adapter_v2.getItemData(position).id
-                dialog_send_sub_comments.setTitleText("回复 ${data._user.name}")
-                dialog_send_sub_comments.show()
             }
         }
 
@@ -175,8 +159,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
                         when (which) {
                             0 -> {
                                 viewModel.commentId = adapter_v2.getItemData(position).id
-                                dialog_send_sub_comments.setTitleText("回复 ${data._user.name}")
-                                dialog_send_sub_comments.show()
                             }
 
                             1 -> {
@@ -212,9 +194,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
         binding.commentsRv.setOnItemChildClickListener { view, position ->
             val id = view.id
             val data = adapter_v2.getItemData(position)
-            if (id == R.id.comments_name || id == R.id.comments_image_layout) {
-                userViewDialog.showUserDialog(data._user)
-            }
             //点赞
             if (id == R.id.comments_like_layout) {
                 viewModel.likePosition = position//保存当前要点赞的position
@@ -257,8 +236,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
         sub_comments_rv.setOnItemClickListener { v, position ->
             val data = adapter_sub.getItemData(position)
             if (position == 0) {
-                dialog_send_sub_comments.setTitleText("回复 " + data._user.name)
-                dialog_send_sub_comments.show()
             } else {
                 val choices: Array<CharSequence> = arrayOf("复制", "举报")
                 MaterialAlertDialogBuilder(v.context)
@@ -301,8 +278,6 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
                     .setItems(choices) { _, which ->
                         when (choices[which]) {
                             "回复" -> {
-                                dialog_send_sub_comments.setTitleText("回复 " + data._user.name)
-                                dialog_send_sub_comments.show()
                             }
 
                             "复制" -> {
@@ -341,7 +316,7 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
             val id = view.id
             val data = adapter_sub.getItemData(position)
             if (id == R.id.comments_name || id == R.id.comments_image_layout) {
-                userViewDialog.showUserDialog(data._user)
+
             }
             //点赞
             if (id == R.id.comments_like_layout) {
@@ -359,24 +334,9 @@ class CommentsActivity : BaseActivity<ActivityCommentsBinding, CommentsViewModel
 
         binding.commentsReplyLayout.setOnClickListener {
             //底部发布评论栏
-            dialog_send_comments.setTitleText("发表评论")
-            dialog_send_comments.show()
         }
         sub_comments_reply_layout.setOnClickListener {
             //底部回复评论栏
-            dialog_send_sub_comments.setTitleText("回复 ${adapter_sub.data[0]._user.name}")
-            dialog_send_sub_comments.show()
-        }
-        dialog_send_comments.setmOnTextSendListener {
-            binding.commentsLoadLayout.isEnabled = false //显示进度条
-            binding.commentsLoadProgressBar.visibility = ViewGroup.VISIBLE
-            binding.commentsLoadError.visibility = ViewGroup.GONE
-            binding.commentsLoadText.text = ""
-            viewModel.seedComments(it)
-
-        }
-        dialog_send_sub_comments.setmOnTextSendListener {
-            viewModel.seedSubComments(it)
         }
 
         //评论列表滑动监听 更改显示的页数

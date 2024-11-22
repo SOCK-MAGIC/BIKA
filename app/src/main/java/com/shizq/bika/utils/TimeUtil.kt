@@ -58,11 +58,6 @@ class TimeUtil {
         return getDate(simpleDateFormat.parse(stringDate)!!)
     }
 
-    fun getDate(milSecond: Long): String {
-        val date = Date(milSecond)
-        return getDate(date)
-    }
-
     //2000-01-01T00:00:00+00:00 转换成 2000-01-01 00:00:00
     fun getDate(StringDate: String): String {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX")

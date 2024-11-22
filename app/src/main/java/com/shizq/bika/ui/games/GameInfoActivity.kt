@@ -18,9 +18,6 @@ import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.image.ImageActivity
 import com.bumptech.glide.Glide
 import com.shizq.bika.utils.GlideUrlNewKey
-import com.shizq.bika.utils.StatusBarUtil
-import com.shizq.bika.utils.dp
-import com.shizq.bika.widget.SpacesItemDecoration
 
 class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel>() {
     private lateinit var mAdapter: GameScreenshotAdapter
@@ -72,15 +69,6 @@ class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel
             val options = ActivityOptions.makeSceneTransitionAnimation(this, v, "image")
             startActivity(intent, options.toBundle())
         }
-
-        mPopupWindow.setOnDismissListener {
-            //恢复状态栏
-            StatusBarUtil.show(this)
-        }
-        popupView.setOnClickListener {
-            mPopupWindow.dismiss()
-        }
-
     }
 
     //toolbar菜单
@@ -137,12 +125,6 @@ class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel
         viewModel.liveData.observe(this) {
             binding.gameinfoProgressbar.visibility = View.GONE
             if (it.code == 200) {
-                binding.gameImageList.addItemDecoration(
-                    SpacesItemDecoration(
-                        6.dp,
-                        it.data.game.screenshots
-                    )
-                )
                 gameLink = it.data.game.androidLinks[0]
                 binding.gameBtnDownload.visibility = View.VISIBLE
 

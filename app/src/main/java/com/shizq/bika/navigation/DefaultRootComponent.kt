@@ -7,7 +7,6 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
 import com.shizq.bika.core.network.model.Comics
@@ -20,7 +19,14 @@ import com.shizq.bika.feature.reader.ReaderComponent
 import com.shizq.bika.feature.search.SearchComponent
 import com.shizq.bika.feature.signin.SignInComponent
 import com.shizq.bika.feature.splash.SplashComponent
-import com.shizq.bika.navigation.RootComponent.Child.*
+import com.shizq.bika.navigation.RootComponent.Child.ComicInfo
+import com.shizq.bika.navigation.RootComponent.Child.ComicList
+import com.shizq.bika.navigation.RootComponent.Child.Comment
+import com.shizq.bika.navigation.RootComponent.Child.Interest
+import com.shizq.bika.navigation.RootComponent.Child.Ranking
+import com.shizq.bika.navigation.RootComponent.Child.Reader
+import com.shizq.bika.navigation.RootComponent.Child.Search
+import com.shizq.bika.navigation.RootComponent.Child.SignIn
 import com.shizq.bika.router.ChildDrawer
 import com.shizq.bika.router.childDrawer
 import dagger.assisted.Assisted
@@ -62,7 +68,7 @@ class DefaultRootComponent @AssistedInject constructor(
     private fun child(config: Config, componentContext: ComponentContext): RootComponent.Child =
         trace("Navigation: $config") {
             when (config) {
-                Config.Splash -> Splash(splashComponentFactory(componentContext))
+                Config.Splash -> RootComponent.Child.Splash(splashComponentFactory(componentContext))
                 Config.SignIn -> SignIn(signInComponentFactory(componentContext))
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
                 is Config.ComicList -> ComicList(

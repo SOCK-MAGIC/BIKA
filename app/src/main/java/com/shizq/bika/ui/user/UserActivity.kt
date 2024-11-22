@@ -67,7 +67,6 @@ class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
                 .openGallery(SelectMimeType.ofImage())
                 .isCameraForegroundService(true)
                 .setSelectionMode(1)
-                .setImageEngine(GlideEngine.createGlideEngine())
                 .setCropEngine { fragment, srcUri, destinationUri, dataSource, requestCode ->
                     UCrop.of(srcUri, destinationUri, dataSource)
                         .withAspectRatio(1f, 1f)

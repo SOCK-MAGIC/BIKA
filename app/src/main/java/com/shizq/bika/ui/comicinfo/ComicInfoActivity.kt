@@ -14,20 +14,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.RecommendAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityComicinfoBinding
 import com.shizq.bika.databinding.ItemEpisodeFooterViewBinding
-import com.shizq.bika.database.model.HistoryEntity
 import com.shizq.bika.network.Result
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.image.ImageActivity
 import com.shizq.bika.utils.*
-import com.shizq.bika.widget.SpacesItemDecoration
-import com.shizq.bika.widget.UserViewDialog
 import kotlinx.coroutines.launch
 
 /**
@@ -38,8 +34,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
     var fileserver: String = ""
     var imageurl: String = ""
     private lateinit var episodeFooterBinding: ItemEpisodeFooterViewBinding
-
-    private lateinit var userViewDialog: UserViewDialog
 
     override fun initContentView(savedInstanceState: Bundle?): Int {
         return R.layout.activity_comicinfo
@@ -77,8 +71,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
             }
         }
 
-        userViewDialog = UserViewDialog(this)
-
 
         binding.comicInfoTotalEps.isNestedScrollingEnabled = false
         binding.comicInfoEpsRv.layoutManager = LinearLayoutManager(this)
@@ -92,8 +84,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
         val lm = LinearLayoutManager(this)
         lm.orientation = LinearLayoutManager.HORIZONTAL
         binding.comicinfoRecommend.layoutManager = lm
-        mAdapterRecommend = RecommendAdapter(this)
-        binding.comicinfoRecommend.adapter = mAdapterRecommend
 
         //加载数据
         Glide.with(this)
@@ -183,10 +173,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
         }
 
         fun CreatorLayout() {
-            //上传者信息
-            if (viewModel.creator != null) {
-                userViewDialog.showUserDialog(viewModel.creator!!)
-            }
         }
     }
 
@@ -562,26 +548,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
                     }
 
                     is Result.Loading -> {}
-                    else -> {}
-                }
-            }
-        }
-
-        //漫画推荐
-        lifecycleScope.launch {
-            viewModel.recommend.collect {
-                when (it) {
-                    is Result.Success -> {
-                        if (mAdapterRecommend.itemCount < 1) {
-                            binding.comicinfoRecommend.addItemDecoration(
-                                SpacesItemDecoration(
-                                    SpacesItemDecoration.px2dp(20F),
-                                    it.data.comics
-                                )
-                            )
-                            mAdapterRecommend.addNewData(it.data.comics)
-                        }
-                    }
                     else -> {}
                 }
             }

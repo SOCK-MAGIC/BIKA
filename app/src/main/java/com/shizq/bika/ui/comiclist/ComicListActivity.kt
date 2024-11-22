@@ -15,17 +15,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.ComicListAdapter
 import com.shizq.bika.adapter.ComicListAdapter2
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityComiclistBinding
-import com.shizq.bika.database.model.SearchEntity
 import com.shizq.bika.network.Result
 import com.shizq.bika.ui.comicinfo.ComicInfoActivity
 import com.shizq.bika.ui.image.ImageActivity
-import com.shizq.bika.utils.StatusBarUtil
 import kotlinx.coroutines.launch
 import me.jingbin.library.skeleton.ByRVItemSkeletonScreen
 import me.jingbin.library.skeleton.BySkeleton
@@ -203,7 +200,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
                 binding.comiclistRv.isEnabled = false//加载时不允许滑动，解决加载时滑动recyclerview报错
                 binding.comiclistLoadLayout.visibility = ViewGroup.VISIBLE
                 binding.comiclistLoadLayout.isEnabled = false
-                showProgressBar(true, "")
                 viewModel.getComicList()
 
             }
@@ -304,7 +300,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
                         binding.comiclistRv.isEnabled = false//加载时不允许滑动，解决加载时滑动recyclerview报错
                         binding.comiclistLoadLayout.visibility = ViewGroup.VISIBLE
                         binding.comiclistLoadLayout.isEnabled = false
-                        showProgressBar(true, "")
 
                         if (viewModel.tag.equals("random")) {
                             mComicListAdapter2.clear()
@@ -435,7 +430,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
             binding.comiclistRv.isEnabled = false//加载时不允许滑动，解决加载时滑动recyclerview报错
             binding.comiclistLoadLayout.visibility = ViewGroup.VISIBLE
             binding.comiclistLoadLayout.isEnabled = false
-            showProgressBar(true, "")
             viewModel.getComicList()
         }
     }
@@ -503,15 +497,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
 
                     is Result.Error -> {
                         viewModel.page--
-                        if (viewModel.page <= 1) {//当首次加载时出现网络错误
-                            showProgressBar(
-                                false,
-                                "网络错误，点击重试\ncode=${it.code} error=${it.error} message=${it.message}"
-                            )
-                        } else {
-                            //当页面不是第一页时 网络错误可能是分页加载时出现的网络错误
-                            binding.comiclistRv.loadMoreFail()
-                        }
                     }
 
                     else -> {}
@@ -531,10 +516,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
                     }
 
                     is Result.Error -> {
-                        showProgressBar(
-                            false,
-                            "网络错误，点击重试\ncode=${it.code} error=${it.error} message=${it.message}"
-                        )
                     }
 
                     else -> {}
@@ -565,7 +546,6 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
         //网络重试点击事件监听
         binding.comiclistLoadLayout.setOnClickListener{
             skeletonScreen.show()
-            showProgressBar(true, "")
             if (viewModel.tag.equals("random")) {
                 viewModel.getRandom()
             } else {
@@ -573,22 +553,5 @@ class ComicListActivity : BaseActivity<ActivityComiclistBinding, ComicListViewMo
             }
 
         }
-
-        //大图PopupWindow
-        mPopupWindow.setOnDismissListener{
-            //恢复状态栏
-            StatusBarUtil.show(this@ComicListActivity)
-        }
-        popupView.setOnClickListener{
-            mPopupWindow.dismiss()
-        }
-    }
-
-    private fun showProgressBar(show: Boolean, string: String) {
-        binding.comiclistLoadProgressBar.visibility =
-            if (show) ViewGroup.VISIBLE else ViewGroup.GONE
-        binding.comiclistLoadError.visibility = if (show) ViewGroup.GONE else ViewGroup.VISIBLE
-        binding.comiclistLoadText.text = string
-        binding.comiclistLoadLayout.isEnabled = !show
     }
 }

@@ -10,7 +10,6 @@ import com.shizq.bika.bean.ChatMessageBean
 import com.shizq.bika.databinding.ItemChatMessageReceiveBinding
 import com.bumptech.glide.Glide
 import com.shizq.bika.utils.GlideUrlNewKey
-import com.shizq.bika.widget.UserViewDialog
 
 //新聊天室 收到的消息
 class ChatMessageReceiveHolder(viewGroup: ViewGroup, layoutId: Int) :
@@ -103,10 +102,6 @@ class ChatMessageReceiveHolder(viewGroup: ViewGroup, layoutId: Int) :
 //                chip.height = 24.dp
                 chip.setEnsureMinTouchTargetSize(false)//去除视图的顶部和底部的额外空间
                 binding.chatAtGroupL.addView(chip)
-
-                chip.setOnClickListener {
-                    UserViewDialog(holder.itemView.context as AppCompatActivity).showUserDialog(i.id)
-                }
             }
         } else {
             binding.chatAtGroupL.visibility = View.GONE
