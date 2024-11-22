@@ -13,22 +13,9 @@ import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import com.shizq.bika.R
-import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
-import com.shizq.bika.network.base.BaseResponse
 import com.shizq.bika.utils.SPUtil
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observer
-import io.reactivex.rxjava3.disposables.Disposable
-import io.reactivex.rxjava3.observers.DefaultObserver
-import io.reactivex.rxjava3.schedulers.Schedulers
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.RequestBody
-import retrofit2.HttpException
 
 // TODO 没有bug 以后再优化 懒
 class SettingsPreferenceFragment : PreferenceFragmentCompat(),
@@ -251,56 +238,8 @@ class SettingsPreferenceFragment : PreferenceFragmentCompat(),
             old = SPUtil.get("password", "") as String
         }
 
-        val body = RequestBody.create(
-            "application/json; charset=UTF-8".toMediaTypeOrNull(),
-            JsonObject().apply {
-                addProperty("new_password", password)
-                addProperty("old_password", old)
-            }.asJsonObject.toString()
-        )
+
         val headers = BaseHeaders("users/password", "PUT").getHeaderMapAndToken()
-        RetrofitUtil.service.changePasswordPUT(body, headers)
-            .compose { upstream ->
-                upstream.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            }
-            .subscribe(object : DefaultObserver<BaseResponse<*>>() {
-
-                override fun onNext(baseResponse: BaseResponse<*>) {
-                    if (baseResponse.code == 200) {
-
-                        //保存密码
-                        SPUtil.put("password", password)
-                        Toast.makeText(activity, "修改密码成功", Toast.LENGTH_SHORT).show()
-                    } else {
-                        Toast.makeText(
-                            activity,
-                            "修改密码失败，网络错误code=${baseResponse.code} error=${baseResponse.error} message=${baseResponse.message}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
-
-                override fun onError(e: Throwable) {
-                    if (e is HttpException) {
-                        val responseBody = e.response()!!.errorBody()
-                        if (responseBody != null) {
-                            val type = object : TypeToken<BaseResponse<*>>() {}.type
-                            val baseResponse: BaseResponse<*> =
-                                Gson().fromJson(responseBody.string(), type)
-                            if (baseResponse.code == 400 && baseResponse.error == "1010") {
-                                showAlertDialog()
-                            }
-                        } else {
-                            Toast.makeText(activity, "修改密码失败，网络错误", Toast.LENGTH_SHORT).show()
-                        }
-                    } else {
-                        Toast.makeText(activity, "修改密码失败，网络错误", Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-
-                override fun onComplete() {}
-            })
     }
 
     fun showAlertDialog() {

@@ -6,7 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.core.text.set
-import com.bumptech.glide.Glide
+
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseBindingAdapter
 import com.shizq.bika.base.BaseBindingHolder
@@ -83,17 +83,5 @@ class ComicListAdapter2 :
             ategory = "$ategory $i"
         }
         binding.comiclistItemCategory.text = "分类：$ategory"
-
-        Glide.with(holder.itemView)
-            .load(
-                //哔咔服务器问题 需自行修改图片请求路径
-                GlideUrlNewKey(
-                    bean.thumb.fileServer, bean.thumb.path
-                )
-            )
-            .placeholder(R.drawable.placeholder_transparent)
-            .into(binding.comiclistItemImage)
-        holder.addOnClickListener(R.id.comiclist_item_image)
-
     }
 }

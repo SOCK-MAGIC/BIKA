@@ -2,14 +2,11 @@ package com.shizq.bika.adapter.holder
 
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.chip.Chip
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseBindingHolder
 import com.shizq.bika.bean.ChatMessageBean
 import com.shizq.bika.databinding.ItemChatMessageSendBinding
-import com.bumptech.glide.Glide
-import com.shizq.bika.utils.GlideUrlNewKey
 
 //新聊天室 我发送的消息
 class ChatMessageSendHolder (viewGroup: ViewGroup, layoutId: Int) :
@@ -29,22 +26,6 @@ class ChatMessageSendHolder (viewGroup: ViewGroup, layoutId: Int) :
         } else {
             binding.chatMessageProgress.visibility = View.GONE
         }
-
-        //头像
-        Glide.with(holder.itemView)
-            .load(
-                if (profile.avatarUrl != null && profile.avatarUrl != "") {
-                    val i: Int = profile.avatarUrl.indexOf("/static/")
-                    if (i > 0) {
-                        GlideUrlNewKey(
-                            profile.avatarUrl.substring(0, i),
-                            profile.avatarUrl.substring(i + 8)
-                        )
-                    } else profile.avatarUrl
-                } else R.drawable.placeholder_avatar_2
-            )
-            .placeholder(R.drawable.placeholder_avatar_2)
-            .into(binding.chatAvatarR)
 
         //等级
         if (profile.level >= 0) {
@@ -83,11 +64,6 @@ class ChatMessageSendHolder (viewGroup: ViewGroup, layoutId: Int) :
                 binding.chatReplyR.text = reply.message
             }
             if (reply.type == "IMAGE_MESSAGE") {
-                binding.chatReplyImage.visibility = View.VISIBLE
-                Glide.with(holder.itemView)
-                    .load(reply.image)
-                    .placeholder(R.drawable.placeholder_avatar_2)
-                    .into(binding.chatReplyImage)
                 binding.chatReplyR.text = "[图片]"
             } else {
                 binding.chatReplyImage.visibility = View.GONE
@@ -130,10 +106,6 @@ class ChatMessageSendHolder (viewGroup: ViewGroup, layoutId: Int) :
             } else {
                 binding.chatContentR.visibility = View.GONE
             }
-            Glide.with(holder.itemView)
-                .load(message.medias[0])
-                .placeholder(R.drawable.placeholder_avatar_2)
-                .into(binding.chatContentImageR)
         } else {
             binding.chatContentImageR.visibility = View.GONE
         }

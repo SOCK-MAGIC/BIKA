@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.shizq.bika.BR
+
 import com.shizq.bika.R
 import com.shizq.bika.adapter.NotificationsAdapter
 import com.shizq.bika.base.BaseActivity

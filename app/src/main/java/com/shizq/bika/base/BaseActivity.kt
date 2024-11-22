@@ -3,14 +3,12 @@ package com.shizq.bika.base
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompatActivity(), IBaseView {
+abstract class BaseActivity<V : ViewBinding, VM : BaseViewModel> : AppCompatActivity(), IBaseView {
     protected lateinit var binding: V
     protected lateinit var viewModel: VM
     private var viewModelId = 0
@@ -30,15 +28,9 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.unbind()
     }
 
     private fun initViewDataBinding(savedInstanceState: Bundle?) {
-        // DataBindingUtil类需要在project的build中配置 dataBinding {enabled true }, 同步后会自动关联android.binding包
-        binding = DataBindingUtil.setContentView(this, initContentView(savedInstanceState))
-        viewModelId = initVariableId()
-        //        viewModel = initViewModel()
-        binding.lifecycleOwner = this
         val modelClass: Class<VM>
         val type = javaClass.genericSuperclass
 
@@ -50,8 +42,6 @@ abstract class BaseActivity<V : ViewDataBinding, VM : BaseViewModel> : AppCompat
         }
 
         viewModel = createViewModel(modelClass)
-        // 关联ViewModel
-        binding.setVariable(viewModelId, viewModel)
         // 让ViewModel拥有View的生命周期感应
         lifecycle.addObserver(viewModel)
     }

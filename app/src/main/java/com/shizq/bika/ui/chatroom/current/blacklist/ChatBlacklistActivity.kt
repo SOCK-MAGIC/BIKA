@@ -5,13 +5,11 @@ import android.view.MenuItem
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.ChatRoomBlackListAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityChatRoomBlacklistBinding
 import com.shizq.bika.network.Result
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /**

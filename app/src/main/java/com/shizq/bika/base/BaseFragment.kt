@@ -5,14 +5,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
 
-abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(), IBaseView {
+abstract class BaseFragment<V : ViewBinding, VM : BaseViewModel> : Fragment(), IBaseView {
     protected lateinit var binding: V
     protected lateinit var viewModel: VM
 
@@ -32,15 +31,6 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
     ): View? {
         // 如果fragment的view已经创建则不再重新创建
         if (lastView == null) {
-            binding =
-                DataBindingUtil.inflate(
-                    inflater,
-                    initContentView(inflater, container, savedInstanceState),
-                    container,
-                    false
-                )
-            binding.lifecycleOwner = viewLifecycleOwner
-            lastView = binding.root
         }
         return lastView
     }
@@ -61,7 +51,6 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.unbind()
     }
 
     /**
@@ -82,7 +71,6 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
         }
         viewModel = createViewModel(this, modelClass)
 
-        binding.setVariable(viewModelId, viewModel)
         /*
          * 让ViewModel拥有View的生命周期感应
          * viewModel implements IBaseViewModel接口
@@ -140,7 +128,6 @@ abstract class BaseFragment<V : ViewDataBinding, VM : BaseViewModel> : Fragment(
 
     // 刷新布局数据
     fun refreshLayout() {
-        binding.setVariable(viewModelId, viewModel)
     }
 
     /**

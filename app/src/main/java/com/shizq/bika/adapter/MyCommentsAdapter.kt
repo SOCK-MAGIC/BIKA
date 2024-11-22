@@ -6,8 +6,6 @@ import com.shizq.bika.base.BaseBindingAdapter
 import com.shizq.bika.base.BaseBindingHolder
 import com.shizq.bika.bean.MyCommentsBean
 import com.shizq.bika.databinding.ItemMyCommentsBinding
-import com.bumptech.glide.Glide
-import com.shizq.bika.utils.GlideUrlNewKey
 import com.shizq.bika.utils.SPUtil
 import com.shizq.bika.utils.TimeUtil
 
@@ -48,25 +46,8 @@ class MyCommentsAdapter: BaseBindingAdapter<MyCommentsBean.Comments.Doc, ItemMyC
         binding.itemMyCommentsUserLevel.text="Lv.$level"
         binding.itemMyCommentsTime.text=TimeUtil().time(bean.created_at)
 
-        if (fileServer != "") {//头像
 
-            Glide.with(holder.itemView)
-                .load(
-                    GlideUrlNewKey(
-                        fileServer,
-                        path
-                    )
-                )
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_avatar_2)
-                .into(binding.itemMyCommentsUserImage)
-        }
-        if (character != "") { //头像框 新用户没有
 
-            Glide.with(holder.itemView)
-                .load(character)
-                .into(binding.itemMyCommentsUserCharacter)
-        }
 
         holder.addOnClickListener(R.id.item_my_comments_like_layout)
         holder.addOnClickListener(R.id.item_my_comments_sub_layout)

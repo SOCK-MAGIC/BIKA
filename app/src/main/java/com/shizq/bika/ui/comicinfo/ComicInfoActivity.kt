@@ -4,18 +4,17 @@ import android.annotation.SuppressLint
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.size
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.shizq.bika.R
-import com.shizq.bika.adapter.RecommendAdapter
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityComicinfoBinding
 import com.shizq.bika.databinding.ItemEpisodeFooterViewBinding
@@ -23,7 +22,7 @@ import com.shizq.bika.network.Result
 import com.shizq.bika.ui.comiclist.ComicListActivity
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.image.ImageActivity
-import com.shizq.bika.utils.*
+import com.shizq.bika.utils.TimeUtil
 import kotlinx.coroutines.launch
 
 /**
@@ -55,9 +54,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
         viewModel.author = intent.getStringExtra("author")
         viewModel.totalViews = intent.getStringExtra("totalViews")
 
-        //点击事件
-        binding.clickListener = ClickListener()
-
         //toolbar
         binding.toolbar.title = ""
         setSupportActionBar(binding.toolbar)
@@ -74,22 +70,12 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
 
         binding.comicInfoTotalEps.isNestedScrollingEnabled = false
         binding.comicInfoEpsRv.layoutManager = LinearLayoutManager(this)
-        episodeFooterBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this), R.layout.item_episode_footer_view,
-            binding.comicInfoEpsRv.parent as ViewGroup, false
-        )
         binding.comicInfoEpsRv.addFooterView(episodeFooterBinding.root)
         episodeFooterBinding.episodeFooterLayout.isEnabled = false
         //漫画推荐
         val lm = LinearLayoutManager(this)
         lm.orientation = LinearLayoutManager.HORIZONTAL
         binding.comicinfoRecommend.layoutManager = lm
-
-        //加载数据
-        Glide.with(this)
-            .load(GlideUrlNewKey(fileserver, imageurl))
-            .placeholder(R.drawable.placeholder_transparent)
-            .into(binding.comicinfoImage)
         binding.comicinfoAuthor.text = viewModel.author
         binding.comicinfoTotalViews.text = "指数：${viewModel.totalViews}"
     }
@@ -374,15 +360,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
                             if (imageurl == "") {
                                 fileserver = it.data.comic.thumb.fileServer
                                 imageurl = it.data.comic.thumb.path
-                                Glide.with(this@ComicInfoActivity)
-                                    .load(
-                                        GlideUrlNewKey(
-                                            it.data.comic.thumb.fileServer,
-                                            it.data.comic.thumb.path
-                                        )
-                                    )
-                                    .placeholder(R.drawable.placeholder_transparent)
-                                    .into(binding.comicinfoImage)
                             }
 
                             //上传者
@@ -477,15 +454,6 @@ class ComicInfoActivity : BaseActivity<ActivityComicinfoBinding, ComicInfoViewMo
 
                             //上传者 头像
                             if (null != it.data.comic._creator.avatar) {
-                                Glide.with(this@ComicInfoActivity)
-                                    .load(
-                                        GlideUrlNewKey(
-                                            it.data.comic._creator.avatar.fileServer,
-                                            it.data.comic._creator.avatar.path
-                                        )
-                                    )
-                                    .placeholder(R.drawable.placeholder_avatar_2)
-                                    .into(binding.comicinfoCreatorAvatar)
                             } else {
                                 binding.comicinfoCreatorAvatar.setImageResource(R.drawable.placeholder_avatar)
                             }

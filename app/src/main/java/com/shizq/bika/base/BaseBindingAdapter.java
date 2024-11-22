@@ -4,16 +4,14 @@ import android.view.ViewGroup;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
-import androidx.databinding.ViewDataBinding;
-
-import com.shizq.bika.BR;
+import androidx.viewbinding.ViewBinding;
 
 import java.util.List;
 
 import me.jingbin.library.adapter.BaseByRecyclerViewAdapter;
 
 
-public abstract class BaseBindingAdapter<T, B extends ViewDataBinding> extends BaseByRecyclerViewAdapter<T, BaseBindingHolder<T, B>> {
+public abstract class BaseBindingAdapter<T, B extends ViewBinding> extends BaseByRecyclerViewAdapter<T, BaseBindingHolder<T, B>> {
 
     private int mLayoutId;
 
@@ -41,9 +39,7 @@ public abstract class BaseBindingAdapter<T, B extends ViewDataBinding> extends B
         @Override
         protected void onBindingView(BaseBindingHolder holder, T bean, int position) {
             if (holder != null && bean != null && binding != null) {
-                holder.binding.setVariable(BR.m, bean);
                 bindView(holder, bean, binding, position);
-                holder.binding.executePendingBindings();
             }
         }
 

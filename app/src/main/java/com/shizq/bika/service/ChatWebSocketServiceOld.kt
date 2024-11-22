@@ -4,10 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import com.shizq.bika.bean.ChatMessageOldBean
 import com.shizq.bika.network.websocket.IReceiveMessage
 import com.shizq.bika.network.websocket.WebSocketManager
@@ -65,68 +62,35 @@ class ChatWebSocketServiceOld : Service() {
 
                     val array = ArrayList<String>()
                     array.add("init")
-                    array.add(Gson().toJson(init()))
+                    // array.add(Gson().toJson(init()))
 
-                    webSocketManager.sendMessage("42" + Gson().toJson(array))
+                    // webSocketManager.sendMessage("42" + Gson().toJson(array))
                 }
                 if (text.substring(0, 2) == "42") {
                     //收到消息 42 进行解析
-                    val key = JsonParser.parseString(text.substring(2)).asJsonArray[0].asString
-                    val json = JsonParser.parseString(text.substring(2)).asJsonArray[1].asJsonObject
+                    // val key = JsonParser.parseString(text.substring(2)).asJsonArray[0].asString
+                    // val json = JsonParser.parseString(text.substring(2)).asJsonArray[1].asJsonObject
 
-                    when (key) {
+                    when ("key") {
                         //broadcast_ads是广告
                         "broadcast_ads" -> {}
                         "new_connection" -> {
-                            liveData_connections.postValue("${json.get("connections").asString}人在线")
+                            // liveData_connections.postValue("${json.get("connections").asString}人在线")
                         }
                         "receive_notification" -> {
-                            liveData_message.postValue(
-                                Gson().fromJson(
-                                    json,
-                                    ChatMessageOldBean::class.java
-                                )
-                            )
                         }
                         "broadcast_message" -> {
-                            liveData_message.postValue(
-                                Gson().fromJson(
-                                    json,
-                                    ChatMessageOldBean::class.java
-                                )
-                            )
-
                         }
                         "broadcast_image" -> {
-                            liveData_message.postValue(
-                                Gson().fromJson(
-                                    json,
-                                    ChatMessageOldBean::class.java
-                                )
-                            )
-
                         }
                         "broadcast_audio" -> {
-                            liveData_message.postValue(
-                                Gson().fromJson(
-                                    json,
-                                    ChatMessageOldBean::class.java
-                                )
-                            )
                         }
 
                         "connection_close" -> {
-                            liveData_connections.postValue("${json.get("connections").asString}人在线")
+                            // liveData_connections.postValue("${json.get("connections").asString}人在线")
                         }
 
                         else -> {
-                            //未知类型
-                            liveData_message.postValue(
-                                Gson().fromJson(
-                                    json,
-                                    ChatMessageOldBean::class.java
-                                )
-                            )
 
                         }
                     }
@@ -179,14 +143,14 @@ class ChatWebSocketServiceOld : Service() {
         map["user_id"] = SPUtil.get("user_id", "") as String
         map["verified"] = SPUtil.get("user_verified", false) as Boolean
 
-        val json = Gson().toJson(map)
+        // val json = Gson().toJson(map)
         val array = ArrayList<String>()
         array.add(if (base64Image != "") "send_image" else if (base64Audio != "") "send_audio" else "send_message")
-        array.add(json)
-        liveData_message.postValue(Gson().fromJson(json, ChatMessageOldBean::class.java))
+        // array.add(json)
+        // liveData_message.postValue(Gson().fromJson(json, ChatMessageOldBean::class.java))
 
-        Log.d("------", Gson().toJson(array))
-        webSocketManager.sendMessage("42" + Gson().toJson(array))
+        // Log.d("------", Gson().toJson(array))
+        // webSocketManager.sendMessage("42" + Gson().toJson(array))
     }
 
     var init = {

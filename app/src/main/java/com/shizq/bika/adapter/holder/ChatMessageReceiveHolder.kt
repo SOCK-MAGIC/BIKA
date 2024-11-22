@@ -8,7 +8,7 @@ import com.shizq.bika.R
 import com.shizq.bika.base.BaseBindingHolder
 import com.shizq.bika.bean.ChatMessageBean
 import com.shizq.bika.databinding.ItemChatMessageReceiveBinding
-import com.bumptech.glide.Glide
+
 import com.shizq.bika.utils.GlideUrlNewKey
 
 //新聊天室 收到的消息
@@ -23,22 +23,6 @@ class ChatMessageReceiveHolder(viewGroup: ViewGroup, layoutId: Int) :
         val profile = bean.data.profile
 
         binding.chatNameL.text = profile.name
-
-        //头像 //拆分 利于缓存 省流量 加载更快
-        Glide.with(holder.itemView)
-            .load(
-                if (profile.avatarUrl != null && profile.avatarUrl != "") {
-                    val i: Int = profile.avatarUrl.indexOf("/static/")
-                    if (i > 0) {
-                        GlideUrlNewKey(
-                            profile.avatarUrl.substring(0, i),
-                            profile.avatarUrl.substring(i + 8)
-                        )
-                    } else profile.avatarUrl
-                } else R.drawable.placeholder_avatar_2
-            )
-            .placeholder(R.drawable.placeholder_avatar_2)
-            .into(binding.chatAvatarL)
 
         if (profile.level >= 0) {
             //等级
@@ -77,10 +61,6 @@ class ChatMessageReceiveHolder(viewGroup: ViewGroup, layoutId: Int) :
             }
             if (reply.type == "IMAGE_MESSAGE") {
                 binding.chatReplyImage.visibility = View.VISIBLE
-                Glide.with(holder.itemView)
-                    .load(reply.image)
-                    .placeholder(R.drawable.placeholder_avatar_2)
-                    .into(binding.chatReplyImage)
                 binding.chatReply.text = "[图片]"
             } else {
                 binding.chatReplyImage.visibility = View.GONE
@@ -122,11 +102,6 @@ class ChatMessageReceiveHolder(viewGroup: ViewGroup, layoutId: Int) :
             } else {
                 binding.chatContentL.visibility = View.GONE
             }
-            Glide.with(holder.itemView)
-                .load(message.medias[0])
-                .placeholder(R.drawable.placeholder_avatar_2)
-//                            .placeholder(binding.chatContentImageL.drawable as BitmapDrawable) //并不能用已经加载的图片做占位图
-                .into(binding.chatContentImageL)
         } else {
             binding.chatContentImageL.visibility = View.GONE
         }

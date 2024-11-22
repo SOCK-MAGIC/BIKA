@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.shizq.bika.R
 import com.shizq.bika.bean.RecommendBean
 import com.shizq.bika.ui.comicinfo.ComicInfoActivity
-import com.bumptech.glide.Glide
-import com.shizq.bika.utils.GlideUrlNewKey
 
 class RecommendAdapter(val context: Context) : RecyclerView.Adapter<RecommendAdapter.ViewHolder>() {
 
@@ -60,11 +58,7 @@ class RecommendAdapter(val context: Context) : RecyclerView.Adapter<RecommendAda
 
         fun setData(item: RecommendBean.Comic) {
             mTextView.text = item.title
-            Glide.with(itemView)
-                .load(GlideUrlNewKey(item.thumb.fileServer, item.thumb.path))
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_transparent)
-                .into(mImageView)
+
         }
 
     }

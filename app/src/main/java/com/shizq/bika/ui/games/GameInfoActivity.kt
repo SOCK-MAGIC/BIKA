@@ -4,7 +4,10 @@ import android.app.ActivityOptions
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.Toast
@@ -16,8 +19,6 @@ import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityGameInfoBinding
 import com.shizq.bika.ui.comment.CommentsActivity
 import com.shizq.bika.ui.image.ImageActivity
-import com.bumptech.glide.Glide
-import com.shizq.bika.utils.GlideUrlNewKey
 
 class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel>() {
     private lateinit var mAdapter: GameScreenshotAdapter
@@ -38,9 +39,6 @@ class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel
 
     override fun initData() {
         viewModel.gameId = intent.getStringExtra("gameId")
-
-        //点击事件
-        binding.clickListener = ClickListener()
 
         binding.gameinfoInclude.toolbar.title = "游戏介绍"
         setSupportActionBar(binding.gameinfoInclude.toolbar)
@@ -134,12 +132,6 @@ class GameInfoActivity : BaseActivity<ActivityGameInfoBinding, GameInfoViewModel
                 //标题
                 binding.gameTitle.text = it.data.game.title
                 binding.gameTitle.paint.isFakeBoldText = true
-
-                //游戏icon
-                Glide.with(this)
-                    .load(GlideUrlNewKey(it.data.game.icon.fileServer, it.data.game.icon.path))
-                    .placeholder(R.drawable.placeholder_transparent)
-                    .into(binding.gameIcon)
 
                 //开发者
                 binding.gamePublisher.text = it.data.game.publisher

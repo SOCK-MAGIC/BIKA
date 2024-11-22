@@ -5,7 +5,7 @@ import com.shizq.bika.base.BaseBindingAdapter
 import com.shizq.bika.base.BaseBindingHolder
 import com.shizq.bika.bean.GamesBean
 import com.shizq.bika.databinding.ItemGamesBinding
-import com.bumptech.glide.Glide
+
 import com.shizq.bika.utils.GlideUrlNewKey
 
 class GamesAdapter :
@@ -17,9 +17,6 @@ class GamesAdapter :
         binding: ItemGamesBinding,
         position: Int
     ) {
-        Glide.with(holder.itemView)
-            .load(GlideUrlNewKey(bean.icon.fileServer, bean.icon.path))
-            .placeholder(R.drawable.placeholder_avatar_2)
-            .into(binding.gamesItemImage)
+
     }
 }

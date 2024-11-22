@@ -1,18 +1,12 @@
 package com.shizq.bika.adapter
 
 import android.content.Context
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.shizq.bika.R
 import com.shizq.bika.bean.GameInfoBean
-import com.bumptech.glide.Glide
-import com.shizq.bika.utils.GlideUrlNewKey
 
 class GameScreenshotAdapter(val context: Context) :
     RecyclerView.Adapter<GameScreenshotAdapter.ViewHolder>() {
@@ -55,11 +49,6 @@ class GameScreenshotAdapter(val context: Context) :
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         fun setData(bean: GameInfoBean.Game, position: Int) {
             val item = bean.screenshots[position]
-            Glide.with(itemView)
-                .load(GlideUrlNewKey(item.fileServer, item.path))
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_transparent)
-                .dontTransform()
         }
 
     }

@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityUserBinding
-import com.shizq.bika.utils.*
-import com.yalantis.ucrop.UCrop
+import com.shizq.bika.utils.Base64Util
+import com.shizq.bika.utils.SPUtil
+import com.shizq.bika.utils.TimeUtil
 
 class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
 
@@ -38,16 +37,6 @@ class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
         val character = SPUtil.get("user_character", "") as String
 
         if (fileServer != "") {
-            Glide.with(this)
-                .load(GlideUrlNewKey(fileServer, path))
-                .centerCrop()
-                .placeholder(R.drawable.placeholder_avatar_2)
-                .into(binding.userAvatar)
-        }
-        if (character != "") {
-            Glide.with(this)
-                .load(character)
-                .into(binding.userCharacter)
         }
 
         binding.userNickname.text = SPUtil.get("user_name", "") as String
@@ -68,16 +57,9 @@ class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
                 .isCameraForegroundService(true)
                 .setSelectionMode(1)
                 .setCropEngine { fragment, srcUri, destinationUri, dataSource, requestCode ->
-                    UCrop.of(srcUri, destinationUri, dataSource)
-                        .withAspectRatio(1f, 1f)
-                        .withMaxResultSize(200, 200) //图片压缩没官方清晰
-                        .start(fragment.requireActivity(), fragment, requestCode)
                 }
                 .forResult(object : OnResultCallbackListener<LocalMedia> {
                     override fun onResult(result: ArrayList<LocalMedia>) {
-                        Glide.with(this@UserActivity)
-                            .load(R.drawable.placeholder_avatar_2)
-                            .into(binding.userAvatar)
 
                         binding.userProgressbar.show()
                         binding.userAvatarLayout.isEnabled = false
@@ -121,14 +103,6 @@ class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
                 //失败切换为原来的头像
                 val fileServer = SPUtil.get("user_fileServer", "") as String
                 val path = SPUtil.get("user_path", "") as String
-                Glide.with(this)
-                    .load(
-                        if (path != "") {
-                            GlideUrlNewKey(fileServer, path)
-                        } else R.drawable.placeholder_avatar_2
-                    )
-                    .placeholder(R.drawable.placeholder_avatar_2)
-                    .into(binding.userAvatar)
             }
         }
 
@@ -158,17 +132,9 @@ class UserActivity : BaseActivity<ActivityUserBinding, UserViewModel>() {
                 if (it.data.user.avatar != null) { //头像
                     fileServer = it.data.user.avatar.fileServer
                     path = it.data.user.avatar.path
-                    Glide.with(this)
-                        .load(GlideUrlNewKey(fileServer, path))
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder_avatar_2)
-                        .into(binding.userAvatar)
                 }
                 if (it.data.user.character != null) { //头像框 新用户没有
                     character = it.data.user.character
-                    Glide.with(this)
-                        .load(character)
-                        .into(binding.userCharacter)
                 }
 
                 binding.userSlogan.text =

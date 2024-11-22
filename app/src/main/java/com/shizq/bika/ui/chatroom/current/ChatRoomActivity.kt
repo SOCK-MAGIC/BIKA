@@ -24,7 +24,6 @@ import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.entity.LocalMedia
 import com.luck.picture.lib.interfaces.OnResultCallbackListener
-import com.shizq.bika.BR
 import com.shizq.bika.R
 import com.shizq.bika.adapter.ChatMessageMultiAdapter
 import com.shizq.bika.base.BaseActivity
@@ -33,8 +32,6 @@ import com.shizq.bika.databinding.ActivityChatRoomBinding
 import com.shizq.bika.service.ChatWebSocketService
 import com.shizq.bika.ui.chatroom.current.blacklist.ChatBlacklistActivity
 import com.shizq.bika.ui.image.ImageActivity
-import com.shizq.bika.utils.*
-import com.yalantis.ucrop.UCrop
 
 //新聊天室
 //消息是websocket实现，消息是实时，不会留记录,网络不好会丢失消息
@@ -254,8 +251,6 @@ class ChatRoomActivity : BaseActivity<ActivityChatRoomBinding, ChatRoomViewModel
                     .isCameraForegroundService(true)
                     .isGif(true)
                     .setCropEngine { fragment, srcUri, destinationUri, dataSource, requestCode ->
-                        UCrop.of(srcUri, destinationUri, dataSource)
-                            .start(fragment.requireActivity(), fragment, requestCode);
                     }
                     .setSelectionMode(1)
                     .forResult(object : OnResultCallbackListener<LocalMedia> {

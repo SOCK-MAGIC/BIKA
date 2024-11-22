@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import androidx.lifecycle.MutableLiveData
-import com.google.gson.Gson
 import com.shizq.bika.bean.ChatMessageBean
 import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.websocket.ChatWebSocketManager
@@ -62,19 +61,19 @@ class ChatWebSocketService : Service() {
             override fun onMessage(text: String) {
                 liveData_state.postValue("success")
 
-                val bean = Gson().fromJson(text, ChatMessageBean::class.java)
-                if (bean.data != null) {
-                    if (bean.type == "TEXT_MESSAGE" || bean.type == "IMAGE_MESSAGE") {
-                        //防止重复显示 屏蔽掉自己发送的消息
-                        if (bean.data.profile.name !=
-                            SPUtil.get("user_name", "") as String
-                        ) {
-                            liveData_message.postValue(bean)
-                        }
-                    } else {
-                        liveData_message.postValue(bean)
-                    }
-                }
+                // val bean = Gson().fromJson(text, ChatMessageBean::class.java)
+                // if (bean.data != null) {
+                //     if (bean.type == "TEXT_MESSAGE" || bean.type == "IMAGE_MESSAGE") {
+                //         //防止重复显示 屏蔽掉自己发送的消息
+                //         if (bean.data.profile.name !=
+                //             SPUtil.get("user_name", "") as String
+                //         ) {
+                //             liveData_message.postValue(bean)
+                //         }
+                //     } else {
+                //         liveData_message.postValue(bean)
+                //     }
+                // }
             }
         })
     }

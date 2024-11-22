@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.shizq.bika.BR
+
 import com.shizq.bika.R
 import com.shizq.bika.adapter.CommentsAdapter
 import com.shizq.bika.adapter.MyCommentsAdapter

@@ -12,8 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
-import com.shizq.bika.BR
+
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseActivity
 import com.shizq.bika.databinding.ActivityMainBinding
@@ -78,23 +77,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
     private fun initProfile() {
         viewModel.fileServer = SPUtil.get("user_fileServer", "") as String
         viewModel.path = SPUtil.get("user_path", "") as String
-
-        // 头像
-        Glide.with(this@MainActivity)
-            .load(GlideUrlNewKey(viewModel.fileServer, viewModel.path))
-            .centerCrop()
-            .placeholder(R.drawable.placeholder_avatar_2)
-            .into(
-                binding.mainNavView.getHeaderView(0)
-                    .findViewById<ImageView>(R.id.main_drawer_imageView)!!
-            )
-        // 头像框
-        Glide.with(this@MainActivity)
-            .load(SPUtil.get("user_character", "") as String)
-            .into(
-                binding.mainNavView.getHeaderView(0)
-                    .findViewById<ImageView>(R.id.main_drawer_character)!!
-            )
         // 用户名
         (
                 binding.mainNavView.getHeaderView(0)
@@ -242,29 +224,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>() {
                 if (it.data.user.avatar != null) { // 头像
                     fileServer = it.data.user.avatar.fileServer
                     path = it.data.user.avatar.path
-                    Glide.with(this@MainActivity)
-                        .load(
-                            GlideUrlNewKey(
-                                fileServer,
-                                path
-                            )
-                        )
-                        .centerCrop()
-                        .placeholder(R.drawable.placeholder_avatar_2)
-                        .into(
-                            binding.mainNavView.getHeaderView(0)
-                                .findViewById<ImageView>(R.id.main_drawer_imageView)!!
-                        )
                 }
                 if (it.data.user.character != null) { // 头像框 新用户没有
 
                     character = it.data.user.character
-                    Glide.with(this@MainActivity)
-                        .load(character)
-                        .into(
-                            binding.mainNavView.getHeaderView(0)
-                                .findViewById<ImageView>(R.id.main_drawer_character)!!
-                        )
                 }
 
                 val name = it.data.user.name

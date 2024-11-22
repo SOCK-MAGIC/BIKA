@@ -9,7 +9,7 @@ import com.shizq.bika.base.BaseBindingAdapter
 import com.shizq.bika.base.BaseBindingHolder
 import com.shizq.bika.bean.ComicListBean
 import com.shizq.bika.databinding.ItemComiclistBinding
-import com.bumptech.glide.Glide
+
 import com.shizq.bika.utils.GlideUrlNewKey
 
 //漫画列表的第一种数据类型
@@ -78,17 +78,5 @@ class ComicListAdapter :
             ategory = "$ategory $i"
         }
         binding.comiclistItemCategory.text = "分类：$ategory"
-
-        Glide.with(holder.itemView)
-            .load(
-                //哔咔服务器问题 需自行修改图片请求路径
-                GlideUrlNewKey(
-                    bean.thumb.fileServer, bean.thumb.path
-                )
-            )
-            .placeholder(R.drawable.placeholder_transparent)
-            .into(binding.comiclistItemImage)
-        holder.addOnClickListener(R.id.comiclist_item_image)
-
     }
 }

@@ -1,10 +1,6 @@
 package com.shizq.bika.network
 
-import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.kotlinx.serialization.asConverterFactory
 
 object RetrofitUtil {
     private var retrofit: Retrofit? = null
