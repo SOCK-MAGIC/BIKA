@@ -88,10 +88,6 @@ dependencies {
 
     implementation(libs.byrecyclerview)
 
-    implementation(libs.retrofit)
-
-    implementation(libs.rxandroid)
-
     implementation(libs.pictureselector)
 
     implementation(libs.photoview)
