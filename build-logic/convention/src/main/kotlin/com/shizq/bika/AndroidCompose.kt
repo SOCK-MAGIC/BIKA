@@ -33,9 +33,8 @@ internal fun Project.configureAndroidCompose(
             metricsDestination = relativeToRootProject("compose-metrics")
             reportsDestination = relativeToRootProject("compose-reports")
         }
-        stabilityConfigurationFile =
-            rootProject.layout.projectDirectory.file("compose_compiler_config.conf")
-
+        stabilityConfigurationFiles =
+            listOf(rootProject.layout.projectDirectory.file("compose_compiler_config.conf"))
         generateFunctionKeyMetaClasses = true
         includeSourceInformation = true
         includeTraceMarkers = true
