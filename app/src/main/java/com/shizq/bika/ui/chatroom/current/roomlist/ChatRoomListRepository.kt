@@ -3,8 +3,6 @@ package com.shizq.bika.ui.chatroom.current.roomlist
 import com.shizq.bika.bean.ChatRoomListBean
 import com.shizq.bika.bean.ChatRoomSignInBean
 import com.shizq.bika.network.Result
-import com.shizq.bika.network.RetrofitUtil
-import com.shizq.bika.network.base.BaseHeaders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -30,7 +28,6 @@ class ChatRoomListRepository {
         // } else {
         //     emit(Result.Error(response.statusCode, response.error, response.message))
         // }
-
     }.catch {
         // TODO 需要补充异常处理（code error message）
         // emit(Result.Error(-1, "请求结果异常", it.message.toString()))
@@ -38,17 +35,15 @@ class ChatRoomListRepository {
 
     suspend fun getRoomListFlow(): Flow<Result<ChatRoomListBean>> = flow {
         emit(Result.Loading)
-        val response = RetrofitUtil.service_live.chatRoomListGet(BaseHeaders().getChatHeaderMapAndToken())
-
-        if (response.rooms != null) {
-            emit(Result.Success(response))
-        } else {
-            emit(Result.Error(response.statusCode, response.error, response.message))
-        }
-
+        // val response = RetrofitUtil.service_live.chatRoomListGet(BaseHeaders().getChatHeaderMapAndToken())
+        //
+        // if (response.rooms != null) {
+        //     emit(Result.Success(response))
+        // } else {
+        //     emit(Result.Error(response.statusCode, response.error, response.message))
+        // }
     }.catch {
         // TODO 需要补充异常处理（code error message）
-        emit(Result.Error(-1, "请求结果异常", it.message.toString()))
+        // emit(Result.Error(-1, "请求结果异常", it.message.toString()))
     }.flowOn(Dispatchers.IO)
-
 }

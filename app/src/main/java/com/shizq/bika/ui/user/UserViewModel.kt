@@ -3,9 +3,7 @@ package com.shizq.bika.ui.user
 import androidx.lifecycle.MutableLiveData
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.ProfileBean
-import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
-import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 
 class UserViewModel : BaseViewModel() {
@@ -51,18 +49,6 @@ class UserViewModel : BaseViewModel() {
     }
 
     fun getProfile() {
-        RetrofitUtil.service.profileGet(BaseHeaders("users/profile", "GET").getHeaderMapAndToken())
-            .doOnSubscribe(this)
-            .subscribe(object : BaseObserver<ProfileBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<ProfileBean>) {
-                    // 请求成功
-                    liveData_profile.postValue(baseResponse)
-                }
 
-                override fun onCodeError(baseResponse: BaseResponse<ProfileBean>) {
-                    liveData_profile.postValue(baseResponse)
-                }
-
-            })
     }
 }

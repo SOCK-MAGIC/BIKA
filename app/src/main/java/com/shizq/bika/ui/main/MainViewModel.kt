@@ -1,22 +1,16 @@
 package com.shizq.bika.ui.main
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.shizq.bika.BIKAApplication
 import com.shizq.bika.R
 import com.shizq.bika.base.BaseViewModel
 import com.shizq.bika.bean.CategoriesBean
 import com.shizq.bika.bean.ProfileBean
-import com.shizq.bika.bean.SignInBean
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
-import com.shizq.bika.network.RetrofitUtil
 import com.shizq.bika.network.base.BaseHeaders
-import com.shizq.bika.network.base.BaseObserver
 import com.shizq.bika.network.base.BaseResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,18 +71,18 @@ class MainViewModel @Inject constructor(
     }
 
     fun getProfile() {
-        RetrofitUtil.service.profileGet(BaseHeaders("users/profile", "GET").getHeaderMapAndToken())
-            .doOnSubscribe(this@MainViewModel)
-            .subscribe(object : BaseObserver<ProfileBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<ProfileBean>) {
-                    // 请求成功
-                    liveData_profile.postValue(baseResponse)
-                }
-
-                override fun onCodeError(baseResponse: BaseResponse<ProfileBean>) {
-                    liveData_profile.postValue(baseResponse)
-                }
-            })
+        // RetrofitUtil.service.profileGet(BaseHeaders("users/profile", "GET").getHeaderMapAndToken())
+        //     .doOnSubscribe(this@MainViewModel)
+        //     .subscribe(object : BaseObserver<ProfileBean>() {
+        //         override fun onSuccess(baseResponse: BaseResponse<ProfileBean>) {
+        //             // 请求成功
+        //             liveData_profile.postValue(baseResponse)
+        //         }
+        //
+        //         override fun onCodeError(baseResponse: BaseResponse<ProfileBean>) {
+        //             liveData_profile.postValue(baseResponse)
+        //         }
+        //     })
     }
 
     fun getSignIn() {
@@ -96,16 +90,16 @@ class MainViewModel @Inject constructor(
 
     fun getCategories() {
         val headers = BaseHeaders("categories", "GET").getHeaderMapAndToken()
-        RetrofitUtil.service.categoriesGet(headers)
-            .doOnSubscribe(this@MainViewModel)
-            .subscribe(object : BaseObserver<CategoriesBean>() {
-                override fun onSuccess(baseResponse: BaseResponse<CategoriesBean>) {
-                    liveData.postValue(baseResponse)
-                }
-
-                override fun onCodeError(baseResponse: BaseResponse<CategoriesBean>) {
-                    liveData.postValue(baseResponse)
-                }
-            })
+        // RetrofitUtil.service.categoriesGet(headers)
+        //     .doOnSubscribe(this@MainViewModel)
+        //     .subscribe(object : BaseObserver<CategoriesBean>() {
+        //         override fun onSuccess(baseResponse: BaseResponse<CategoriesBean>) {
+        //             liveData.postValue(baseResponse)
+        //         }
+        //
+        //         override fun onCodeError(baseResponse: BaseResponse<CategoriesBean>) {
+        //             liveData.postValue(baseResponse)
+        //         }
+        //     })
     }
 }
