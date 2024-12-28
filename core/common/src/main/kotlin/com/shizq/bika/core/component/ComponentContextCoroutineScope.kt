@@ -2,7 +2,7 @@ package com.shizq.bika.core.component
 
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.essenty.instancekeeper.InstanceKeeper
-import com.arkivanov.essenty.lifecycle.Lifecycle
+import com.arkivanov.essenty.lifecycle.doOnDestroy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -17,7 +17,7 @@ val ComponentContext.componentScope: CoroutineScope
         val scope = instanceKeeper.get(INSTANCE_KEY)
         if (scope is CoroutineScope) return scope
 
-        if (lifecycle.state == Lifecycle.State.DESTROYED) {
+        lifecycle.doOnDestroy {
             try {
                 scope?.onDestroy()
             } catch (e: Exception) {
@@ -27,15 +27,14 @@ val ComponentContext.componentScope: CoroutineScope
             }
         }
 
-        return DestroyableCoroutineScope(Dispatchers.Main.immediate + SupervisorJob()).also {
+        return DestroyableCoroutineScope(SupervisorJob() + Dispatchers.Main.immediate).also {
             instanceKeeper.put(INSTANCE_KEY, it)
         }
     }
 
 class DestroyableCoroutineScope(
-    context: CoroutineContext,
-) : CoroutineScope,
-    InstanceKeeper.Instance {
+    context: CoroutineContext
+) : CoroutineScope, InstanceKeeper.Instance {
 
     override val coroutineContext: CoroutineContext = context
 
