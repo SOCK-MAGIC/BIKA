@@ -48,10 +48,8 @@ roborazzi = "1.37.0"
 androidxRecyclerview = "1.3.2"
 byrecyclerview = "1.4.1"
 commonsCodec = "1.17.1"
-glide = "4.16.0"
 material = "1.12.0"
 androidxNavigationFragment = "2.8.5"
-okhttp3Integration = "4.16.0"
 photoview = "2.3.0"
 pictureselector = "v3.11.3"
 androidxAppcompat = "1.7.0"
@@ -125,8 +123,6 @@ decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref
 decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 decompose-compose-experimental = { group = "com.arkivanov.decompose", name = "extensions-compose-experimental", version.ref = "decompose" }
 
-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-glide-okhttp3 = { group = "com.github.bumptech.glide", name = "okhttp3-integration", version.ref = "okhttp3Integration" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
@@ -146,7 +142,6 @@ ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serializatio
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 napier = { group = "io.github.aakira", name = "napier", version.ref = "napier" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
-okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 photoview = { group = "com.github.chrisbanes", name = "PhotoView", version.ref = "photoview" }
 pictureselector = { group = "io.github.lucksiege", name = "pictureselector", version.ref = "pictureselector" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truth" }

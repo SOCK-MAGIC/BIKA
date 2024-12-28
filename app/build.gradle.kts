@@ -29,9 +29,11 @@ android {
         debug {}
         release {
             isMinifyEnabled = true
-            isShrinkResources = true
             signingConfig = signingConfigs.getByName("keyStore")
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"))
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
             baselineProfile.automaticGenerationDuringBuild = true
         }
     }
