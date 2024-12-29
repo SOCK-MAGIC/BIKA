@@ -36,7 +36,6 @@ import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.plus
-import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.scale
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.slide
 import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
 import com.shizq.bika.core.data.util.ErrorMessage
@@ -175,10 +174,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
 
                     is RootComponent.Child.SignIn -> SignInScreen(
                         component = child.component,
-                    ) {
-                        component.onBack()
-                        component.navigationToInterest()
-                    }
+                    )
 
                     is RootComponent.Child.Interest -> InterestScreen(
                         component = child.component,

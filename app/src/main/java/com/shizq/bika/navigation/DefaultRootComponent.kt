@@ -69,7 +69,13 @@ class DefaultRootComponent @AssistedInject constructor(
         trace("Navigation: $config") {
             when (config) {
                 Config.Splash -> RootComponent.Child.Splash(splashComponentFactory(componentContext))
-                Config.SignIn -> SignIn(signInComponentFactory(componentContext))
+                Config.SignIn -> SignIn(
+                    signInComponentFactory(
+                        componentContext,
+                        ::navigationToInterest,
+                    ),
+                )
+
                 Config.Interest -> Interest(interestComponentFactory(componentContext))
                 is Config.ComicList -> ComicList(
                     comicListComponentFactory(componentContext, config.comics),
