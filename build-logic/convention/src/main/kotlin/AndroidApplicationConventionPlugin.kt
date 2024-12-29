@@ -1,8 +1,9 @@
+
 import com.android.build.api.dsl.ApplicationExtension
 import com.android.build.api.variant.ApplicationAndroidComponentsExtension
 import com.android.build.gradle.BaseExtension
-import com.shizq.bika.applyPlugin
 import com.shizq.bika.configureBadgingTasks
+import com.shizq.bika.configureFlavors
 import com.shizq.bika.configureGradleManagedDevices
 import com.shizq.bika.configureKotlinAndroid
 import com.shizq.bika.configurePrintApksTask
@@ -22,6 +23,7 @@ class AndroidApplicationConventionPlugin : Plugin<Project> {
 
             extensions.configure<ApplicationExtension> {
                 configureKotlinAndroid(this)
+                configureFlavors(this)
                 defaultConfig.targetSdk = 34
                 @Suppress("UnstableApiUsage")
                 testOptions.animationsDisabled = true

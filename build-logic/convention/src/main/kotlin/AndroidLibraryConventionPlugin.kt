@@ -1,5 +1,6 @@
 import com.android.build.api.variant.LibraryAndroidComponentsExtension
 import com.android.build.gradle.LibraryExtension
+import com.shizq.bika.configureFlavors
 import com.shizq.bika.configureGradleManagedDevices
 import com.shizq.bika.configureKotlinAndroid
 import com.shizq.bika.configurePrintApksTask
@@ -27,7 +28,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 defaultConfig.targetSdk = 34
                 defaultConfig.testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
                 testOptions.animationsDisabled = true
-//                configureFlavors(this)
+                configureFlavors(this)
                 configureGradleManagedDevices(this)
                 configureResourcesPackaging(this)
                 // The resource prefix is derived from the module name,

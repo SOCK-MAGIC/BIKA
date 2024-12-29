@@ -1,3 +1,5 @@
+import com.shizq.bika.BikaBuildType
+
 plugins {
     id("kotlin-kapt")
     alias(libs.plugins.bika.android.application)
@@ -26,9 +28,12 @@ android {
         }
     }
     buildTypes {
-        debug {}
+        debug {
+            applicationIdSuffix = BikaBuildType.DEBUG.applicationIdSuffix
+        }
         release {
             isMinifyEnabled = true
+            applicationIdSuffix = BikaBuildType.RELEASE.applicationIdSuffix
             signingConfig = signingConfigs.getByName("keyStore")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
