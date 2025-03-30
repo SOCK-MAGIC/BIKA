@@ -1,22 +1,13 @@
 package com.shizq.bika.feature.reader
 
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.ui.geometry.Offset
 import androidx.paging.PagingData
 import com.arkivanov.decompose.ComponentContext
-import com.shizq.bika.core.datastore.model.Orientation
 import com.shizq.bika.core.model.Picture
-import com.shizq.bika.feature.reader.util.PageScrollingDirection
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.StateFlow
 
 interface ReaderComponent {
     val picturePagingFlow: Flow<PagingData<Picture>>
-    val pageCount: Float
-
-    fun onClick(offset: Offset, scope: CoroutineScope)
-    fun onClick(direction: PageScrollingDirection, scope: CoroutineScope)
+    val controller: ReaderController
 
     interface Factory {
         operator fun invoke(
@@ -25,12 +16,4 @@ interface ReaderComponent {
             order: Int,
         ): ReaderComponent
     }
-
-    val bottomText: StateFlow<String>
-    val lazyListState: LazyListState
-    val showActionMenu: Boolean
-    fun updateOrientation(orientation: Orientation)
-    fun updateCurrentItemIndex(scope: CoroutineScope)
-    val currentItemIndex: Flow<Float>
-    var slideTrack: Int
 }
