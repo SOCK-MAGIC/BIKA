@@ -14,5 +14,5 @@ dependencies {
 
     implementation(libs.androidx.paging.compose)
 
-    implementation("com.webtoonscorp.android:readmore-material3:1.7.1")
+    implementation("com.webtoonscorp.android:readmore-material3:1.7.2")
 }
