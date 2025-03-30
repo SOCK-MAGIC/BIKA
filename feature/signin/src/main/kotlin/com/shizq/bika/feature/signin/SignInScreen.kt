@@ -38,7 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun SignInScreen(component: SignInComponent) {
     val credentialState by component.credentialState.collectAsStateWithLifecycle()
-    SignInContent(
+    LoginInContent(
         signIn = component::signIn,
         credentialState = credentialState,
         updateEmail = component::updateEmail,
@@ -47,7 +47,7 @@ fun SignInScreen(component: SignInComponent) {
 }
 
 @Composable
-internal fun SignInContent(
+internal fun LoginInContent(
     signIn: () -> Unit,
     updateEmail: (String) -> Unit,
     updatePassword: (String) -> Unit,
