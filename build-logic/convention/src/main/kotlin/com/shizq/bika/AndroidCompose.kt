@@ -6,7 +6,6 @@ import org.gradle.kotlin.dsl.assign
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 
 /**
  * Configure Compose-specific options
@@ -35,11 +34,5 @@ internal fun Project.configureAndroidCompose(
         }
         stabilityConfigurationFiles =
             listOf(rootProject.layout.projectDirectory.file("compose_compiler_config.conf"))
-        generateFunctionKeyMetaClasses = true
-        includeSourceInformation = true
-        includeTraceMarkers = true
-        featureFlags = setOf(
-            ComposeFeatureFlag.OptimizeNonSkippingGroups,
-        )
     }
 }
