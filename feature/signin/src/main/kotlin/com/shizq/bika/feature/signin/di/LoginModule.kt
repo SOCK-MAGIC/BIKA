@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface SignInModule {
+interface LoginModule {
     @Binds
     fun componentFactory(impl: SignInComponentImpl.Factory): SignInComponent.Factory
 }
