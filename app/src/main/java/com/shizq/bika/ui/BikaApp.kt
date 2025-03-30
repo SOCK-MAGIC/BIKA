@@ -151,7 +151,7 @@ private fun RootContent(component: RootComponent, modifier: Modifier = Modifier)
         ChildStack(
             stack = component.stack,
             modifier = modifier,
-            animation = stackAnimation { child, otherChild, direction ->
+            animation = stackAnimation { child, otherChild, direction, isPredictiveBack ->
                 when (child.instance) {
                     is RootComponent.Child.ComicList,
                     is RootComponent.Child.ComicInfo,

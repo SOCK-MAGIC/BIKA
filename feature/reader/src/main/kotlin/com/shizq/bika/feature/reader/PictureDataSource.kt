@@ -5,11 +5,9 @@ import androidx.compose.foundation.lazy.LazyListPrefetchStrategy
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.snapshotFlow
 import com.shizq.bika.core.data.model.PagingMetadata
-import com.shizq.bika.core.data.paging.ReaderPagingSource
 import com.shizq.bika.core.model.Picture
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,13 +52,13 @@ class PictureDataSourceImpl @AssistedInject constructor(
             }
         }.map { it.pages.docs.map { doc -> Picture(doc.id, doc.media.imageUrl) } }
 
-    @AssistedFactory
-    interface Factory {
-        operator fun invoke(
-            id: String,
-            order: Int,
-        ): ReaderPagingSource
-    }
+//    @AssistedFactory
+//    interface Factory {
+//        operator fun invoke(
+//            id: String,
+//            order: Int,
+//        ): ReaderPagingSource
+//    }
 }
 
 fun LazyListState.isLastItemVisible(index: Int = 1): Boolean =
