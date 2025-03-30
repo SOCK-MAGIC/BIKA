@@ -1,6 +1,7 @@
 package com.shizq.bika.core.designsystem.icon
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Chat
 import androidx.compose.material.icons.automirrored.rounded.Comment
 import androidx.compose.material.icons.automirrored.rounded.Sort
@@ -37,4 +38,5 @@ object BikaIcons {
     val SwapHoriz = Icons.Rounded.SwapHoriz
     val Sort = Icons.AutoMirrored.Rounded.Sort
     val HideSource = Icons.Rounded.HideSource
+    val ArrowBack = Icons.AutoMirrored.Rounded.ArrowBack
 }
