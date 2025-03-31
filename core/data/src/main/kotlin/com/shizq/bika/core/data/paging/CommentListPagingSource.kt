@@ -17,7 +17,7 @@ class CommentListPagingSource @AssistedInject constructor(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Comment> {
         val nextPageNumber = params.key ?: 1
         val commentList = network.getComments(comicId, nextPageNumber)
-        val page = commentList.comments.page.toIntOrNull() ?: 0
+        val page = commentList.comments.page
         val pages = commentList.comments.pages
 
         return try {

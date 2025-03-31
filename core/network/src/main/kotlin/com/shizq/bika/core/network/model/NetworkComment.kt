@@ -1,5 +1,6 @@
 package com.shizq.bika.core.network.model
 
+import com.shizq.bika.core.network.serialization.StringAsIntSerializer
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -19,7 +20,8 @@ data class NetworkComment(
         @SerialName("limit")
         val limit: Int = 0,
         @SerialName("page")
-        val page: String = "",
+        @Serializable(StringAsIntSerializer::class)
+        val page: Int = 0,
         @SerialName("pages")
         val pages: Int = 0,
         @SerialName("total")
