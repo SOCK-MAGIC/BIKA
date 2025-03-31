@@ -92,8 +92,9 @@ internal fun ComicContent(
                 },
             )
         },
+        modifier = Modifier,
     ) { innerPadding ->
-        LazyColumn(modifier = modifier.padding(innerPadding)) {
+        LazyColumn(modifier = Modifier.padding(innerPadding)) {
             comicCardItems(
                 lazyPagingItems,
             ) {
