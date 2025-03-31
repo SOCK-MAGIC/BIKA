@@ -1,4 +1,4 @@
-package com.shizq.bika.feature.comic.paging
+package com.shizq.bika.core.data.paging
 
 /**
  * 分页数据的一页.
