@@ -56,8 +56,16 @@ internal fun CommentDoc.asComment() = Comment(
     ),
 )
 
+/**
+ * 置顶评论会重复返回，所以需要去重
+ */
 internal fun NetworkComment.asCommentList(): List<Comment> {
-    return topComments.map { top -> top.asComment() } + comments.docs.map { it.asComment() }
+    val top = if (comments.page == 1) {
+        topComments.map { top -> top.asComment() }
+    } else {
+        emptyList()
+    }
+    return top + comments.docs.map { it.asComment() }
 }
 
 internal fun ChildComment.asCommentList(): List<Comment> = comments.docs.map { it.asComment() }
