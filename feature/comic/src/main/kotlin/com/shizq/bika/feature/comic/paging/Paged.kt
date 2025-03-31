@@ -37,3 +37,14 @@ inline fun <T, R> Paged<T>.map(block: (T) -> R): Paged<R> =
         hasMore = hasMore,
         page = page.map(block),
     )
+
+fun <T> Paged.Companion.processPagedResponse(total: Int?, pageSize: Int, data: List<T>?) =
+    if (data == null) {
+        Paged(total, false, emptyList())
+    } else {
+        Paged(
+            total,
+            data.isNotEmpty() && data.size >= pageSize,
+            data,
+        )
+    }
