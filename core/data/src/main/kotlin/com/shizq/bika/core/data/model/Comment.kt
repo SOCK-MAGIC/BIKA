@@ -57,12 +57,7 @@ internal fun CommentDoc.asComment() = Comment(
 )
 
 internal fun NetworkComment.asCommentList(): List<Comment> {
-    val top = if (comments.page == 1) {
-        topComments.map { top -> top.asComment() }
-    } else {
-        emptyList()
-    }
-    return top + comments.docs.map { it.asComment() }
+    return topComments.map { top -> top.asComment() } + comments.docs.map { it.asComment() }
 }
 
 internal fun ChildComment.asCommentList(): List<Comment> = comments.docs.map { it.asComment() }
