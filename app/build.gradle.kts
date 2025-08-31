@@ -1,7 +1,6 @@
 import com.shizq.bika.BikaBuildType
 
 plugins {
-    id("kotlin-kapt")
     alias(libs.plugins.bika.android.application)
     alias(libs.plugins.bika.android.compose)
     alias(libs.plugins.bika.decompose)
@@ -46,10 +45,6 @@ android {
         resources {
             excludes.add("/META-INF/{AL2.0,LGPL2.1}")
         }
-    }
-    buildFeatures {
-        viewBinding = true
-        buildConfig = true
     }
     applicationVariants.all {
         outputs
@@ -133,8 +128,4 @@ baselineProfile {
 
     // Make use of Dex Layout Optimizations via Startup Profiles
     dexLayoutOptimization = true
-}
-
-dependencyGuard {
-    configuration("releaseRuntimeClasspath")
 }

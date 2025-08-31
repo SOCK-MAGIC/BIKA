@@ -6,8 +6,8 @@ import com.shizq.bika.core.data.paging.MappingPagingSource
 import com.shizq.bika.core.database.dao.RecentWatchedComicQueryDao
 import com.shizq.bika.core.database.model.RecentWatchedComicQueryEntity
 import com.shizq.bika.core.model.ComicResource
-import kotlinx.datetime.Clock
 import javax.inject.Inject
+import kotlin.time.Clock
 
 class RecentlyViewedComicRepository @Inject constructor(
     private val recentSearchQueryDao: RecentWatchedComicQueryDao,

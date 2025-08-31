@@ -39,7 +39,7 @@ class CompositeComicListRepository @Inject constructor(
             when (comics.category) {
                 "recommend" -> comicRecommendPagingSource
                 "random" -> comicRandomPagingSource
-                "recently" -> recentlyViewedComicRepository.getRecentWatchedComicQueries()
+//                "recently" -> recentlyViewedComicRepository.getRecentWatchedComicQueries()
                 "favourite" -> favouritePagingSourceFactory(sort, pagingMetadata)
                 else -> comicListPagingSourceFactory(
                     sort = sort,

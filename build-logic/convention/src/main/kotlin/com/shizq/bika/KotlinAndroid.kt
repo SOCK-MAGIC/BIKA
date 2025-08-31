@@ -16,10 +16,10 @@ internal fun Project.configureKotlinAndroid(
     commonExtension: CommonExtension<*, *, *, *, *, *>,
 ) {
     commonExtension.apply {
-        compileSdk = 35
+        compileSdk = 36
 
         defaultConfig {
-            minSdk = 24
+            minSdk = 26
         }
     }
 
@@ -43,6 +43,10 @@ inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() = configu
         freeCompilerArgs.add(
             // Enable experimental coroutines APIs, including Flow
             "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+        )
+        freeCompilerArgs.add(
+            // Enable experimental coroutines APIs, including Flow
+            "-opt-in=kotlin.time.ExperimentalTime",
         )
     }
 }
