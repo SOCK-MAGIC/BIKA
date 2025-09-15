@@ -15,5 +15,5 @@ dependencies {
     implementation(libs.coil.compose)
 
     implementation(libs.androidx.paging.compose)
-    implementation("androidx.navigation:navigation-compose:2.8.9")
+    implementation("androidx.navigation:navigation-compose:2.9.4")
 }
