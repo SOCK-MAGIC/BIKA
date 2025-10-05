@@ -1,22 +1,11 @@
 package com.shizq.bika.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.only
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult.ActionPerformed
+import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -25,13 +14,15 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.testTagsAsResourceId
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.EntryProviderBuilder
 import com.shizq.bika.core.data.util.ErrorMessage
 import com.shizq.bika.core.data.util.MessageDuration
+import com.shizq.bika.core.designsystem.component.BikaBackground
+import com.shizq.bika.core.designsystem.component.BikaGradientBackground
+import com.shizq.bika.core.designsystem.component.BikaNavigationSuiteScaffold
 import com.shizq.bika.core.navigation.BikaNavKey
 import com.shizq.bika.navigation.BikaNavDisplay
 
@@ -42,91 +33,77 @@ fun BikaApp(
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    BikaBackground(modifier = modifier) {
+        BikaGradientBackground {
+            val snackbarHostState = remember { SnackbarHostState() }
 
-    SideEffect {
-        appState.offlineMessage = "⚠\uFE0F You aren’t connected to the internet"
-    }
+            SideEffect {
+                appState.offlineMessage = "⚠\uFE0F You aren’t connected to the internet"
+            }
 
-    val snackbarMessage by appState.snackbarMessage.collectAsStateWithLifecycle()
+            val snackbarMessage by appState.snackbarMessage.collectAsStateWithLifecycle()
 
-    LaunchedEffect(snackbarMessage) {
-        snackbarMessage?.let {
-            val snackBarResult = snackbarHostState.showSnackbar(
-                message = it.message,
-                actionLabel = it.label,
-                duration = snackbarDurationOf(it.duration),
-            ) == ActionPerformed
+            LaunchedEffect(snackbarMessage) {
+                snackbarMessage?.let {
+                    val snackBarResult = snackbarHostState.showSnackbar(
+                        message = it.message,
+                        actionLabel = it.label,
+                        duration = snackbarDurationOf(it.duration),
+                    ) == ActionPerformed
 
-            handleSnackbarResult(snackBarResult, it)
-            // Remove Message from Queue
-            appState.clearErrorMessage(it.id)
+                    handleSnackbarResult(snackBarResult, it)
+                    // Remove Message from Queue
+                    appState.clearErrorMessage(it.id)
+                }
+            }
+
+            BikaApp(
+                appState = appState,
+                entryProviderBuilders = entryProviderBuilders,
+            )
         }
     }
-
-    BikaApp(
-        appState = appState,
-        snackbarHostState = snackbarHostState,
-        entryProviderBuilders = entryProviderBuilders,
-        windowAdaptiveInfo = windowAdaptiveInfo,
-    )
 }
 
 @Composable
 internal fun BikaApp(
     appState: BikaAppState,
-    snackbarHostState: SnackbarHostState,
     entryProviderBuilders: Set<EntryProviderBuilder<BikaNavKey>.() -> Unit>,
     modifier: Modifier = Modifier,
-    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
-    Scaffold(
-        containerColor = Color.Transparent,
-        contentColor = MaterialTheme.colorScheme.onBackground,
-        modifier = modifier.semantics {
-            testTagsAsResourceId = true
+    val currentTopLevelKey = appState.currentTopLevelDestination!!.key
+
+    BikaNavigationSuiteScaffold(
+        navigationSuiteItems = {
+            appState.topLevelDestinations.forEach { destination ->
+                val selected = destination.key == currentTopLevelKey
+                item(
+                    selected = selected,
+                    onClick = { /*appState.navigateToTopLevelDestination(destination)*/ },
+                    icon = {
+                        Icon(
+                            imageVector = destination.unselectedIcon,
+                            contentDescription = null,
+                        )
+                    },
+                    selectedIcon = {
+                        Icon(
+                            imageVector = destination.selectedIcon,
+                            contentDescription = null,
+                        )
+                    },
+                    label = { Text(stringResource(destination.iconTextId)) },
+                    modifier = Modifier
+                        .testTag("BikaNavItem"),
+                )
+            }
         },
-        contentWindowInsets = WindowInsets(0, 0, 0, 0),
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .consumeWindowInsets(innerPadding)
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.Horizontal,
-                    ),
-                ),
-        ) {}
-        Box(modifier = Modifier.consumeWindowInsets(WindowInsets(0, 0, 0, 0))) {
-//            val drawerState = rememberNavigationDrawerState(
-//                drawer = component.drawer,
-//                onStateChanged = component::setDrawerState,
-//            )
-//            ModalNavigationDrawer(
-//                drawerContent = {
-//                    DrawerScreen(
-//                        component = drawerState.instance,
-//                        drawerState = drawerState.drawerState,
-//                        navigationToComicList = {
-//                            component.navigationToComicList(Comics(it))
-//                            component.setDrawerState(false)
-//                        },
-//                        modifier = Modifier,
-//                    )
-//                },
-//                gesturesEnabled = false,
-//                drawerState = drawerState.drawerState,
-//            ) {
-//                RootContent(component)
-//            }
-            BikaNavDisplay(
-                niaBackStack = appState.bikaBackStack,
-                entryProviderBuilders,
-            )
-        }
+        modifier = modifier,
+    ) {
+        BikaNavDisplay(
+            bikaBackStack = appState.bikaBackStack,
+            entryProviderBuilders,
+        )
     }
 }
 

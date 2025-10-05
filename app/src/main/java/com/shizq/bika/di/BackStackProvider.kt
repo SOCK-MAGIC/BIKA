@@ -17,14 +17,13 @@ import javax.inject.Singleton
 object BackStackProvider {
     @Provides
     @Singleton
-    fun provideNiaBackStack(): BikaBackStack =
+    fun provideBikaBackStack(): BikaBackStack =
         BikaBackStack(startKey = TopLevelDestination.FOR_YOU.key)
 
 
     /**
      * Registers feature modules' polymorphic serializers to support
-     * feature keys' save and restore by savedstate
-     * in [com.google.samples.apps.nowinandroid.core.navigation.NiaBackStackViewModel].
+     * feature keys' save and restore by savedstate.
      */
     @Provides
     @Singleton

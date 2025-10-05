@@ -15,15 +15,15 @@ import com.shizq.bika.core.navigation.BikaNavKey
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 @Composable
 fun BikaNavDisplay(
-    niaBackStack: BikaBackStack,
+    bikaBackStack: BikaBackStack,
     entryProviderBuilders: Set<EntryProviderBuilder<BikaNavKey>.() -> Unit>,
 ) {
     val listDetailStrategy = rememberListDetailSceneStrategy<BikaNavKey>()
 
     NavDisplay(
-        backStack = niaBackStack.backStack,
+        backStack = bikaBackStack.backStack,
         sceneStrategy = listDetailStrategy,
-        onBack = { count -> niaBackStack.popLast(count) },
+        onBack = { count -> bikaBackStack.popLast(count) },
         entryDecorators = listOf(
             rememberSceneSetupNavEntryDecorator(),
             rememberSavedStateNavEntryDecorator(),

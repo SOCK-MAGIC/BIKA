@@ -24,18 +24,18 @@ fun configureFlavors(
     flavorConfigurationBlock: ProductFlavor.(flavor: BikaFlavor) -> Unit = {},
 ) {
     commonExtension.apply {
-        FlavorDimension.values().forEach { flavorDimension ->
+        FlavorDimension.entries.forEach { flavorDimension ->
             flavorDimensions += flavorDimension.name
         }
 
         productFlavors {
-            BikaFlavor.values().forEach { niaFlavor ->
-                register(niaFlavor.name) {
-                    dimension = niaFlavor.dimension.name
-                    flavorConfigurationBlock(this, niaFlavor)
+            BikaFlavor.entries.forEach { bikaFlavor ->
+                register(bikaFlavor.name) {
+                    dimension = bikaFlavor.dimension.name
+                    flavorConfigurationBlock(this, bikaFlavor)
                     if (this@apply is ApplicationExtension && this is ApplicationProductFlavor) {
-                        if (niaFlavor.applicationIdSuffix != null) {
-                            applicationIdSuffix = niaFlavor.applicationIdSuffix
+                        if (bikaFlavor.applicationIdSuffix != null) {
+                            applicationIdSuffix = bikaFlavor.applicationIdSuffix
                         }
                     }
                 }
