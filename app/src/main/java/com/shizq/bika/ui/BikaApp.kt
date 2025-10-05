@@ -29,12 +29,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation3.runtime.EntryProviderBuilder
 import com.shizq.bika.core.data.util.ErrorMessage
 import com.shizq.bika.core.data.util.MessageDuration
+import com.shizq.bika.core.navigation.BikaNavKey
+import com.shizq.bika.navigation.BikaNavDisplay
 
 @Composable
 fun BikaApp(
     appState: BikaAppState,
+    entryProviderBuilders: Set<EntryProviderBuilder<BikaNavKey>.() -> Unit>,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
@@ -61,14 +65,18 @@ fun BikaApp(
     }
 
     BikaApp(
+        appState = appState,
         snackbarHostState = snackbarHostState,
+        entryProviderBuilders = entryProviderBuilders,
         windowAdaptiveInfo = windowAdaptiveInfo,
     )
 }
 
 @Composable
 internal fun BikaApp(
+    appState: BikaAppState,
     snackbarHostState: SnackbarHostState,
+    entryProviderBuilders: Set<EntryProviderBuilder<BikaNavKey>.() -> Unit>,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
@@ -114,6 +122,10 @@ internal fun BikaApp(
 //            ) {
 //                RootContent(component)
 //            }
+            BikaNavDisplay(
+                niaBackStack = appState.bikaBackStack,
+                entryProviderBuilders,
+            )
         }
     }
 }
