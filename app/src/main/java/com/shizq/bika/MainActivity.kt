@@ -5,11 +5,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material3.MaterialTheme
 import androidx.metrics.performance.JankStats
 import androidx.navigation3.runtime.EntryProviderBuilder
 import com.shizq.bika.core.data.util.ErrorMonitor
 import com.shizq.bika.core.data.util.NetworkMonitor
+import com.shizq.bika.core.designsystem.theme.BikaTheme
 import com.shizq.bika.core.navigation.BikaBackStackViewModel
 import com.shizq.bika.core.navigation.BikaNavKey
 import com.shizq.bika.ui.BikaApp
@@ -32,6 +32,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var errorMonitor: ErrorMonitor
 
     private val backStackViewModel: BikaBackStackViewModel by viewModels()
+
+    @Inject
     lateinit var entryProviderBuilders: Set<@JvmSuppressWildcards EntryProviderBuilder<BikaNavKey>.() -> Unit>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                 errorMonitor = errorMonitor,
                 bikaBackStack = backStackViewModel.bikaBackStack,
             )
-            MaterialTheme {
+            BikaTheme {
                 BikaApp(appState, entryProviderBuilders)
             }
         }

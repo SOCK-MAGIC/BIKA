@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.bika.android.compose)
     alias(libs.plugins.bika.hilt)
     alias(libs.plugins.baselineprofile)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -115,7 +116,7 @@ dependencies {
     implementation(libs.coil.kt)
     implementation(libs.coil.network)
 
-    baselineProfile(projects.benchmarks)
+//    baselineProfile(projects.benchmarks)
 }
 
 baselineProfile {
