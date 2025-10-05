@@ -9,12 +9,14 @@ androidxComposeBom = "2025.09.01"
 androidxComposeRuntimeTracing = "1.9.2"
 androidxComposeMaterial3Adaptive = "1.1.0"
 androidxComposeMaterial3AdaptiveNavigationSuite = "1.4.0"
+androidxComposeMaterial3AdaptiveNavigation3 = "1.0.0-SNAPSHOT"
 androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.1.7"
 androidxLifecycle = "2.9.4"
+androidxLifecycleViewModelNavigation3 = "1.0.0-alpha03"
 androidxMetrics = "1.0.0-rc01"
 androidxHiltNavigationCompose = "1.3.0"
-androidxNavigation = "1.0.0-alpha10"
+androidxNavigation3 = "1.0.0-alpha10"
 androidxProfileinstaller = "1.4.1"
 androidxRoom = "2.8.1"
 androidxWork = "2.10.5"
@@ -49,10 +51,10 @@ androidxRecyclerview = "1.4.0"
 byrecyclerview = "1.4.1"
 commonsCodec = "1.19.0"
 material = "1.13.0"
-androidxNavigationFragment = "2.9.5"
 photoview = "2.3.0"
 pictureselector = "v3.11.3"
 androidxAppcompat = "1.7.1"
+androidxSavedStateCompose = "1.3.1"
 androidxPreference = "1.2.1"
 truth = "1.4.5"
 constraintlayout = "2.2.1"
@@ -71,6 +73,7 @@ androidx-compose-foundation-layout = { group = "androidx.compose.foundation", na
 androidx-compose-material-iconsExtended = { group = "androidx.compose.material", name = "material-icons-extended" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material3-adaptive = { group = "androidx.compose.material3.adaptive", name = "adaptive", version.ref = "androidxComposeMaterial3Adaptive" }
+androidx-compose-material3-adaptive-navigation3 = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation3", version.ref = "androidxComposeMaterial3AdaptiveNavigation3" }
 androidx-compose-material3-navigationSuite = { group = "androidx.compose.material3", name = "material3-adaptive-navigation-suite", version.ref = "androidxComposeMaterial3AdaptiveNavigationSuite" }
 androidx-compose-material3-adaptive-layout = { group = "androidx.compose.material3.adaptive", name = "adaptive-layout", version.ref = "androidxComposeMaterial3Adaptive" }
 androidx-compose-material3-adaptive-navigation = { group = "androidx.compose.material3.adaptive", name = "adaptive-navigation", version.ref = "androidxComposeMaterial3Adaptive" }
@@ -88,14 +91,15 @@ androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navig
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewModel-testing = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-testing", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewModel-navigation3 = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-navigation3", version.ref = "androidxLifecycleViewModelNavigation3" }
 androidx-lifecycle-runtimeCompose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidxLifecycle" }
 androidx-lifecycle-runtimeTesting = { group = "androidx.lifecycle", name = "lifecycle-runtime-testing", version.ref = "androidxLifecycle" }
 androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "androidxLifecycle" }
 androidx-metrics = { group = "androidx.metrics", name = "metrics-performance", version.ref = "androidxMetrics" }
-androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigationFragment" }
-androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigationFragment" }
-androidx-naivigation-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidxNavigation" }
-androidx-naivigation-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidxNavigation" }
+androidx-navigation3-runtime = { group = "androidx.navigation3", name = "navigation3-runtime", version.ref = "androidxNavigation3" }
+androidx-navigation3-ui = { group = "androidx.navigation3", name = "navigation3-ui", version.ref = "androidxNavigation3" }
+androidx-savedstate-compose = { group = "androidx.savedstate", name = "savedstate-compose", version.ref = "androidxSavedStateCompose" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidxPaging" }
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "androidxPaging" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidxPreference" }
