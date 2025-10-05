@@ -3,7 +3,6 @@ import com.shizq.bika.BikaBuildType
 plugins {
     alias(libs.plugins.bika.android.application)
     alias(libs.plugins.bika.android.compose)
-    alias(libs.plugins.bika.decompose)
     alias(libs.plugins.bika.hilt)
     alias(libs.plugins.baselineprofile)
 }
@@ -111,9 +110,6 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.hilt.navigation.compose)
-
-    implementation(libs.decompose)
-    implementation(libs.decompose.compose.experimental)
 
     implementation(libs.coil.kt)
     implementation(libs.coil.network)

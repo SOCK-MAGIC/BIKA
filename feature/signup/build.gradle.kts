@@ -11,6 +11,4 @@ android {
 dependencies {
     implementation(projects.core.datastore)
     implementation(projects.core.network)
-
-    implementation(libs.decompose)
 }

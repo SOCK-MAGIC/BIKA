@@ -1,24 +1,20 @@
 package com.shizq.bika.navigation
 
-import com.arkivanov.decompose.ComponentContext
-import com.shizq.bika.core.component.componentScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkUser
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
-class DefaultDrawerComponent @AssistedInject constructor(
-    @Assisted componentContext: ComponentContext,
+class DefaultDrawerComponent @Inject constructor(
     private val network: BikaNetworkDataSource,
-) : DrawerComponent,
-    ComponentContext by componentContext {
+) : DrawerComponent, ViewModel() {
     override val uiState = flow { emit(network.getUserProfile()) }
         .asResult()
         .map { result ->
@@ -29,17 +25,10 @@ class DefaultDrawerComponent @AssistedInject constructor(
             }
         }
         .stateIn(
-            componentScope,
+            viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             DrawerUiState.Loading,
         )
-
-    @AssistedFactory
-    interface Factory : DrawerComponent.Factory {
-        override fun invoke(
-            componentContext: ComponentContext,
-        ): DefaultDrawerComponent
-    }
 }
 
 sealed interface DrawerUiState {

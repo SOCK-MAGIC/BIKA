@@ -76,10 +76,6 @@ gradlePlugin {
             id = "bika.hilt"
             implementationClass = "HiltConventionPlugin"
         }
-        register("decompose") {
-            id = "bika.decompose"
-            implementationClass = "DecomposeConventionPlugin"
-        }
         register("detekt") {
             id = libs.plugins.bika.detekt.get().pluginId
             implementationClass = "DetektConventionPlugin"

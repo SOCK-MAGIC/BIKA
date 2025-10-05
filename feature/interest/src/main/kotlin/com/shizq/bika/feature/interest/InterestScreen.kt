@@ -38,34 +38,33 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.shizq.bika.core.backhandle.BackHandler
-import com.shizq.bika.core.context.findActivity
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.shizq.bika.core.designsystem.component.BikaLoadingWheel
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 
 @Composable
 fun InterestScreen(
-    component: InterestComponent,
+    interestViewModel: InterestViewModel = hiltViewModel(),
     navigationToComicList: (String?) -> Unit,
     navigationToSearch: (String?) -> Unit,
     navigationToRanking: () -> Unit,
     openDrawer: () -> Unit,
 ) {
-    val uiState by component.interestUiState.collectAsState()
-    val topicsUiState by component.topicsUiState.collectAsState()
+    val uiState by interestViewModel.interestUiState.collectAsState()
+    val topicsUiState by interestViewModel.topicsUiState.collectAsState()
     var showSubscriptionDialog by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
-    BackHandler(component.backHandler) {
-        if (showSubscriptionDialog) {
-            showSubscriptionDialog = false
-            return@BackHandler
-        }
-        context.findActivity()?.finish()
-    }
+//    BackHandler(interestViewModel.backHandler) {
+//        if (showSubscriptionDialog) {
+//            showSubscriptionDialog = false
+//            return@BackHandler
+//        }
+//        context.findActivity()?.finish()
+//    }
     InterestContent(
         interestsUiState = uiState,
-        state = component.state,
+        state = interestViewModel.state,
         navigationToSearch = navigationToSearch,
         navigationToComicList = navigationToComicList,
         navigationToRanking = navigationToRanking,
@@ -73,7 +72,7 @@ fun InterestScreen(
         onTopAppBarActionClickSubscriptions = { showSubscriptionDialog = true },
         showSubscriptionDialog = showSubscriptionDialog,
         topicsUiState = topicsUiState,
-        updateTopicSelection = component::updateTopicSelection,
+        updateTopicSelection = interestViewModel::updateTopicSelection,
         openDrawer = openDrawer,
     )
 }

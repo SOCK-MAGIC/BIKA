@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +29,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.text.isDigitsOnly
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.shizq.bika.core.designsystem.icon.BikaIcons
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.ui.comicCardItems
@@ -39,20 +38,20 @@ import com.shizq.bika.core.ui.comicCardItems
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ComicScreen(
-    component: ComicListComponent,
+    comicListViewModel: ComicListViewModel = hiltViewModel(),
     navigationToComicInfo: (String) -> Unit,
 ) {
-    val comicsPagingItems = component.comicFlow.collectAsLazyPagingItems()
-    var showSortDialog by rememberSaveable { mutableStateOf(false) }
-    ComicContent(
-        comicsPagingItems,
-        showSortDialog = showSortDialog,
-        onDismissed = {
-            showSortDialog = false
-        },
-        onActionClickSortDialog = { showSortDialog = true },
-        navigationToComicInfo = navigationToComicInfo,
-    )
+//    val comicsPagingItems = comicListViewModel.comicFlow.collectAsLazyPagingItems()
+//    var showSortDialog by rememberSaveable { mutableStateOf(false) }
+//    ComicContent(
+//        comicsPagingItems,
+//        showSortDialog = showSortDialog,
+//        onDismissed = {
+//            showSortDialog = false
+//        },
+//        onActionClickSortDialog = { showSortDialog = true },
+//        navigationToComicInfo = navigationToComicInfo,
+//    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

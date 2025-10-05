@@ -1,29 +1,29 @@
+@file:JvmName("RankingViewModelKt")
+
 package com.shizq.bika.feature.ranking
 
-import com.arkivanov.decompose.ComponentContext
-import com.shizq.bika.core.component.componentScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkRankingDetail
 import com.shizq.bika.core.network.model.NetworkUser
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class RankingComponentImpl @AssistedInject constructor(
-    @Assisted componentContext: ComponentContext,
+@HiltViewModel
+class RankingViewModel @Inject constructor(
     private val network: BikaNetworkDataSource,
-) : RankingComponent,
-    ComponentContext by componentContext {
-    override val rankingUiState = combine(
+) : ViewModel() {
+    val rankingUiState = combine(
         flow { emit(network.getRankingDetail("H24")) },
         flow { emit(network.getRankingDetail("D7")) },
         flow { emit(network.getRankingDetail("D30")) },
@@ -46,22 +46,15 @@ class RankingComponentImpl @AssistedInject constructor(
                 }
             }
         }.stateIn(
-            componentScope,
+            viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             RankUiState.Loading,
         )
 
     init {
-        componentScope.launch {
+        viewModelScope.launch {
             network.getKnightRankingDetail()
         }
-    }
-
-    @AssistedFactory
-    interface Factory : RankingComponent.Factory {
-        override fun invoke(
-            componentContext: ComponentContext,
-        ): RankingComponentImpl
     }
 }
 

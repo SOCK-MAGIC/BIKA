@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.fastForEach
 import androidx.compose.ui.util.fastJoinToString
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.DynamicAsyncImage
 import com.shizq.bika.core.designsystem.icon.BikaIcons
@@ -73,7 +74,7 @@ import com.webtoonscorp.android.readmore.material3.ReadMoreText
 
 @Composable
 fun ComicInfoScreen(
-    component: ComicInfoComponent,
+    component: ComicInfoViewModel = hiltViewModel(),
     navigationToReader: (String, Int) -> Unit,
     navigationToComicList: (Comics) -> Unit,
     navigationToComment: (String) -> Unit,

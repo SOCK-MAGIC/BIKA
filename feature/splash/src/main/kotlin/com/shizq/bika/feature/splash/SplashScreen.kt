@@ -2,17 +2,16 @@ package com.shizq.bika.feature.splash
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
 fun SplashScreen(
-    component: SplashComponent,
+    splashViewModel: SplashViewModel = hiltViewModel(),
     navigationToInterest: () -> Unit,
     navigationToSignIn: () -> Unit,
 ) {
     SideEffect {
-        if (component.hasToken) {
+        if (splashViewModel.hasToken) {
             navigationToInterest()
         } else {
             navigationToSignIn()

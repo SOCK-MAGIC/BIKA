@@ -6,10 +6,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.material3.MaterialTheme
 import androidx.metrics.performance.JankStats
-import com.arkivanov.decompose.defaultComponentContext
 import com.shizq.bika.core.data.util.ErrorMonitor
 import com.shizq.bika.core.data.util.NetworkMonitor
-import com.shizq.bika.navigation.RootComponent
 import com.shizq.bika.ui.BikaApp
 import com.shizq.bika.ui.rememberBikaAppState
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,23 +25,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var lazyStats: dagger.Lazy<JankStats>
 
     @Inject
-    lateinit var rootComponentFactory: RootComponent.Factory
-
-    @Inject
     lateinit var errorMonitor: ErrorMonitor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
         setContent {
-            val componentContext = defaultComponentContext()
-            val component = rootComponentFactory(componentContext)
             val appState = rememberBikaAppState(
                 networkMonitor = networkMonitor,
                 errorMonitor = errorMonitor,
             )
             MaterialTheme {
-                BikaApp(component, appState)
+                BikaApp(appState)
             }
         }
     }

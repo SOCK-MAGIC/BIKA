@@ -20,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.shizq.bika.core.designsystem.component.AvatarAsyncImage
 import com.shizq.bika.core.model.ComicResource
@@ -28,7 +29,7 @@ import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun RankingScreen(
-    component: RankingComponent,
+    component: RankingViewModel = hiltViewModel(),
     navigationToComicInfo: (String) -> Unit,
     navigationToSearch: (String?) -> Unit,
 ) {

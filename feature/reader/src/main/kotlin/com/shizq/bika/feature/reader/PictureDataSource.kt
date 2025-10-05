@@ -51,14 +51,6 @@ class PictureDataSourceImpl @AssistedInject constructor(
                 PagingMetadata(epPicture.pages.pages, epPicture.pages.page, epPicture.pages.total)
             }
         }.map { it.pages.docs.map { doc -> Picture(doc.id, doc.media.imageUrl) } }
-
-//    @AssistedFactory
-//    interface Factory {
-//        operator fun invoke(
-//            id: String,
-//            order: Int,
-//        ): ReaderPagingSource
-//    }
 }
 
 fun LazyListState.isLastItemVisible(index: Int = 1): Boolean =

@@ -1,42 +1,40 @@
 package com.shizq.bika.feature.interest
 
 import androidx.compose.foundation.lazy.grid.LazyGridState
-import com.arkivanov.decompose.ComponentContext
-import com.shizq.bika.core.component.componentScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.shizq.bika.core.datastore.BikaPreferencesDataSource
 import com.shizq.bika.core.datastore.BikaUserCredentialDataSource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.network.model.NetworkCategories
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class InterestComponentImpl @AssistedInject constructor(
-    @Assisted componentContext: ComponentContext,
+@HiltViewModel
+class InterestViewModel @Inject constructor(
     private val network: BikaNetworkDataSource,
     userCredential: BikaUserCredentialDataSource,
     private val preferencesDataSource: BikaPreferencesDataSource,
-) : InterestComponent,
-    ComponentContext by componentContext {
-    override val state: LazyGridState = LazyGridState()
-    override val topicsUiState =
+) : ViewModel() {
+    val state: LazyGridState = LazyGridState()
+    val topicsUiState =
         preferencesDataSource.userData.map {
             TopicsUiState.Success(it.topics)
         }.stateIn(
-            componentScope,
+            viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             TopicsUiState.Loading,
         )
 
-    override val interestUiState = combine(
+    val interestUiState = combine(
         flow { emit(network.getCategories()) }.asResult(),
         userCredential.userData,
         preferencesDataSource.userData,
@@ -55,22 +53,15 @@ class InterestComponentImpl @AssistedInject constructor(
             }
         }
     }.stateIn(
-        scope = componentScope,
+        scope = viewModelScope,
         started = SharingStarted.Eagerly,
         initialValue = InterestsUiState.Loading,
     )
 
-    override fun updateTopicSelection(title: String, state: Boolean) {
-        componentScope.launch {
+    fun updateTopicSelection(title: String, state: Boolean) {
+        viewModelScope.launch {
             preferencesDataSource.setTopicIdFollowed(title, state)
         }
-    }
-
-    @AssistedFactory
-    interface Factory : InterestComponent.Factory {
-        override fun invoke(
-            componentContext: ComponentContext,
-        ): InterestComponentImpl
     }
 }
 

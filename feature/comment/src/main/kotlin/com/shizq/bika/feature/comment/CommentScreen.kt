@@ -35,13 +35,12 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
-import com.shizq.bika.core.backhandle.BackHandler
 import com.shizq.bika.core.data.model.Comment
 import com.shizq.bika.core.data.model.User
 import com.shizq.bika.core.designsystem.component.AvatarAsyncImage
@@ -50,21 +49,24 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CommentScreen(component: CommentComponent, onBackClick: () -> Unit) {
+fun CommentScreen(
+    component: CommentViewModel = hiltViewModel(),
+    onBackClick: () -> Unit,
+) {
     val lazyPagingItems = component.pagingDataFlow.collectAsLazyPagingItems()
     val childLazyPagingItems = component.childCommentPagingDataFlow.collectAsLazyPagingItems()
     val bottomSheetState =
         rememberStandardBottomSheetState(SheetValue.Hidden, skipHiddenState = false)
     val scope = rememberCoroutineScope()
-    BackHandler(backHandler = component.backHandler) {
-        if (bottomSheetState.currentValue == SheetValue.Expanded) {
-            scope.launch {
-                bottomSheetState.hide()
-            }
-        } else {
-            onBackClick()
-        }
-    }
+//    BackHandler(backHandler = component.backHandler) {
+//        if (bottomSheetState.currentValue == SheetValue.Expanded) {
+//            scope.launch {
+//                bottomSheetState.hide()
+//            }
+//        } else {
+//            onBackClick()
+//        }
+//    }
     CommentContent(
         lazyPagingItems = lazyPagingItems,
         childLazyPagingItems = childLazyPagingItems,
@@ -237,10 +239,4 @@ fun UserCommentRow(user: User, content: String, modifier: Modifier = Modifier) {
             Text(content)
         }
     }
-}
-
-@Preview
-@Composable
-private fun PreviewCommentScreen() {
-    CommentScreen(PreviewCommentComponent(), {})
 }

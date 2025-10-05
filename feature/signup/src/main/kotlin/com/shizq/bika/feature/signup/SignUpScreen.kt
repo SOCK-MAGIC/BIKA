@@ -10,10 +10,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 
 @Composable
-fun SignInScreen(component: SignUpComponent) {
+fun SignInScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
+) {
     SignUpContent()
 }
 
@@ -28,10 +30,4 @@ internal fun SignUpContent(
         var name by remember { mutableStateOf("") }
         OutlinedTextField(name, {}, placeholder = { Text("") })
     }
-}
-
-@Preview
-@Composable
-private fun PreviewSignUpScreen() {
-    SignInScreen(PreviewSignUpComponent())
 }

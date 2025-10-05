@@ -4,16 +4,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
-import com.arkivanov.decompose.ComponentContext
-import com.shizq.bika.core.component.componentScope
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.shizq.bika.core.data.repository.RecentlyViewedComicRepository
 import com.shizq.bika.core.data.util.asComicResource
 import com.shizq.bika.core.model.ComicResource
 import com.shizq.bika.core.network.BikaNetworkDataSource
 import com.shizq.bika.core.result.Result
 import com.shizq.bika.core.result.asResult
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -24,16 +22,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.transform
 import kotlinx.coroutines.launch
 
-class ComicInfoComponentImpl @AssistedInject constructor(
-    @Assisted componentContext: ComponentContext,
-    @Assisted private val comicId: String,
+class ComicInfoViewModel @AssistedInject constructor(
+    private val comicId: String,
     private val network: BikaNetworkDataSource,
     private val recentlyViewedComicRepository: RecentlyViewedComicRepository,
-) : ComicInfoComponent,
-    ComponentContext by componentContext {
+) : ViewModel() {
     private var hasClick by mutableStateOf(false)
 
-    override val comicInfoUiState = snapshotFlow { hasClick to comicId }
+    val comicInfoUiState = snapshotFlow { hasClick to comicId }
         .map { it.second }
         .transform {
             coroutineScope {
@@ -67,11 +63,11 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                 }
             }
         }.stateIn(
-            componentScope,
+            viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
             ComicInfoUiState.Loading,
         )
-    override val epUiState = flow { emit(network.getComicAllEp(comicId)) }
+    val epUiState = flow { emit(network.getComicAllEp(comicId)) }
         .asResult()
         .map { result ->
             when (result) {
@@ -82,36 +78,28 @@ class ComicInfoComponentImpl @AssistedInject constructor(
                 )
             }
         }.stateIn(
-            componentScope,
+            viewModelScope,
             SharingStarted.WhileSubscribed(5_000),
             EpUiState.Loading,
         )
 
-    override fun onClickTrigger(comicResource: ComicResource) {
-        componentScope.launch {
+    fun onClickTrigger(comicResource: ComicResource) {
+        viewModelScope.launch {
             recentlyViewedComicRepository.insertOrReplaceRecentWatchedComic(comicResource)
         }
     }
 
-    override fun onSwitchLike() {
-        componentScope.launch {
+    fun onSwitchLike() {
+        viewModelScope.launch {
             network.switchLike(comicId)
             hasClick = !hasClick
         }
     }
 
-    override fun onSwitchFavorite() {
-        componentScope.launch {
+    fun onSwitchFavorite() {
+        viewModelScope.launch {
             network.switchFavourite(comicId)
             hasClick = !hasClick
         }
-    }
-
-    @AssistedFactory
-    interface Factory : ComicInfoComponent.Factory {
-        override fun invoke(
-            componentContext: ComponentContext,
-            id: String,
-        ): ComicInfoComponentImpl
     }
 }

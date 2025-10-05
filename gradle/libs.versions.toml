@@ -13,6 +13,8 @@ androidxCoreSplashscreen = "1.0.1"
 androidxDataStore = "1.1.7"
 androidxLifecycle = "2.9.4"
 androidxMetrics = "1.0.0-rc01"
+androidxHiltNavigationCompose = "1.3.0"
+androidxNavigation = "1.0.0-alpha10"
 androidxProfileinstaller = "1.4.1"
 androidxRoom = "2.8.1"
 androidxWork = "2.10.5"
@@ -53,7 +55,6 @@ pictureselector = "v3.11.3"
 androidxAppcompat = "1.7.1"
 androidxPreference = "1.2.1"
 truth = "1.4.5"
-androidxHiltNavigationCompose = "1.3.0"
 constraintlayout = "2.2.1"
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivity" }
@@ -93,6 +94,8 @@ androidx-lifecycle-viewModelCompose = { group = "androidx.lifecycle", name = "li
 androidx-metrics = { group = "androidx.metrics", name = "metrics-performance", version.ref = "androidxMetrics" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigationFragment" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigationFragment" }
+androidx-naivigation-runtime = { module = "androidx.navigation3:navigation3-runtime", version.ref = "androidxNavigation" }
+androidx-naivigation-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "androidxNavigation" }
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidxPaging" }
 androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", version.ref = "androidxPaging" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "androidxPreference" }
@@ -117,16 +120,13 @@ coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref 
 coil-network = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil" }
 commons-codec = { group = "commons-codec", name = "commons-codec", version.ref = "commonsCodec" }
 
-decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
-decompose-compose = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
-decompose-compose-experimental = { group = "com.arkivanov.decompose", name = "extensions-compose-experimental", version.ref = "decompose" }
-
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
 hilt-core = { group = "com.google.dagger", name = "hilt-core", version.ref = "hilt" }
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+hilt-lifecycle-viewmodel-compose = { group = "androidx.hilt", name = "hilt-lifecycle-viewmodel-compose", version.ref = "hiltExt" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
@@ -179,6 +179,5 @@ bika-android-lint = { id = "bika.android.lint" }
 bika-jvm-library = { id = "bika.jvm.library" }
 bika-android-application-flavors = { id = "bika.android.application.flavors" }
 bika-hilt = { id = "bika.hilt" }
-bika-decompose = { id = "bika.decompose" }
 bika-detekt = { id = "bika.detekt" }
 bika-android-testoptions = { id = "bika.android.testoptions" }

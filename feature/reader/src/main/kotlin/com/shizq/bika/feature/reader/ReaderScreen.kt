@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +26,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
@@ -37,20 +36,20 @@ import com.shizq.bika.core.model.Picture
 import kotlinx.coroutines.launch
 
 @Composable
-fun ReaderScreen(component: ReaderComponent) {
+fun ReaderScreen(component: ReaderViewModel = hiltViewModel()) {
     val items = component.picturePagingFlow.collectAsLazyPagingItems()
-    val controller = component.controller
-    val controllerVisibility by controller.visible.collectAsStateWithLifecycle()
-    val progression by controller.progress.collectAsStateWithLifecycle()
-    ReaderContent(
-        lazyPagingItems = items,
-        lazyListState = controller.lazyListState,
-        readingProgress = progression,
-        readableItems = items.itemCount,
-        onChangeReadingProgress = { controller.updateProgress(it) },
-        onClick = controller::onClick,
-        controllerVisibility = controllerVisibility,
-    )
+//    val controller = component.controller
+//    val controllerVisibility by controller.visible.collectAsStateWithLifecycle()
+//    val progression by controller.progress.collectAsStateWithLifecycle()
+//    ReaderContent(
+//        lazyPagingItems = items,
+//        lazyListState = controller.lazyListState,
+//        readingProgress = progression,
+//        readableItems = items.itemCount,
+//        onChangeReadingProgress = { controller.updateProgress(it) },
+//        onClick = controller::onClick,
+//        controllerVisibility = controllerVisibility,
+//    )
 }
 
 @Composable

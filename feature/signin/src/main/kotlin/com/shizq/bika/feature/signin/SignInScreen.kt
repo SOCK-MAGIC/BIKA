@@ -33,16 +33,17 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun SignInScreen(component: SignInComponent) {
-    val credentialState by component.credentialState.collectAsStateWithLifecycle()
+fun SignInScreen(signInViewModel: SignInViewModel = hiltViewModel()) {
+    val credentialState by signInViewModel.credentialState.collectAsStateWithLifecycle()
     LoginInContent(
-        signIn = component::signIn,
+        signIn = signInViewModel::signIn,
         credentialState = credentialState,
-        updateEmail = component::updateEmail,
-        updatePassword = component::updatePassword,
+        updateEmail = signInViewModel::updateEmail,
+        updatePassword = signInViewModel::updatePassword,
     )
 }
 

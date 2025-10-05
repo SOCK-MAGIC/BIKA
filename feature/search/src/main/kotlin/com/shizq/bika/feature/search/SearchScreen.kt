@@ -34,6 +34,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -42,20 +43,20 @@ import com.shizq.bika.core.ui.comicCardItems
 
 @Composable
 fun SearchScreen(
-    component: SearchComponent,
+    searchViewModel: SearchViewModel = hiltViewModel(),
     onBackClick: () -> Unit,
     navigationToComicInfo: (String) -> Unit,
 ) {
-    val recentSearchQueriesUiState by component.recentSearchQueriesUiState.collectAsStateWithLifecycle()
-    val searchResultUiState = component.searchResultUiState.collectAsLazyPagingItems()
-    val searchQuery by component.searchQuery.collectAsStateWithLifecycle()
+    val recentSearchQueriesUiState by searchViewModel.recentSearchQueriesUiState.collectAsStateWithLifecycle()
+    val searchResultUiState = searchViewModel.searchResultUiState.collectAsLazyPagingItems()
+    val searchQuery by searchViewModel.searchQuery.collectAsStateWithLifecycle()
     SearchContent(
         modifier = Modifier,
         searchQuery = searchQuery,
         recentSearchesUiState = RecentSearchQueriesUiState.Loading,
         searchResultUiState = searchResultUiState,
-        onSearchQueryChanged = component::onSearchQueryChanged,
-        onSearchTriggered = component::onSearchTriggered,
+        onSearchQueryChanged = searchViewModel::onSearchQueryChanged,
+        onSearchTriggered = searchViewModel::onSearchTriggered,
         onClearRecentSearches = {},
         navigationToComicInfo = navigationToComicInfo,
         onBackClick = onBackClick,
