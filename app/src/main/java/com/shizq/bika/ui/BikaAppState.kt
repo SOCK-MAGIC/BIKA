@@ -56,4 +56,7 @@ class BikaAppState(
         initialValue = null,
     )
     val topLevelDestinations: List<TopLevelDestination> = TopLevelDestination.entries
+    fun navigateToTopLevelDestination(destination: TopLevelDestination) {
+
+    }
 }

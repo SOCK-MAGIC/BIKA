@@ -21,13 +21,8 @@ object BackStackProvider {
     @Provides
     @Singleton
     fun provideBikaBackStack(): BikaBackStack =
-        BikaBackStack(startKey = TopLevelDestination.Interests.key)
+        BikaBackStack(TopLevelDestination.Interests.key)
 
-
-    /**
-     * Registers feature modules' polymorphic serializers to support
-     * feature keys' save and restore by savedstate.
-     */
     @Provides
     @Singleton
     fun provideSerializersModule(

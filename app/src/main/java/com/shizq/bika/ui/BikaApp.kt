@@ -1,11 +1,10 @@
 package com.shizq.bika.ui
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult.ActionPerformed
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
@@ -14,14 +13,12 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation3.runtime.EntryProviderBuilder
 import com.shizq.bika.core.data.util.ErrorMessage
 import com.shizq.bika.core.data.util.MessageDuration
 import com.shizq.bika.core.designsystem.component.BikaBackground
 import com.shizq.bika.core.designsystem.component.BikaGradientBackground
-import com.shizq.bika.core.designsystem.component.BikaNavigationSuiteScaffold
 import com.shizq.bika.core.navigation.BikaNavKey
 import com.shizq.bika.navigation.BikaNavDisplay
 
@@ -31,6 +28,7 @@ fun BikaApp(
     entryProviderBuilders: Set<EntryProviderBuilder<BikaNavKey>.() -> Unit>,
     modifier: Modifier = Modifier,
     windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
+    id: String = "",
 ) {
     BikaBackground(modifier = modifier) {
         BikaGradientBackground {
@@ -59,6 +57,7 @@ fun BikaApp(
             BikaApp(
                 appState = appState,
                 entryProviderBuilders = entryProviderBuilders,
+                windowAdaptiveInfo = windowAdaptiveInfo,
             )
         }
     }
@@ -69,35 +68,10 @@ internal fun BikaApp(
     appState: BikaAppState,
     entryProviderBuilders: Set<EntryProviderBuilder<BikaNavKey>.() -> Unit>,
     modifier: Modifier = Modifier,
+    windowAdaptiveInfo: WindowAdaptiveInfo = currentWindowAdaptiveInfo(),
 ) {
-    val currentTopLevelKey = appState.currentTopLevelDestination!!.key
-
-    BikaNavigationSuiteScaffold(
-        navigationSuiteItems = {
-            appState.topLevelDestinations.forEach { destination ->
-                val selected = destination.key == currentTopLevelKey
-                item(
-                    selected = selected,
-                    onClick = { /*appState.navigateToTopLevelDestination(destination)*/ },
-                    icon = {
-                        Icon(
-                            imageVector = destination.unselectedIcon,
-                            contentDescription = null,
-                        )
-                    },
-                    selectedIcon = {
-                        Icon(
-                            imageVector = destination.selectedIcon,
-                            contentDescription = null,
-                        )
-                    },
-                    label = { Text(destination.iconText) },
-                    modifier = Modifier
-                        .testTag("BikaNavItem"),
-                )
-            }
-        },
-        modifier = modifier,
+    ModalNavigationDrawer(
+        drawerContent = {},
     ) {
         BikaNavDisplay(
             bikaBackStack = appState.bikaBackStack,

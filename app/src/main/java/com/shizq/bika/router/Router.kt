@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object InterestsRoute : BikaNavKey {
     override val isTopLevel: Boolean
-        get() = true
+        get() = false
 }
