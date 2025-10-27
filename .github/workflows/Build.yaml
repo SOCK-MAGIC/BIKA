@@ -68,7 +68,7 @@ jobs:
           -Pandroid.experimental.testOptions.managedDevices.setupTimeoutMinutes=5
 
       - name: Upload build outputs (APKs)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: APKs
           path: '**/build/outputs/apk/**/*.apk'
