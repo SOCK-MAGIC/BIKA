@@ -16,7 +16,7 @@ dependencies {
 
     testImplementation(libs.truth)
 
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.9.0-rc01")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.10.0-beta01")
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.compose.ui.testManifest)
     androidTestImplementation(libs.androidx.lifecycle.viewModel.testing)
